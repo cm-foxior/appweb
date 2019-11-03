@@ -1,0 +1,15 @@
+.git/
+
+images/covers/
+!images/covers/README.md
+
+images/logotypes/
+!images/logotypes/README.md
+
+images/products/
+!images/products/README.md
+
+images/users/
+!images/users/README.md
+
+configuration.php
