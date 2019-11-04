@@ -19,10 +19,10 @@ class Configuration
 	* @static string 		$helpurl 			Help from master
 	*/
 
-	public static $domain 			= 'dev.sofierp.com';
+	public static $domain 			= 'sofierp.com';
 	public static $webPage 			= 'Sofi ERP';
 	public static $langDefault 		= 'es';
-	public static $error_reporting 	= 'development';
+	public static $error_reporting 	= 'production';
 	public static $debug 			= false;
 	public static $debugLang 		= false;
 	public static $urlFriendly 		= true;
@@ -51,7 +51,7 @@ class Configuration
 	public static $db_state			= true;
 	public static $db_type 			= 'mysql';
 	public static $db_host 			= 'sofierp.com';
-	public static $db_name 			= 'sf-web-platform-dev';
+	public static $db_name 			= 'sf-web-platform';
 	public static $db_user 			= 'sofierp';
 	public static $db_pass 			= 'npSr&231';
 	public static $db_charset		= 'utf8';
