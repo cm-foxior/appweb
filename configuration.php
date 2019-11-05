@@ -22,7 +22,7 @@ class Configuration
 	public static $domain 			= 'sofierp.com';
 	public static $webPage 			= 'Sofi ERP';
 	public static $langDefault 		= 'es';
-	public static $error_reporting 	= 'production';
+	public static $error_reporting 	= 'none';
 	public static $debug 			= false;
 	public static $debugLang 		= false;
 	public static $urlFriendly 		= true;
@@ -73,7 +73,7 @@ class Configuration
 	public static $smtp_auth 		= true;
 	public static $smtp_host 		= 'mail.codemonkey.com.mx';
 	public static $smtp_user 		= 'noreply@codemonkey.com.mx';
-	public static $smtp_pass 		= '&27lS6mv';
+	public static $smtp_pass 		= 'Xxk71#g7';
 	public static $smtp_secure 		= 'ssl';
 	public static $smtp_port 		= 465;
 }
