@@ -51,7 +51,7 @@ class Configuration
 	public static $db_state			= true;
 	public static $db_type 			= 'mysql';
 	public static $db_host 			= 'sofierp.com';
-	public static $db_name 			= 'sf-web-platform';
+	public static $db_name 			= 'sf-website';
 	public static $db_user 			= 'sofierp';
 	public static $db_pass 			= 'npSr&231';
 	public static $db_charset		= 'utf8';
