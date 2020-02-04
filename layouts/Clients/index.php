@@ -34,7 +34,7 @@ $this->dependencies->getDependencies([
             <a data-button-modal="clients"><i class="material-icons">add</i><span>Nuevo</span></a>
             <!-- {$btnDeactivateClients}
             {$btnActivateClients} -->
-            <a data-button-modal="sendMassEmail"><i class="material-icons">mail</i><span>Enviar correo masivo</span></a>
+            <!-- <a data-button-modal="sendMassEmail"><i class="material-icons">mail</i><span>Enviar correo masivo</span></a> -->
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">

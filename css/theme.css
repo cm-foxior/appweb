@@ -1849,7 +1849,7 @@ body > main.body {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: #eee;
+    background-color: #fff;
     box-sizing: border-box;
     padding: 50px 0px 0px 50px;
 }

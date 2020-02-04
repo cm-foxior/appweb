@@ -20,12 +20,16 @@
             <div class="dropdown-menu">
                 <button type="button"><i class="material-icons">more_vert</i></button>
                 <div class="dropdown md--shadow">
-                    <?php if (Session::getValue('level') == 10) : ?>
-                    <a href="/settings/sales"><i class="material-icons">settings</i>Configuraciones</a>
+                    <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
+                    <a href="/branchoffices"><i class="material-icons">account_balance</i>Sucursales</a>
                     <span class="space"></span>
                     <?php endif; ?>
                     <?php if (Session::getValue('level') >= 9) : ?>
                     <a href="/users"><i class="material-icons">people</i>Usuarios</a>
+                    <span class="space"></span>
+                    <?php endif; ?>
+                    <?php if (Session::getValue('level') == 10) : ?>
+                    <a href="/settings/sales"><i class="material-icons">settings</i>Configuraciones</a>
                     <span class="space"></span>
                     <?php endif; ?>
                     <a href="?session=logout"><i class="material-icons">power_settings_new</i>Cerrar sesion</a>
@@ -67,11 +71,6 @@
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
         <li data-target="providers">
             <a href="/providers"><i class="material-icons">verified_user</i>Proveedores</a>
-        </li>
-        <?php endif; ?>
-        <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
-        <li data-target="branchoffices">
-            <a href="/branchoffices"><i class="material-icons">account_balance</i>Sucursales</a>
         </li>
         <?php endif; ?>
     </ul>

@@ -29,17 +29,17 @@ $this->dependencies->getDependencies([
 
 <main class="body">
     <div class="content">
-        <div class="box-buttons">
-            <a data-button-modal="deleteCategories"><i class="material-icons">delete</i><span>Eliminar</span></a>
-            <a data-button-modal="categories" data-number="one"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <a href="/products"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
-            <div class="clear"></div>
-        </div>
         <div class="box-tab-buttons">
             <a href="/products/categories_one" class="view" button-tab>Categorías</a>
             <a href="/products/categories_two" button-tab>Subcategorías 1</a>
             <a href="/products/categories_tree" button-tab>Subcategorías 2</a>
             <a href="/products/categories_four" button-tab>Subcategorías 3</a>
+            <div class="clear"></div>
+        </div>
+        <div class="box-buttons">
+            <a data-button-modal="deleteCategories"><i class="material-icons">delete</i><span>Eliminar</span></a>
+            <a data-button-modal="categories" data-number="one"><i class="material-icons">add</i><span>Nuevo</span></a>
+            <a href="/products"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">
