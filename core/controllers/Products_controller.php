@@ -263,8 +263,6 @@ class Products_controller extends Controller
 						<a data-button-modal="products"><i class="material-icons">add</i><span>Nuevo</span></a>
 						<!-- <a data-button-modal="deactivateProducts"><i class="material-icons">block</i><span>Desactivar</span></a>
 			            <a data-button-modal="activateProducts"><i class="material-icons">check</i><span>Activar</span></a> -->
-						<a data-button-modal="unpostProductsToEcommerce"><i class="material-icons">remove_shopping_cart</i><span>Remover de tienda en linea</span></a>
-						<a data-button-modal="postProductsToEcommerce"><i class="material-icons">shopping_cart</i><span>Publicar para tienda en linea</span></a>
 						<a href="/products/categories_one/"><i class="material-icons">turned_in</i><span>Categorías</span></a>';
 					}
 

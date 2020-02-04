@@ -29,15 +29,15 @@ $this->dependencies->getDependencies([
 
 <main class="body <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <div class="content">
+        <div class="box-tab-buttons">
+            <a href="/inventories/inputs/{$idInventory}" button-tab>Entradas</a>
+            <a href="" class="view" button-tab>Salidas</a>
+            <div class="clear"></div>
+        </div>
         <div class="box-buttons not-margin">
             <a data-button-modal="outputs"><i class="material-icons">add</i><span>Nuevo</span></a>
             {$btnTransferProduct}
             <a href="/inventories"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
-            <div class="clear"></div>
-        </div>
-        <div class="box-tab-buttons">
-            <a href="/inventories/inputs/{$idInventory}" button-tab>Entradas</a>
-            <a href="" class="view" button-tab>Salidas</a>
             <div class="clear"></div>
         </div>
         <div class="title">

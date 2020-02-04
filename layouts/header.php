@@ -55,24 +55,23 @@
         </li>
         <?php endif; ?>
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
-        <li data-target="catalogs">
-            <a href=""><i class="material-icons">view_module</i>Catálogos</a>
-            <ul>
-                <li>
-                    <a href="/products"><i class="material-icons">keyboard_arrow_right</i>Productos</a>
-                </li>
-                <?php if (Session::getValue('level') == 10) : ?>
-                <li>
-                    <a href="/providers"><i class="material-icons">keyboard_arrow_right</i>Proveedores</a>
-                </li>
-                <li>
-                    <a href="/clients"><i class="material-icons">keyboard_arrow_right</i>Clientes</a>
-                </li>
-                <li data-target="branchoffices">
-                    <a href="/branchoffices"><i class="material-icons">keyboard_arrow_right</i>Sucursales</a>
-                </li>
-                <?php endif; ?>
-            </ul>
+        <li data-target="products">
+            <a href="/products"><i class="material-icons">shopping_basket</i>Productos</a>
+        </li>
+        <?php endif; ?>
+        <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
+        <li data-target="clients">
+            <a href="/clients"><i class="material-icons">people</i>Clientes</a>
+        </li>
+        <?php endif; ?>
+        <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
+        <li data-target="providers">
+            <a href="/providers"><i class="material-icons">verified_user</i>Proveedores</a>
+        </li>
+        <?php endif; ?>
+        <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
+        <li data-target="branchoffices">
+            <a href="/branchoffices"><i class="material-icons">account_balance</i>Sucursales</a>
         </li>
         <?php endif; ?>
     </ul>

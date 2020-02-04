@@ -541,7 +541,6 @@ section.know-us div.content > h1 {
     margin: 0px 0px 15px 0px;
     font-size: 35px;
     font-weight: 400;
-
     color: #757575;
 }
 
@@ -1600,15 +1599,9 @@ body > header.topbar > div.tools > .widgets {
 body > header.topbar > div.tools > .widgets button {
     border: none;
     background-color: transparent;
-    color: #FFF;
+    color: #fff;
     padding: 10px;
     cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s linear;
-}
-
-body > header.topbar > div.tools > .widgets button:hover {
-    opacity: 1;
 }
 
 .dropdown-menu,
@@ -1658,11 +1651,6 @@ body > header.topbar > div.tools > .widgets button:hover {
     font-size: 10px;
     margin-right: 5px;
     color: #4caf50;
-}
-
-.shortcut-menu > a:hover {
-    color: #fff;
-    transition: 400ms;
 }
 
 .shortcut-menu > a.user-logged:hover {
@@ -1760,16 +1748,14 @@ body > aside.leftbar {
     overflow: hidden;
     overflow-y: auto;
     color: #757575;
-    background-color: #FFF;
+    background-color: #eee;
     z-index: 99;
     padding-bottom: 50px;
 }
 
 body > aside.leftbar:hover {
     width: 300px;
-    color: #FFF;
-    background-color: #3f51b5;
-    box-shadow: 0px -10px 20px rgba(0, 0, 0, 0.5);
+    background-color: #eee;
 }
 
 body > aside.leftbar.droped {
@@ -1787,7 +1773,7 @@ body > aside.leftbar > ul > li > ul > li {
 }
 
 body > aside.leftbar > ul > li.active {
-    background-color: #F1F1F1;
+    background-color: #fff;
 }
 
 body > aside.leftbar:hover > ul > li.active {
@@ -1863,16 +1849,17 @@ body > main.body {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: #F1F1F1;
+    background-color: #eee;
     box-sizing: border-box;
-    padding: 70px 20px 20px 70px;
+    padding: 50px 0px 0px 50px;
 }
 
 body > main.body.droped {
-    padding: 70px 20px 20px 20px;
+    padding: 50px 20px 20px 20px;
 }
 
 body > main.body > .content {
+    min-height: calc(100vh - 70px);
     background-color: #FFF;
 }
 
@@ -2353,7 +2340,7 @@ div.upload-image > input {
 .box-buttons {
     width: 100%;
     height: auto;
-    background-color: #f1f1f1;
+    background-color: #fff;
 }
 
 .box-buttons.not-margin {
@@ -2403,7 +2390,7 @@ div.upload-image > input {
     color: #fff;
     background-color: #000;
     display: none;
-    z-index: 99;
+    z-index: 199;
 }
 
 .box-buttons a:hover > span,
@@ -2415,7 +2402,9 @@ div.upload-image > input {
 ------------------------------------------------------------------------------ */
 .box-tab-buttons {
     width: auto;
-    background-color: #f1f1f1;
+    padding-left: 20px;
+    box-sizing: border-box;
+    background-color: #fff;
 }
 
 .box-tab-buttons > a {
@@ -2426,12 +2415,12 @@ div.upload-image > input {
     text-transform: uppercase;
     text-align: center;
     text-decoration: none;
-    color: #fff;
-    background-color: #ffccbc;
+    color: #757575;
+    background-color: #eee;
 }
 
 .box-tab-buttons > a.view {
-    background-color: #ff5722;
+    background-color: #eee;
 }
 
 .box-tab-buttons > a.view:after,

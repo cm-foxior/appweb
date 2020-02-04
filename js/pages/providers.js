@@ -1,6 +1,6 @@
 'use strict';
 
-menuActive('catalogs');
+menuActive('providers');
 
 $(document).ready(function ()
 {
