@@ -33,9 +33,9 @@
             </div>
         </div>
     </div>
-    <figure class="avatar">
+    <!-- <figure class="avatar">
         <img <?php echo (!empty(Session::getValue('avatar')) ? 'src="{$path.images}users/' . Session::getValue('avatar') . '"' : 'src="{$path.images}users/avatar.png"') ?> alt="avatar">
-    </figure>
+    </figure> -->
 </header>
 <aside class="leftbar <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <ul>
