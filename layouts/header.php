@@ -20,11 +20,7 @@
             <div class="dropdown-menu">
                 <button type="button"><i class="material-icons">more_vert</i></button>
                 <div class="dropdown md--shadow">
-                    <a><i class="material-icons">account_circle</i>Mi perfil</a>
-                    <!-- <a href="/directory"><i class="material-icons">contacts</i>Directorio</a> -->
-                    <!-- <a href="uploads/user-manual.pdf" download="user-manual"><i class="material-icons">picture_as_pdf</i>Manual de usuario</a> -->
                     <?php if (Session::getValue('level') == 10) : ?>
-                    <span class="space"></span>
                     <a href="/settings/sales"><i class="material-icons">settings</i>Configuraciones</a>
                     <span class="space"></span>
                     <?php endif; ?>
@@ -37,41 +33,18 @@
         <img <?php echo (!empty(Session::getValue('avatar')) ? 'src="{$path.images}users/' . Session::getValue('avatar') . '"' : 'src="{$path.images}users/avatar.png"') ?> alt="avatar">
     </figure>
 </header>
-
 <aside class="leftbar <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <ul>
-        <!-- <li data-target="dashboard">
-            <a href="/dashboard"><i class="material-icons">dashboard</i>Escritorio</a>
-        </li> -->
         <?php if (Session::getValue('level') >= 8) : ?>
         <li data-target="inventories">
             <a href="/inventories"><i class="material-icons">assignment_turned_in</i>Inventarios</a>
         </li>
         <?php endif; ?>
-
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
         <li data-target="sales">
-            <a href=""><i class="material-icons">shopping_cart</i>Ventas</a>
-            <ul>
-                <li>
-                    <a href="/pointsale"><i class="material-icons">keyboard_arrow_right</i>Punto de venta</a>
-                </li>
-                <li>
-                    <a href="/quotations"><i class="material-icons">keyboard_arrow_right</i>Cotizaciones</a>
-                </li>
-                <!-- <li>
-                    <a href="/aparts"><i class="material-icons">keyboard_arrow_right</i>* Apartados</a>
-                </li>
-                <li>
-                    <a href="/promotions"><i class="material-icons">keyboard_arrow_right</i>* Promociones</a>
-                </li>
-                <li>
-                    <a href="/boxcuts"><i class="material-icons">keyboard_arrow_right</i>* Cortes de caja</a>
-                </li> -->
-            </ul>
+            <a href="/pointsale"><i class="material-icons">shopping_cart</i>Punto de venta</a>
         </li>
         <?php endif; ?>
-
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
         <li data-target="catalogs">
             <a href=""><i class="material-icons">view_module</i>Catálogos</a>
