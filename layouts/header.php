@@ -79,15 +79,15 @@
                 <li>
                     <a href="/products"><i class="material-icons">keyboard_arrow_right</i>Productos</a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="/services"><i class="material-icons">keyboard_arrow_right</i>Servicios</a>
-                </li>
+                </li> -->
                 <?php if (Session::getValue('level') == 10) : ?>
                 <li>
                     <a href="/providers"><i class="material-icons">keyboard_arrow_right</i>Proveedores</a>
                 </li>
                 <li>
-                    <a href="/clients"><i class="material-icons">keyboard_arrow_right</i>Clientes / Prospectos</a>
+                    <a href="/clients"><i class="material-icons">keyboard_arrow_right</i>Clientes</a>
                 </li>
                 <!-- <li>
                     <a href="/prospects"><i class="material-icons">keyboard_arrow_right</i>Prospectos</a>
