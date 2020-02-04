@@ -2367,8 +2367,6 @@ div.upload-image > input {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 5px solid #fff;
-    box-sizing: border-box;
     transition: 400ms;
 }
 
@@ -2380,8 +2378,8 @@ div.upload-image > input {
 
 .box-buttons a > span,
 .box-buttons a > span {
-    right: 5px;
-    top: -20px;
+    right: 0px;
+    top: -24px;
     position: absolute;
     padding: 2px 7px;
     font-size: 12px;
