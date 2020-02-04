@@ -1551,7 +1551,7 @@ body > header.topbar {
     display: -webkit-box;
     display: flex;
     justify-content: margin-between;
-    background-color: #313246;
+    background-color: #ff5722;
     z-index: 100;
 }
 
@@ -1650,7 +1650,7 @@ body > header.topbar > div.tools > .widgets button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.7);
+    color: #fff;
     transition: 400ms;
 }
 
