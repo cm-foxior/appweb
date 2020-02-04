@@ -9,15 +9,6 @@ class Products_model extends Model
 		parent::__construct();
 	}
 
-	// public function sql($id, $price)
-	// {
-	// 	$query = $this->database->update('products', [
-	// 		'price' => $price
-	// 	], [
-	// 		'id_product' => $id
-	// 	]);
-	// }
-
 	/* Productos
 	--------------------------------------------------------------------------- */
 	public function getAllProducts()
@@ -191,6 +182,131 @@ class Products_model extends Model
 		}
 		else
 			return null;
+	}
+
+	public function importFromExcel($xlsx)
+	{
+		$this->component->loadComponent('uploader');
+
+		$_com_uploader = new Upload;
+		$_com_uploader->SetFileName($xlsx['name']);
+		$_com_uploader->SetTempName($xlsx['tmp_name']);
+		$_com_uploader->SetFileType('application/xlsx');
+		$_com_uploader->SetFileSize($xlsx['size']);
+		$_com_uploader->SetUploadDirectory(PATH_UPLOADS . 'xlsx');
+		$_com_uploader->SetValidExtensions(['xlsx', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+		$_com_uploader->SetMaximumFileSize('unlimited');
+
+		$xlsx = $_com_uploader->UploadFile();
+
+		if ($xlsx['status'] == 'success')
+		{
+	        $this->component->loadComponent('simplexlsx');
+			$xlsx = new SimpleXLSX(PATH_UPLOADS . 'xlsx/' . $xlsx['file']);
+
+			$inserts = [];
+			$fullErrors1 = [];
+			$fullErrors2 = [];
+			$xlsxRow = 1;
+			$today = date('Y-m-d');
+
+			foreach ($xlsx->rows() as $value)
+			{
+				$errors = [];
+
+				if (empty($value[0]))
+					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El nombre no puede estár vacío']);
+
+				if (empty($value[1]))
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El email no puede estár vacío']);
+	            else if (Security::checkMail($value[1]) == false)
+					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El formato del email es incorrecto']);
+
+				if (empty($value[2]))
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede estár vacía']);
+	            else if (!is_numeric($value[2]))
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país tiene que ser números']);
+	            else if ($value[2] < 0)
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede ser menor a 0']);
+	            else if (Security::checkIsFloat($value[2]) == true)
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede contener números decimáles']);
+				else if (Security::checkIfExistSpaces($value[2]) == true)
+					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede contener espacios']);
+
+				if (empty($value[3]))
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede estár vacío']);
+	            else if (!is_numeric($value[3]))
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser números']);
+	            else if ($value[3] < 0)
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede ser menor a 0']);
+	            else if ($value[4] == 'Móvil' AND strlen($value[3]) != 10)
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser de 10 dígitos']);
+	            else if ($value[4] == 'Local' AND strlen($value[3]) != 7)
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser de 7 dígitos']);
+	            else if (Security::checkIsFloat($value[3]) == true)
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede contener números decimáles']);
+				else if (Security::checkIfExistSpaces($value[3]) == true)
+					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede contener espacios']);
+
+				if (empty($value[4]))
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El tipo de teléfono no puede quedar vacío']);
+	            else if ($value[4] != 'Local' AND $value[4] != 'Móvil')
+	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El tipo de teléfono solo puede ser Local o Móvil']);
+
+				if (!empty($errors))
+				{
+					array_push($fullErrors1, $errors);
+				}
+				else
+				{
+					$phoneNumber = json_encode([
+						'country_code' => $value[2],
+						'number' => $value[3],
+						'type' => $value[4]
+					]);
+
+					$exist = $this->checkExistProspect(null, $value[1], $phoneNumber, 'new');
+
+					if ($exist['status'] == true)
+						array_push($fullErrors1, [['xlsx', 'Linea ' . $xlsxRow . '. Este registro ya ha sido ingresado previamente']]);
+					else
+						array_push($inserts, ['name' => $value[0], 'email' => $value[1], 'phone_number' => $phoneNumber, 'address' => $value[5]]);
+				}
+
+				$xlsxRow = $xlsxRow + 1;
+			}
+
+			if (!empty($fullErrors1))
+			{
+				foreach ($fullErrors1 as $fullErrors)
+				{
+					foreach ($fullErrors as $error)
+					{
+						array_push($fullErrors2, $error);
+					}
+				}
+
+				return ['status' => 'error', 'errors' => $fullErrors2];
+			}
+			else
+			{
+				foreach ($inserts as $insert)
+				{
+					$query = $this->database->insert('clients', [
+					    'name' => $insert['name'],
+					    'email' => $insert['email'],
+					    'phone_number' => $insert['phone_number'],
+					    'address' => $insert['address'],
+						'prospect' => true,
+					    'registration_date' => $today
+					]);
+				}
+
+				return ['status' => 'success'];
+			}
+		}
+		else
+			return ['status' => 'error', 'errors' => [['xlsx', 'No se pudo subir el XLSX adecuadamente']]];
 	}
 
 	public function editProduct($id, $name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $warranty, $category_one, $category_two, $category_tree, $category_four, $observations)

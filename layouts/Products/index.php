@@ -59,6 +59,7 @@ $this->dependencies->getDependencies([
 </main>
 
 {$mdlProducts}
+{$mdlImportFromExcel}
 {$mdlActivateProducts}
 {$mdlDectivateProducts}
 {$mdlDeleteProducts}

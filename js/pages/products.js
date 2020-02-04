@@ -254,6 +254,45 @@ $(document).ready(function ()
         });
     });
 
+    /* Importar prospectos desde Excel
+    /* ------------------------------------------------------------------------ */
+    var frmImportFromExcel = $('form[name="importFromExcel"]');
+
+    modal('importFromExcel', function(modal)
+    {
+        modal.find('form')[0].reset();
+
+    }, function(modal)
+    {
+        frmImportFromExcel.submit();
+    });
+
+    frmImportFromExcel.on('submit', function(e)
+    {
+        e.preventDefault();
+
+        var self = $(this);
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/products/importFromExcel',
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response)
+            {
+                checkValidateFormAjax(self, response, function()
+                {
+                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
+                    location.reload();
+                });
+            }
+        });
+    });
+
     /* Activar selección multiple de productos
     /* ------------------------------------------------------------------------ */
     var btnActivateProducts = $('[data-action="activateProducts"]');

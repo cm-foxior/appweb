@@ -245,6 +245,7 @@ class Products_controller extends Controller
 				$buttons = '';
 				$tblProducts = '';
 				$mdlProducts = '';
+				$mdlImportFromExcel = '';
 				$mdlActivateProducts = '';
 				$mdlDectivateProducts = '';
 				$mdlDeleteProducts = '';
@@ -263,6 +264,7 @@ class Products_controller extends Controller
 						<a data-button-modal="products"><i class="material-icons">add</i><span>Nuevo</span></a>
 						<!-- <a data-button-modal="deactivateProducts"><i class="material-icons">block</i><span>Desactivar</span></a>
 			            <a data-button-modal="activateProducts"><i class="material-icons">check</i><span>Activar</span></a> -->
+						<a data-button-modal="importFromExcel"><i class="material-icons">cloud_upload</i><span>Importar desde excel</span></a>
 						<a href="/products/categories_one/"><i class="material-icons">turned_in</i><span>Categorías</span></a>';
 					}
 
@@ -646,6 +648,32 @@ class Products_controller extends Controller
 					        </footer>
 					    </div>
 					</section>';
+
+					$mdlImportFromExcel .=
+					'<section class="modal" data-modal="importFromExcel">
+					    <div class="content">
+					        <header>
+					            <h6>Importar prospectos desde Excel</h6>
+					        </header>
+					        <main>
+					            <form name="importFromExcel">
+					                <fieldset class="input-group">
+					                    <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
+					                </fieldset>
+					                <fieldset class="input-group">
+					                    <label data-important>
+					                        <span><span class="required-field">*</span>Excel</span>
+					                        <input name="xlsx" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+					                    </label>
+					                </fieldset>
+					            </form>
+					        </main>
+					        <footer>
+					            <a button-cancel>Cancelar</a>
+					            <a button-success>Aceptar</a>
+					        </footer>
+					    </div>
+					</section>';
 				}
 
 				if (Session::getValue('level') == 10)
@@ -735,6 +763,7 @@ class Products_controller extends Controller
 					'{$buttons}' => $buttons,
 					'{$tblProducts}' => $tblProducts,
 					'{$mdlProducts}' => $mdlProducts,
+					'{$mdlImportFromExcel}' => $mdlImportFromExcel,
 					'{$mdlActivateProducts}' => $mdlActivateProducts,
 					'{$mdlDectivateProducts}' => $mdlDectivateProducts,
 					'{$mdlDeleteProducts}' => $mdlDeleteProducts,
@@ -745,6 +774,59 @@ class Products_controller extends Controller
 				$template = $this->format->replace($replace, $template);
 
 				echo $template;
+			}
+		}
+		else
+			header('Location: /dashboard');
+	}
+
+	/* Importar prospectos desde Excel
+	--------------------------------------------------------------------------- */
+	public function importFromExcel()
+	{
+		if (Session::getValue('level') == 10)
+		{
+			if (Format::existAjaxRequest() == true)
+			{
+				$xlsx = (isset($_FILES['xlsx']['name']) AND !empty($_FILES['xlsx']['name'])) ? $_FILES['xlsx'] : null;
+
+				$errors = [];
+
+				if (!isset($xlsx))
+	                array_push($errors, ['xlsx', 'Seleccione un archivo']);
+
+				if (empty($errors))
+				{
+					$query = $this->model->importFromExcel($xlsx);
+
+					if ($query['status'] == 'success')
+					{
+						echo json_encode([
+							'status' => 'success'
+						]);
+					}
+					else if ($query['status'] == 'error')
+					{
+						echo json_encode([
+							'status' => 'error',
+							'labels' => $query['errors']
+						]);
+					}
+					else
+					{
+						echo json_encode([
+							'status' => 'error',
+							'labels' => [['xlsx', 'Error desconocido. Pongase en contácto con soporte técnico']]
+						]);
+					}
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'labels' => $errors
+					]);
+				}
 			}
 		}
 		else
