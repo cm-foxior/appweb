@@ -25,7 +25,7 @@
                     <span class="space"></span>
                     <?php endif; ?>
                     <?php if (Session::getValue('level') >= 9) : ?>
-                    <a href="/users"><i class="material-icons">settings</i>Usuarios</a>
+                    <a href="/users"><i class="material-icons">people</i>Usuarios</a>
                     <span class="space"></span>
                     <?php endif; ?>
                     <a href="?session=logout"><i class="material-icons">power_settings_new</i>Cerrar sesion</a>
@@ -61,9 +61,6 @@
                 <li>
                     <a href="/products"><i class="material-icons">keyboard_arrow_right</i>Productos</a>
                 </li>
-                <!-- <li>
-                    <a href="/services"><i class="material-icons">keyboard_arrow_right</i>Servicios</a>
-                </li> -->
                 <?php if (Session::getValue('level') == 10) : ?>
                 <li>
                     <a href="/providers"><i class="material-icons">keyboard_arrow_right</i>Proveedores</a>
@@ -71,9 +68,6 @@
                 <li>
                     <a href="/clients"><i class="material-icons">keyboard_arrow_right</i>Clientes</a>
                 </li>
-                <!-- <li>
-                    <a href="/prospects"><i class="material-icons">keyboard_arrow_right</i>Prospectos</a>
-                </li> -->
                 <li data-target="branchoffices">
                     <a href="/branchoffices"><i class="material-icons">keyboard_arrow_right</i>Sucursales</a>
                 </li>
@@ -81,6 +75,5 @@
             </ul>
         </li>
         <?php endif; ?>
-
     </ul>
 </aside>
