@@ -24,6 +24,10 @@
                     <a href="/settings/sales"><i class="material-icons">settings</i>Configuraciones</a>
                     <span class="space"></span>
                     <?php endif; ?>
+                    <?php if (Session::getValue('level') >= 9) : ?>
+                    <a href="/users"><i class="material-icons">settings</i>Usuarios</a>
+                    <span class="space"></span>
+                    <?php endif; ?>
                     <a href="?session=logout"><i class="material-icons">power_settings_new</i>Cerrar sesion</a>
                 </div>
             </div>
@@ -43,6 +47,11 @@
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
         <li data-target="sales">
             <a href="/pointsale"><i class="material-icons">shopping_cart</i>Punto de venta</a>
+        </li>
+        <?php endif; ?>
+        <?php if (Session::getValue('level') >= 9) : ?>
+        <li data-target="reports">
+            <a href="/reports/inventories/existence"><i class="material-icons">crop_portrait</i>Reportes</a>
         </li>
         <?php endif; ?>
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
@@ -73,16 +82,5 @@
         </li>
         <?php endif; ?>
 
-        <?php if (Session::getValue('level') >= 9) : ?>
-        <li data-target="reports">
-            <a href="/reports/inventories/existence"><i class="material-icons">crop_portrait</i>Reportes</a>
-        </li>
-        <?php endif; ?>
-
-        <?php if (Session::getValue('level') >= 9) : ?>
-        <li data-target="users">
-            <a href="/users"><i class="material-icons">supervisor_account</i>Usuarios</a>
-        </li>
-        <?php endif; ?>
     </ul>
 </aside>
