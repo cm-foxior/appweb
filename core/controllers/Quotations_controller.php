@@ -705,8 +705,7 @@ class Quotations_controller extends Controller
 										'discount' => $product['discount'],
 										'coin' => $product['coin'],
 										'type' => $product['type'],
-										'components' => $components,
-										'id_warranty' => $product['id_warranty']
+										'components' => $components
 									];
 
 									$inventory = ($sync_quotations_with_inventories == 'true') ? $inventoryToDiscount : '';
@@ -799,8 +798,7 @@ class Quotations_controller extends Controller
 								'price' => $service['price'],
 								'discount' => $service['discount'],
 								'coin' => $service['coin'],
-								'components' => $components,
-								'id_warranty' => $service['id_warranty']
+								'components' => $components
 							];
 
 							$inventory = '';
@@ -842,7 +840,6 @@ class Quotations_controller extends Controller
 							'quantity' => $quantity,
 							'object' => $object,
 							'totals' => [],
-							'warranty' => '',
 							'inventory' => $inventory,
 							'branchOffice' => $branchOffice,
 							'flag' => $flag
@@ -896,9 +893,6 @@ class Quotations_controller extends Controller
 							'discountType' => $discountType,
 							'total' => $total
 						];
-
-						if (!empty($object['id_warranty']))
-							$data['warranty'] = $this->model->getWarrantyById($object['id_warranty']);
 
 						echo json_encode([
 							'status' => 'success',

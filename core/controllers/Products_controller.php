@@ -33,7 +33,6 @@ class Products_controller extends Controller
 				$coin 				= (isset($_POST['coin']) AND !empty($_POST['coin'])) ? $_POST['coin'] : null;
 				$unity       		= (isset($_POST['unity']) AND !empty($_POST['unity'])) ? $_POST['unity'] : null;
 				$avatar 			= (isset($_FILES['avatar']['name']) AND !empty($_FILES['avatar']['name'])) ? $_FILES['avatar'] : null;
-				$warranty 			= (isset($_POST['warranty']) AND !empty($_POST['warranty'])) ? $_POST['warranty'] : null;
 				$category_one 		= (isset($_POST['category_one']) AND !empty($_POST['category_one'])) ? $_POST['category_one'] : null;
 				$category_two 		= (isset($_POST['category_two']) AND !empty($_POST['category_two'])) ? $_POST['category_two'] : null;
 				$category_tree 		= (isset($_POST['category_tree']) AND !empty($_POST['category_tree'])) ? $_POST['category_tree'] : null;
@@ -177,7 +176,6 @@ class Products_controller extends Controller
 						$price		= null;
 						$discount	= null;
 						$coin		= null;
-						$warranty	= null;
 					}
 
 					$exist = $this->model->checkExistProduct($id, $name, $category_one, $category_two, $category_tree, $category_four, $folio, $type, $action);
@@ -201,9 +199,9 @@ class Products_controller extends Controller
 					else
 					{
 						if ($action == 'new')
-							$query = $this->model->newProduct($name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $warranty, $category_one, $category_two, $category_tree, $category_four, $observations);
+							$query = $this->model->newProduct($name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations);
 						else if ($action == 'edit')
-							$query = $this->model->editProduct($id, $name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $warranty, $category_one, $category_two, $category_tree, $category_four, $observations);
+							$query = $this->model->editProduct($id, $name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations);
 
 						if (!empty($query))
 						{
@@ -236,7 +234,6 @@ class Products_controller extends Controller
 				$template = $this->format->replaceFile($template, 'header');
 
 				$products = $this->model->getAllProducts();
-				$warranties = $this->model->getAllWarranties();
 				$categories_one = $this->model->getAllCategories('one');
 				$categories_two = $this->model->getAllCategories('two');
 				$categories_tree = $this->model->getAllCategories('tree');
@@ -286,7 +283,6 @@ class Products_controller extends Controller
 							<th width="50px">Descuento</th>
 							<th width="50px">Unidad</th>
 							<th width="50px">Tipo</th>
-							<th width="50px">Garantía</th>
 							<th width="100px">Estado</th>
 							<th width="100px">Tienda</th>
 							' . ((Session::getValue('level') == 10) ? '<th width="70px"></th>' : '') . '
@@ -359,22 +355,6 @@ class Products_controller extends Controller
 					else if ($product['type'] == '4')
 						$type = 'Operación';
 
-					if (!empty($product['id_warranty']))
-					{
-						$warranty = $this->model->getWarrantyById($product['id_warranty']);
-
-						if ($warranty['time_frame'] == '1')
-							$warranty = $warranty['quantity'] . ' Días';
-						else if ($warranty['time_frame'] == '2')
-							$warranty = $warranty['quantity'] . ' Meses';
-						else if ($warranty['time_frame'] == '3')
-							$warranty = $warranty['quantity'] . ' Años';
-					}
-					else if (empty($product['id_warranty']) AND $product['type'] <= '2')
-						$warranty = '-';
-					else
-						$warranty = 'N/A';
-
 					if (!empty($product['id_product_category_one']))
 					{
 						$categoryOne = $this->model->getCategoryById($product['id_product_category_one'], 'one');
@@ -429,7 +409,6 @@ class Products_controller extends Controller
 						<td>' . $discount . '</td>
 						<td>' . $unity . '</td>
 						<td>' . $type . '</td>
-						<td>' . $warranty . '</td>
 						<td>' . (($product['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>
 						<td>' . (($product['to_ecommerce'] == true) ? '<span class="active">Publicado</span>' : '') . '</td>';
 
@@ -560,28 +539,6 @@ class Products_controller extends Controller
 										<a clear-image>Eliminar imagen</a>
 					                    <input id="image-preview" name="avatar" type="file" accept="image/*" image-preview="image-preview"/>
 					                </div>
-					                <fieldset class="input-group hidden">
-					                    <label data-important>
-					                        <span>Garantía</span>
-					                        <select name="warranty" class="chosen-select">
-					                            <option value="">Sin garantía</option>';
-
-					foreach ($warranties as $warranty)
-					{
-						if ($warranty['time_frame'] == '1')
-							$timeFrame = 'Días';
-						else if ($warranty['time_frame'] == '2')
-							$timeFrame = 'Meses';
-						else if ($warranty['time_frame'] == '3')
-							$timeFrame = 'Años';
-
-						$mdlProducts .= '<option value="' . $warranty['id_warranty'] . '">' . $warranty['quantity'] . ' ' . $timeFrame . '</option>';
-					}
-
-					$mdlProducts .=
-					'						</select>
-					                    </label>
-					                </fieldset>
 					                <fieldset class="input-group">
 					                    <label data-important>
 					                        <span>Categoría 1</span>

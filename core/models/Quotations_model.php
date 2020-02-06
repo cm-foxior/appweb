@@ -175,12 +175,6 @@ class Quotations_model extends Model
         return !empty($query) ? $query[0] : '';
     }
 
-	public function getWarrantyById($id)
-    {
-        $query = $this->database->select('warranties', '*', ['id_warranty' => $id]);
-        return !empty($query) ? $query[0] : '';
-    }
-
 	public function getUserById($id)
     {
         $query = $this->database->select('users', '*', ['id_user' => $id]);
@@ -226,7 +220,6 @@ class Quotations_model extends Model
 			'products.components',
 			'products.status',
 			'products.avatar',
-			'products.id_warranty',
 			'products.id_product_category_one',
 			'products.id_product_category_two',
 			'products.id_product_category_tree',
@@ -261,7 +254,6 @@ class Quotations_model extends Model
 			'services.coin',
 			'services.components',
 			'services.status',
-			'services.id_warranty',
 			'services.id_service_category',
 			'services.observations',
 			'services_categories.name(category)',

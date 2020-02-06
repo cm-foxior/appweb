@@ -453,7 +453,6 @@ class Inventories_model extends Model
 			'products.components',
 			'products.status',
 			'products.avatar',
-			'products.id_warranty',
 			'products.id_product_category_one',
 			'products.id_product_category_two',
 			'products.id_product_category_tree',
@@ -494,7 +493,6 @@ class Inventories_model extends Model
 			'products.components',
 			'products.status',
 			'products.avatar',
-			'products.id_warranty',
 			'products.id_product_category_one',
 			'products.id_product_category_two',
 			'products.id_product_category_tree',
@@ -537,7 +535,7 @@ class Inventories_model extends Model
 
 	public function getLoans($idInventory)
 	{
-		$query = $this->database->select('loans', [
+		$query = $this->database->select('inventories_loans', [
 			'[>]products' => ['id_product' => 'id_product'],
 			'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
 			'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
@@ -569,7 +567,7 @@ class Inventories_model extends Model
 
 	public function getLoan($idLoan)
 	{
-		$query = $this->database->select('loans', [
+		$query = $this->database->select('inventories_loans', [
 			'quantity',
 			'id_product',
 			'id_inventory'
@@ -691,7 +689,7 @@ class Inventories_model extends Model
 
 	public function newLoan($loan)
 	{
-		$query = $this->database->insert('loans', [
+		$query = $this->database->insert('inventories_loans', [
 			'quantity' => $loan['quantity'],
 			'datetime' => $loan['datetime'],
 			'id_product' => $loan['id_product'],
@@ -706,7 +704,7 @@ class Inventories_model extends Model
 
 	public function closeLoan($idLoan)
 	{
-		$query = $this->database->update('loans', [
+		$query = $this->database->update('inventories_loans', [
 			'status' => false
 		], [
 			'id_loan' => $idLoan

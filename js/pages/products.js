@@ -87,7 +87,6 @@ $(document).ready(function ()
             $('input[name="publicPrice"]').parent().parent().removeClass('hidden');
             $('select[name="discountType"]').parent().parent().removeClass('hidden');
             $('select[name="coin"]').parent().parent().removeClass('hidden');
-            $('select[name="warranty"]').parent().parent().removeClass('hidden');
         }
         else
         {
@@ -98,7 +97,6 @@ $(document).ready(function ()
             $('input[name="discountQuantity"]').val('');
             $('select[name="discountType"]').val('');
             $('select[name="coin"]').val('1');
-            $('select[name="warranty"]').val('').trigger('chosen:updated');
 
             $('select[name="components"]').parent().parent().addClass('hidden');
             $('input[name="basePrice"]').parent().parent().addClass('hidden');
@@ -106,7 +104,6 @@ $(document).ready(function ()
             $('input[name="publicPrice"]').parent().parent().addClass('hidden');
             $('select[name="discountType"]').parent().parent().addClass('hidden');
             $('select[name="coin"]').parent().parent().addClass('hidden');
-            $('select[name="warranty"]').parent().parent().addClass('hidden');
         }
     });
 
@@ -171,7 +168,6 @@ $(document).ready(function ()
                         }
 
                         $('select[name="coin"]').val(response.data.coin);
-                        $('select[name="warranty"]').val(response.data.id_warranty).trigger('chosen:updated');
 
                         $('select[name="components"]').parent().parent().removeClass('hidden');
                         $('input[name="basePrice"]').parent().parent().removeClass('hidden');
@@ -180,7 +176,6 @@ $(document).ready(function ()
                         $('input[name="discountQuantity"]').parent().parent().removeClass('hidden');
                         $('select[name="discountType"]').parent().parent().removeClass('hidden');
                         $('select[name="coin"]').parent().parent().removeClass('hidden');
-                        $('select[name="warranty"]').parent().parent().removeClass('hidden');
                     }
 
                     $('select[name="unity"]').val(response.data.unity);
@@ -215,7 +210,6 @@ $(document).ready(function ()
         modal.find('input[name="publicPrice"]').parent().parent().addClass('hidden');
         modal.find('select[name="discountType"]').parent().parent().addClass('hidden');
         modal.find('select[name="coin"]').parent().parent().addClass('hidden');
-        modal.find('select[name="warranty"]').parent().parent().addClass('hidden');
         modal.find('form').attr('data-submit-action', 'new');
         modal.find('form')[0].reset();
 

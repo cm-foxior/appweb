@@ -38,7 +38,6 @@ class Search_model extends Model
 	public function getProductById($idProduct)
 	{
 		$query = $this->database->select('products', [
-			'[>]warranties' => ['id_warranty' => 'id_warranty'],
 			'[>]products_categories_one' => ['id_product_category_one' => 'id_product_category_one'],
 			'[>]products_categories_two' => ['id_product_category_two' => 'id_product_category_two'],
 			'[>]products_categories_tree' => ['id_product_category_tree' => 'id_product_category_tree'],
@@ -51,8 +50,6 @@ class Search_model extends Model
 			'products.discount',
 			'products.coin',
 			'products.unity',
-			'warranties.quantity',
-			'warranties.time_frame',
 			'products_categories_one.name(category_one)',
 			'products_categories_two.name(category_two)',
 			'products_categories_tree.name(category_tree)',

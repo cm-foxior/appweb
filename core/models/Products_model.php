@@ -133,7 +133,7 @@ class Products_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-	public function newProduct($name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $warranty, $category_one, $category_two, $category_tree, $category_four, $observations)
+	public function newProduct($name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations)
 	{
 		if (isset($avatar))
 		{
@@ -169,7 +169,6 @@ class Products_model extends Model
 				'type' => $type,
 				'components' => $components,
 				'avatar' => $avatar,
-				'id_warranty' => $warranty,
 				'id_product_category_one' => $category_one,
 				'id_product_category_two' => $category_two,
 				'id_product_category_tree' => $category_tree,
@@ -310,7 +309,7 @@ class Products_model extends Model
 			return ['status' => 'error', 'errors' => [['xlsx', 'No se pudo subir el XLSX adecuadamente']]];
 	}
 
-	public function editProduct($id, $name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $warranty, $category_one, $category_two, $category_tree, $category_four, $observations)
+	public function editProduct($id, $name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations)
 	{
 		if (isset($avatar))
 		{
@@ -351,7 +350,6 @@ class Products_model extends Model
 				'type' => $type,
 				'components' => $components,
 				'avatar' => $avatar,
-				'id_warranty' => $warranty,
 				'id_product_category_one' => $category_one,
 				'id_product_category_two' => $category_two,
 				'id_product_category_tree' => $category_tree,
@@ -676,18 +674,6 @@ class Products_model extends Model
 
 	/*
 	--------------------------------------------------------------------------- */
-	public function getAllWarranties()
-	{
-		$query = $this->database->select('warranties', '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'time_frame ASC']);
-		return $query;
-	}
-
-	public function getWarrantyById($id)
-	{
-		$query = $this->database->select('warranties', '*', ['id_warranty' => $id]);
-		return !empty($query) ? $query[0] : '';
-	}
-
 	public function getAllSettings()
     {
         $query = $this->database->select('settings', '*', ['id_subscription' => Session::getValue('id_subscription')]);

@@ -913,8 +913,7 @@ class Pointsale_controller extends Controller
 										'discount' => $product['discount'],
 										'coin' => $product['coin'],
 										'type' => $product['type'],
-										'components' => $components,
-										'id_warranty' => $product['id_warranty']
+										'components' => $components
 									];
 
 									$inventory = ($sync_point_sale_with_inventories == 'true') ? $inventoryToDiscount : '';
@@ -1007,8 +1006,7 @@ class Pointsale_controller extends Controller
 								'price' => $service['price'],
 								'discount' => $service['discount'],
 								'coin' => $service['coin'],
-								'components' => $components,
-								'id_warranty' => $service['id_warranty']
+								'components' => $components
 							];
 
 							$inventory = '';
@@ -1050,7 +1048,6 @@ class Pointsale_controller extends Controller
 							'quantity' => $quantity,
 							'object' => $object,
 							'totals' => [],
-							'warranty' => '',
 							'inventory' => $inventory,
 							'branchOffice' => $branchOffice,
 							'flag' => $flag
@@ -1104,9 +1101,6 @@ class Pointsale_controller extends Controller
 							'discountType' => $discountType,
 							'total' => $total
 						];
-
-						if (!empty($object['id_warranty']))
-							$data['warranty'] = $this->model->getWarrantyById($object['id_warranty']);
 
 						Session::setValue('sappl', 'false');
 						Session::setValue('sfoli', '');
@@ -1342,14 +1336,6 @@ class Pointsale_controller extends Controller
 					else if ($item['object']['coin'] == '2')
 						$mainCoin = 'USD';
 
-					if (!empty($item['warranty']))
-					{
-						$warranty = $this->model->getWarrantyById($item['warranty']);
-						$warranty = $warranty['quantity'] . ' ' . $warranty['time_frame'];
-					}
-					else
-						$warranty = 'NA';
-
 					$lstItemsSale .=
 					'<tr>
 						<td>' . $item['quantity'] . '</td>
@@ -1357,7 +1343,6 @@ class Pointsale_controller extends Controller
 						<td>$ ' . $item['totals']['price'] . ' ' . $mainCoin . '</td>
 						<td>$ ' . $item['totals']['discount'] . ' ' . $mainCoin . '</td>
 						<td>$ ' . $item['totals']['total'] . ' ' . $mainCoin . '</td>
-						<td>' . $warranty . '</td>
 					</tr>';
 				}
 
