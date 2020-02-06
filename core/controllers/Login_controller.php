@@ -84,7 +84,7 @@ class Login_controller extends Controller
 		}
 		else
 		{
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Inicio de sesión');
 			$template = $this->view->render($this, 'index');
 
 			echo $template;

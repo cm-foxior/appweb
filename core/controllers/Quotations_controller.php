@@ -15,7 +15,7 @@ class Quotations_controller extends Controller
 	{
 		if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9)
         {
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
 			$template = $this->view->render($this, 'index');
 			$template = $this->format->replaceFile($template, 'header');
@@ -326,7 +326,7 @@ class Quotations_controller extends Controller
 			}
             else
             {
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
                 $template = $this->view->render($this, 'add');
                 $template = $this->format->replaceFile($template, 'header');
@@ -1074,7 +1074,7 @@ class Quotations_controller extends Controller
 			}
             else
             {
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
                 $template = $this->view->render($this, 'view');
                 $template = $this->format->replaceFile($template, 'header');

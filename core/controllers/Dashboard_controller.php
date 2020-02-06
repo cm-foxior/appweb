@@ -11,7 +11,7 @@ class Dashboard_controller extends Controller
 
 	public function index()
 	{
-		define('_title', '{$lang.title}');
+		define('_title', '{$lang.title} | Dashboard');
 
 		$template = $this->view->render($this, 'index');
 

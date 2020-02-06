@@ -152,7 +152,7 @@ class Clients_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'index');
 				$template = $this->format->replaceFile($template, 'header');
@@ -424,7 +424,7 @@ class Clients_controller extends Controller
     {
 		if (Session::getValue('level') == 10)
 		{
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
 			$template = $this->view->render($this, 'view');
 			$template = $this->format->replaceFile($template, 'header');

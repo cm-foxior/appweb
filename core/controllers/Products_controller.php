@@ -230,7 +230,7 @@ class Products_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'index');
 				$template = $this->format->replaceFile($template, 'header');
@@ -1074,7 +1074,7 @@ class Products_controller extends Controller
 			{
 				if (isset($components))
 				{
-					define('_title', '{$lang.title}');
+					define('_title', '{$lang.title} | Dashboard');
 
 					$template = $this->view->render($this, 'components');
 					$template = $this->format->replaceFile($template, 'header');
@@ -1329,7 +1329,7 @@ class Products_controller extends Controller
 										{
 											$lstTags .=
 											'<figure style="width:auto;height:60px;overflow:hidden;">
-												<img style="width:auto;height:60px;" src="' . ((isset($logotype) AND !empty($logotype)) ? '/images/logotypes/' . $logotype : '/images/logotype-sofi-2.svg') . '" alt="" />
+												<img style="width:auto;height:60px;" src="' . ((isset($logotype) AND !empty($logotype)) ? '/images/logotypes/' . $logotype : '/images/isotype.svg') . '" alt="" />
 											</figure>';
 										}
 
@@ -1375,7 +1375,7 @@ class Products_controller extends Controller
 							{
 								$lstTags .=
 								'<figure style="width:auto;height:60px;overflow:hidden;">
-									<img style="width:auto;height:60px;" src="' . ((isset($logotype) AND !empty($logotype)) ? '/images/logotypes/' . $logotype : '/images/logotype-sofi-2.svg') . '" alt="" />
+									<img style="width:auto;height:60px;" src="' . ((isset($logotype) AND !empty($logotype)) ? '/images/logotypes/' . $logotype : '/images/isotype.svg') . '" alt="" />
 								</figure>';
 							}
 
@@ -1403,7 +1403,7 @@ class Products_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'tags');
 				$template = $this->format->replaceFile($template, 'header');
@@ -1691,7 +1691,7 @@ class Products_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'categories_one');
 				$template = $this->format->replaceFile($template, 'header');
@@ -1728,7 +1728,7 @@ class Products_controller extends Controller
 	{
 		if (Session::getValue('level') == 10)
 		{
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
 			$template = $this->view->render($this, 'categories_two');
 			$template = $this->format->replaceFile($template, 'header');
@@ -1763,7 +1763,7 @@ class Products_controller extends Controller
 	{
 		if (Session::getValue('level') == 10)
 		{
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
 			$template = $this->view->render($this, 'categories_tree');
 			$template = $this->format->replaceFile($template, 'header');
@@ -1798,7 +1798,7 @@ class Products_controller extends Controller
 	{
 		if (Session::getValue('level') == 10)
 		{
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
 			$template = $this->view->render($this, 'categories_four');
 			$template = $this->format->replaceFile($template, 'header');

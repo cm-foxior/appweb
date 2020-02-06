@@ -15,7 +15,7 @@ class Reports_controller extends Controller
 	{
 		if (Session::getValue('level') >= 9)
         {
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
             $template = $this->view->render($this, 'index');
             $template = $this->format->replaceFile($template, 'header');
@@ -57,7 +57,7 @@ class Reports_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'inventories');
 				$template = $this->format->replaceFile($template, 'header');
@@ -236,7 +236,7 @@ class Reports_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'sales');
 				$template = $this->format->replaceFile($template, 'header');
@@ -350,7 +350,7 @@ class Reports_controller extends Controller
 	{
 		if (Session::getValue('level') >= 9)
         {
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
             $template = $this->view->render($this, 'graphs');
             $template = $this->format->replaceFile($template, 'header');

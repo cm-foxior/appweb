@@ -25,7 +25,7 @@ $this->dependencies->getDependencies([
 
         <form name="login">
             <figure class="logotype">
-                <img src="{$path.images}logotype-sofi-2.svg" alt="logotipo">
+                <img src="{$path.images}isotype.svg" alt="logotipo">
             </figure>
 
             <!-- Inicie sesion en su cuenta -->

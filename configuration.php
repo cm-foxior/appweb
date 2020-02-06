@@ -19,8 +19,8 @@ class Configuration
 	* @static string 		$helpurl 			Help from master
 	*/
 
-	public static $domain 			= 'sofierp.com';
-	public static $webPage 			= 'Sofi ERP';
+	public static $domain 			= 'foxior.com';
+	public static $webPage 			= 'Foxior';
 	public static $langDefault 		= 'es';
 	public static $error_reporting 	= 'none';
 	public static $debug 			= false;
@@ -50,9 +50,9 @@ class Configuration
 
 	public static $db_state			= true;
 	public static $db_type 			= 'mysql';
-	public static $db_host 			= 'sofierp.com';
-	public static $db_name 			= 'sf-website';
-	public static $db_user 			= 'sofierp';
+	public static $db_host 			= 'foxior.com';
+	public static $db_name 			= 'fx-website';
+	public static $db_user 			= 'foxior';
 	public static $db_pass 			= 'npSr&231';
 	public static $db_charset		= 'utf8';
 	public static $db_prefix 		= '';

@@ -90,7 +90,7 @@ class Inventories_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'index');
 				$template = $this->format->replaceFile($template, 'header');
@@ -478,7 +478,7 @@ class Inventories_controller extends Controller
 
 	            if ($inventory['status'] == true AND $inventoryLogged == true)
 	            {
-	                define('_title', '{$lang.title}');
+	                define('_title', '{$lang.title} | Dashboard');
 
 	    			$template = $this->view->render($this, 'inputs');
 	    			$template = $this->format->replaceFile($template, 'header');
@@ -723,7 +723,7 @@ class Inventories_controller extends Controller
 
 	            if ($inventory['status'] == true AND $inventoryLogged == true)
 	            {
-	                define('_title', '{$lang.title}');
+	                define('_title', '{$lang.title} | Dashboard');
 
 	    			$template = $this->view->render($this, 'outputs');
 	    			$template = $this->format->replaceFile($template, 'header');
@@ -1211,7 +1211,7 @@ class Inventories_controller extends Controller
 
 	            if ($inventory['status'] == true AND $inventoryLogged == true)
 	            {
-	                define('_title', '{$lang.title}');
+	                define('_title', '{$lang.title} | Dashboard');
 
 	        		$template = $this->view->render($this, 'stocks');
 	        		$template = $this->format->replaceFile($template, 'header');
@@ -1513,7 +1513,7 @@ class Inventories_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 				$template = $this->view->render($this, 'loans');
 				$template = $this->format->replaceFile($template, 'header');

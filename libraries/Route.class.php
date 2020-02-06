@@ -14,7 +14,6 @@ class Route
     {
         $publicRoutes = [
             '/Index/index',
-            '/Subscriptions/signin',
             '/Login/index'
         ];
 
@@ -41,5 +40,6 @@ class Route
 
     public function onChangeEnd()
     {
+        
     }
 }

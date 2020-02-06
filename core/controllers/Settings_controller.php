@@ -15,7 +15,7 @@ class Settings_controller extends Controller
 	{
 		if (Session::getValue('level') == 10)
         {
-			define('_title', '{$lang.title}');
+			define('_title', '{$lang.title} | Dashboard');
 
             $template = $this->view->render($this, 'index');
             $template = $this->format->replaceFile($template, 'header');
@@ -44,7 +44,7 @@ class Settings_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 	            $template = $this->view->render($this, 'generals');
 	            $template = $this->format->replaceFile($template, 'header');
@@ -107,7 +107,7 @@ class Settings_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 	            $template = $this->view->render($this, 'business');
 	            $template = $this->format->replaceFile($template, 'header');
@@ -272,7 +272,7 @@ class Settings_controller extends Controller
 			}
 			else
 			{
-				define('_title', '{$lang.title}');
+				define('_title', '{$lang.title} | Dashboard');
 
 	            $template = $this->view->render($this, 'sales');
 	            $template = $this->format->replaceFile($template, 'header');
