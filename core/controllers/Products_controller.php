@@ -52,10 +52,10 @@ class Products_controller extends Controller
 				else if ($type != '1' AND $type != '2' AND $type != '3' AND $type != '4')
 					array_push($errors, ['type', 'Opción no válidad']);
 
-				if ($type <= '2' AND !isset($components))
-					array_push($errors, ['components', 'Seleccione una opción']);
-				else if ($type <= '2' AND $components != '1' AND $type <= '2' AND $components != '2')
-					array_push($errors, ['components', 'Opción no válidad']);
+				// if ($type <= '2' AND !isset($components))
+				// 	array_push($errors, ['components', 'Seleccione una opción']);
+				// else if ($type <= '2' AND $components != '1' AND $type <= '2' AND $components != '2')
+				// 	array_push($errors, ['components', 'Opción no válidad']);
 
 				if (isset($basePrice) AND $type <= '2' AND isset($basePrice) AND !is_numeric($basePrice))
 					array_push($errors, ['basePrice', 'Ingrese únicamente números']);
@@ -100,10 +100,7 @@ class Products_controller extends Controller
 				else if ($unity != '1' AND $unity != '2' AND $unity != '3' AND $unity != '4' AND $unity != '5')
 					array_push($errors, ['unity', 'Opción no válida']);
 
-				if ($name_compound == true AND !isset($category_one)
-					OR $name_compound == true AND !isset($category_two)
-					OR $name_compound == true AND !isset($category_tree)
-					OR $name_compound == true AND !isset($category_four))
+				if ($name_compound == true AND !isset($category_one) AND $name_compound == true AND !isset($category_two) AND $name_compound == true AND !isset($category_tree) AND $name_compound == true AND !isset($category_four))
 					array_push($errors, ['name', 'Seleccione una de las categorías']);
 
 				if (empty($errors))
@@ -137,22 +134,22 @@ class Products_controller extends Controller
 
 					if ($type == '1' OR $type == '2')
 					{
-						if ($components == '2')
-						{
-							if ($action == 'edit')
-							{
-								$product = $this->model->getProductById($id);
-
-								if (!empty($product['components']))
-									$components = json_decode($product['components'], true);
-								else
-									$components = json_encode([]);
-							}
-							else
-								$components = json_encode([]);
-						}
-						else
-							$components = null;
+						// if ($components == '2')
+						// {
+						// 	if ($action == 'edit')
+						// 	{
+						// 		$product = $this->model->getProductById($id);
+						//
+						// 		if (!empty($product['components']))
+						// 			$components = json_decode($product['components'], true);
+						// 		else
+						// 			$components = json_encode([]);
+						// 	}
+						// 	else
+						// 		$components = json_encode([]);
+						// }
+						// else
+						// 	$components = null;
 
 						$price = json_encode([
 							'base_price' => $basePrice,
@@ -430,11 +427,11 @@ class Products_controller extends Controller
 					                        <span><span class="required-field">*</span>Nombre</span>
 					                        <input type="text" name="name" autofocus>
 					                    </label>
-										<!-- <label class="checkbox" data-important>
+										<label class="checkbox" data-important>
 					                        <input type="checkbox" name="name_compound">
 					                        <span>Componer nombre con categorías</span>
 					                        <div class="clear"></div>
-					                    </label> -->
+					                    </label>
 					                </fieldset>
 					                <fieldset class="input-group">
 					                    <label data-important>
@@ -458,14 +455,14 @@ class Products_controller extends Controller
 					                        </select>
 					                    </label>
 					                </fieldset>
-									<fieldset class="input-group">
+									<!-- <fieldset class="input-group">
 					                    <label data-important>
 					                        <select name="components">
 					                            <option value="1">Producto simple</option>
 					                            <option value="2">Producto compuesto</option>
 					                        </select>
 					                    </label>
-					                </fieldset>
+					                </fieldset> -->
 					                <fieldset class="input-group">
 					                    <label data-important>
 					                        <span>Precio base</span>
