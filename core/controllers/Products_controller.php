@@ -279,12 +279,11 @@ class Products_controller extends Controller
 	                        <th width="40px"></th>
 							<th>Folio</th>
 							<th>Nombre</th>
-							<th width="180px">Precio</th>
-							<th width="50px">Descuento</th>
+							<th>Categorías</th>
 							<th width="50px">Unidad</th>
+							<th width="180px">Precio</th>
 							<th width="50px">Tipo</th>
 							<th width="100px">Estado</th>
-							<th width="100px">Tienda</th>
 							' . ((Session::getValue('level') == 10) ? '<th width="70px"></th>' : '') . '
 	                    </tr>
 	                </thead>
@@ -320,20 +319,6 @@ class Products_controller extends Controller
 					}
 					else
 						$prefPrice = 'No aplica';
-
-					if (!empty($product['discount']) AND $product['type'] <= '2')
-					{
-						$discount = json_decode($product['discount'], true);
-
-						if ($discount['type'] == '1')
-							$discount = $discount['quantity'] . '%';
-						else if ($discount['type'] == '2')
-							$discount = '$ ' . $discount['quantity'] . ' ' . $coin;
-					}
-					else if (empty($product['discount']) AND $product['type'] <= '2')
-						$discount = '-';
-					else
-						$discount = 'N/A';
 
 					if ($product['unity'] == '1')
 	                    $unity = 'Kilogramos';
@@ -400,17 +385,16 @@ class Products_controller extends Controller
 						' . ((Session::getValue('level') == 10) ? '<td><input type="checkbox" data-check value="' . $product['id_product'] . '" /></td>' : '') . '
 						<td>' . $pAvatar . '</td>
 						<td>' . $product['folio'] . '</td>
-						<td>' . $product['name'] . ' ' . $categoryOne . ' ' . $categoryTwo . ' ' . $categoryTree . ' ' . $categoryFour . '</td>
+						<td>' . $product['name'] . '</td>
+						<td>' . $categoryOne . ', ' . $categoryTwo . ', ' . $categoryTree . ', ' . $categoryFour . '</td>
+						<td>' . $unity . '</td>
 						<td>
 							Base: ' . $basePrice . '<br>
 							Preferencial: ' . $prefPrice . '<br>
 							Público: ' . (!empty($product['price']) ? '$ ' . json_decode($product['price'], true)['public_price'] . ' ' . $coin : 'No aplica') . '
 						</td>
-						<td>' . $discount . '</td>
-						<td>' . $unity . '</td>
 						<td>' . $type . '</td>
-						<td>' . (($product['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>
-						<td>' . (($product['to_ecommerce'] == true) ? '<span class="active">Publicado</span>' : '') . '</td>';
+						<td>' . (($product['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>';
 
 					if (Session::getValue('level') == 10)
 					{
@@ -619,17 +603,6 @@ class Products_controller extends Controller
 					                </fieldset>
 					                <fieldset class="input-group">
 					                    <label data-important>
-					                        <span><span class="required-field">*</span>Tipo</span>
-											<select name="type">
-					                            <option value="1">Venta</option>
-					                            <option value="2">Venta sin inventario</option>
-					                            <option value="3">Producción</option>
-					                            <option value="4">Operación</option>
-					                        </select>
-					                    </label>
-					                </fieldset>
-					                <fieldset class="input-group">
-					                    <label data-important>
 					                        <span><span class="required-field">*</span>Excel</span>
 					                        <input name="xlsx" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 					                    </label>
@@ -756,20 +729,16 @@ class Products_controller extends Controller
 		{
 			if (Format::existAjaxRequest() == true)
 			{
-				$type = (isset($_POST['type']) AND !empty($_POST['type'])) ? $_POST['type'] : null;
 				$xlsx = (isset($_FILES['xlsx']['name']) AND !empty($_FILES['xlsx']['name'])) ? $_FILES['xlsx'] : null;
 
 				$errors = [];
-
-				if (!isset($type))
-	                array_push($errors, ['type', 'No deje este campo vacío']);
 
 				if (!isset($xlsx))
 	                array_push($errors, ['xlsx', 'Seleccione un archivo']);
 
 				if (empty($errors))
 				{
-					$query = $this->model->importFromExcel($xlsx, $type);
+					$query = $this->model->importFromExcel($xlsx);
 
 					if ($query['status'] == 'success')
 					{
@@ -1664,7 +1633,7 @@ class Products_controller extends Controller
 						<td><input type="checkbox" data-check value="' . $category['id_product_category_one'] . '_one" /></td>
 						<td>' . (!empty($category['avatar']) ? '<a href="{$path.images}products/categories/' . $category['avatar'] . '" class="fancybox-thumb" rel="fancybox-thumb"><img src="{$path.images}products/categories/' . $category['avatar'] . '" /></a>' : '<img src="{$path.images}empty.png" class="emptyAvatar" />') . '</td>
 						<td>' . $category['name'] . '</td>
-						<td><a href="" data-action="getCategoryToEdit" data-id="' . $category['id_product_category_one'] . '" data-number="one"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
+						<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_one'] . '" data-number="one"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 					</tr>';
 				}
 
@@ -1700,7 +1669,7 @@ class Products_controller extends Controller
 				'<tr>
 					<td><input type="checkbox" data-check value="' . $category['id_product_category_two'] . '_two" /></td>
 					<td>' . $category['name'] . '</td>
-					<td><a href="" data-action="getCategoryToEdit" data-id="' . $category['id_product_category_two'] . '" data-number="two"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
+					<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_two'] . '" data-number="two"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 				</tr>';
 			}
 
@@ -1735,7 +1704,7 @@ class Products_controller extends Controller
 				'<tr>
 					<td><input type="checkbox" data-check value="' . $category['id_product_category_tree'] . '_tree" /></td>
 					<td>' . $category['name'] . '</td>
-					<td><a href="" data-action="getCategoryToEdit" data-id="' . $category['id_product_category_tree'] . '" data-number="tree"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
+					<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_tree'] . '" data-number="tree"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 				</tr>';
 			}
 
@@ -1770,7 +1739,7 @@ class Products_controller extends Controller
 				'<tr>
 					<td><input type="checkbox" data-check value="' . $category['id_product_category_four'] . '_four" /></td>
 					<td>' . $category['name'] . '</td>
-					<td><a href="" data-action="getCategoryToEdit" data-id="' . $category['id_product_category_four'] . '" data-number="four"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
+					<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_four'] . '" data-number="four"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 				</tr>';
 			}
 

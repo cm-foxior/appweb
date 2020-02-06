@@ -183,7 +183,7 @@ class Products_model extends Model
 			return null;
 	}
 
-	public function importFromExcel($xlsx, $type)
+	public function importFromExcel($xlsx)
 	{
 		$this->component->loadComponent('uploader');
 
@@ -263,21 +263,18 @@ class Products_model extends Model
 					// else
 					// 	array_push($inserts, ['name' => $value[0], 'email' => $value[1], 'phone_number' => $phoneNumber, 'address' => $value[5]]);
 
-					if ($type == '1')
-					{
-						// array_push($inserts, [
-						// 	'name' => $value[0],
-						// 	'folio' => !empty($value[1]) ? $value[1] : strtoupper($this->security->randomString(6)),
-						// 	'price' => json_encode([
-						// 		'base_price' => $value[2],
-						// 		'pref_price' => null,
-						// 		'public_price' => $value[3]
-						// 	]),
-						// 	'discount' => null,
-						// 	'coin' => ,
-						// 	'type' => '1'
-						// ]);
-					}
+					// array_push($inserts, [
+					// 	'name' => $value[0]
+					// ]);
+
+					// array_push($inserts, [
+					// 	'name' => $value[1],
+					// 	'folio' => $value[0],
+					// 	'price' => !empty($value[5]) ? $value[5] : 0,
+					// 	'unity' => $value[2],
+					// 	'id_product_category_one' => $value[3],
+					// 	'id_product_category_two' => $value[4]
+					// ]);
 				}
 
 				// $xlsxRow = $xlsxRow + 1;
@@ -297,9 +294,34 @@ class Products_model extends Model
 			{
 				foreach ($inserts as $insert)
 				{
-					$query = $this->database->insert('products', [
+					// $query = $this->database->insert('products_categories_two', [
+					// 	'name' => $insert['name'],
+					// 	'id_subscription' => 9
+					// ]);
 
-					]);
+					// $query = $this->database->insert('products', [
+					// 	'name' => $insert['name'],
+					// 	'folio' => $insert['folio'],
+					// 	'price' => json_encode([
+					// 		'base_price' => $insert['price'],
+					// 		'pref_price' => 0,
+					// 		'public_price' => 0
+					// 	]),
+					// 	'discount' => null,
+					// 	'coin' => 1,
+					// 	'unity' => $insert['unity'],
+					// 	'type' => 3,
+					// 	'components' => null,
+					// 	'status' => 1,
+					// 	'avatar' => null,
+					// 	'id_product_category_one' => $insert['id_product_category_one'],
+					// 	'id_product_category_two' => $insert['id_product_category_two'],
+					// 	'id_product_category_tree' => null,
+					// 	'id_product_category_four' => null,
+					// 	'observations' => null,
+					// 	'to_ecommerce' => 0,
+					// 	'id_subscription' => 9
+					// ]);
 				}
 
 				return ['status' => 'success'];
