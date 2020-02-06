@@ -29,12 +29,12 @@ $this->dependencies->getDependencies([
             </figure>
 
             <!-- Inicie sesion en su cuenta -->
-            <h2>Inicie sesión en su cuenta</h2>
+            <h2>Foxior</h2>
 
             <fieldset class="input-group">
                 <label data-important>
                     <!-- Nombre de usuario -->
-                    <span>Ingrese su nombre de usuario</span>
+                    <span>Usuario o Correo electrónico</span>
                     <input type="text" name="username" value="">
                 </label>
                 <!-- Por favor, escriba su nombre de usuario. -->
@@ -43,7 +43,7 @@ $this->dependencies->getDependencies([
             <fieldset class="input-group">
                 <label data-important>
                     <!-- Contraseña -->
-                    <span>Ingrese su contraseña</span>
+                    <span>Contraseña</span>
                     <input type="password" name="password" value="">
                 </label>
                 <!-- Por favor, escriba una contraseña válida. -->

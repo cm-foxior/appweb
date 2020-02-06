@@ -662,6 +662,17 @@ class Products_controller extends Controller
 					                </fieldset>
 					                <fieldset class="input-group">
 					                    <label data-important>
+					                        <span><span class="required-field">*</span>Tipo</span>
+											<select name="type">
+					                            <option value="1">Venta</option>
+					                            <option value="2">Venta sin inventario</option>
+					                            <option value="3">Producción</option>
+					                            <option value="4">Operación</option>
+					                        </select>
+					                    </label>
+					                </fieldset>
+					                <fieldset class="input-group">
+					                    <label data-important>
 					                        <span><span class="required-field">*</span>Excel</span>
 					                        <input name="xlsx" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 					                    </label>
@@ -788,16 +799,20 @@ class Products_controller extends Controller
 		{
 			if (Format::existAjaxRequest() == true)
 			{
+				$type = (isset($_POST['type']) AND !empty($_POST['type'])) ? $_POST['type'] : null;
 				$xlsx = (isset($_FILES['xlsx']['name']) AND !empty($_FILES['xlsx']['name'])) ? $_FILES['xlsx'] : null;
 
 				$errors = [];
+
+				if (!isset($type))
+	                array_push($errors, ['type', 'No deje este campo vacío']);
 
 				if (!isset($xlsx))
 	                array_push($errors, ['xlsx', 'Seleccione un archivo']);
 
 				if (empty($errors))
 				{
-					$query = $this->model->importFromExcel($xlsx);
+					$query = $this->model->importFromExcel($xlsx, $type);
 
 					if ($query['status'] == 'success')
 					{

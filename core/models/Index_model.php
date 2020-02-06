@@ -8,24 +8,4 @@ class Index_model extends Model
 	{
 		parent::__construct();
 	}
-
-	/* Envio de correo electrónico
-	--------------------------------------------------------------------------- */
-	public function sendEmail($email, $name, $subject, $message)
-	{
-		$this->component->loadComponent('phpmailer');
-
-		send_email(
-			[
-				$email => $name
-			],
-			FALSE,
-			FALSE,
-			FALSE,
-			FALSE,
-			$subject,
-			$message,
-			''
-		);
-	}
 }

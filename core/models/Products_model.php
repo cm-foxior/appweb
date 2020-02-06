@@ -184,7 +184,7 @@ class Products_model extends Model
 			return null;
 	}
 
-	public function importFromExcel($xlsx)
+	public function importFromExcel($xlsx, $type)
 	{
 		$this->component->loadComponent('uploader');
 
@@ -202,78 +202,86 @@ class Products_model extends Model
 		if ($xlsx['status'] == 'success')
 		{
 	        $this->component->loadComponent('simplexlsx');
+
 			$xlsx = new SimpleXLSX(PATH_UPLOADS . 'xlsx/' . $xlsx['file']);
 
 			$inserts = [];
 			$fullErrors1 = [];
 			$fullErrors2 = [];
-			$xlsxRow = 1;
-			$today = date('Y-m-d');
+			// $xlsxRow = 1;
 
 			foreach ($xlsx->rows() as $value)
 			{
 				$errors = [];
 
-				if (empty($value[0]))
-					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El nombre no puede estár vacío']);
-
-				if (empty($value[1]))
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El email no puede estár vacío']);
-	            else if (Security::checkMail($value[1]) == false)
-					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El formato del email es incorrecto']);
-
-				if (empty($value[2]))
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede estár vacía']);
-	            else if (!is_numeric($value[2]))
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país tiene que ser números']);
-	            else if ($value[2] < 0)
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede ser menor a 0']);
-	            else if (Security::checkIsFloat($value[2]) == true)
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede contener números decimáles']);
-				else if (Security::checkIfExistSpaces($value[2]) == true)
-					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede contener espacios']);
-
-				if (empty($value[3]))
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede estár vacío']);
-	            else if (!is_numeric($value[3]))
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser números']);
-	            else if ($value[3] < 0)
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede ser menor a 0']);
-	            else if ($value[4] == 'Móvil' AND strlen($value[3]) != 10)
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser de 10 dígitos']);
-	            else if ($value[4] == 'Local' AND strlen($value[3]) != 7)
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser de 7 dígitos']);
-	            else if (Security::checkIsFloat($value[3]) == true)
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede contener números decimáles']);
-				else if (Security::checkIfExistSpaces($value[3]) == true)
-					array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede contener espacios']);
-
-				if (empty($value[4]))
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El tipo de teléfono no puede quedar vacío']);
-	            else if ($value[4] != 'Local' AND $value[4] != 'Móvil')
-	                array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El tipo de teléfono solo puede ser Local o Móvil']);
+				// if (empty($value[0]))
+				// 	array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El nombre no puede estár vacío']);
+				//
+				// if (empty($value[1]))
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El email no puede estár vacío']);
+	            // else if (Security::checkMail($value[1]) == false)
+				// 	array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El formato del email es incorrecto']);
+				//
+				// if (empty($value[2]))
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede estár vacía']);
+	            // else if (!is_numeric($value[2]))
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país tiene que ser números']);
+	            // else if ($value[2] < 0)
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede ser menor a 0']);
+	            // else if (Security::checkIsFloat($value[2]) == true)
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede contener números decimáles']);
+				// else if (Security::checkIfExistSpaces($value[2]) == true)
+				// 	array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. La clave del país no puede contener espacios']);
+				//
+				// if (empty($value[3]))
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede estár vacío']);
+	            // else if (!is_numeric($value[3]))
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser números']);
+	            // else if ($value[3] < 0)
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede ser menor a 0']);
+	            // else if ($value[4] == 'Móvil' AND strlen($value[3]) != 10)
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser de 10 dígitos']);
+	            // else if ($value[4] == 'Local' AND strlen($value[3]) != 7)
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico tiene que ser de 7 dígitos']);
+	            // else if (Security::checkIsFloat($value[3]) == true)
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede contener números decimáles']);
+				// else if (Security::checkIfExistSpaces($value[3]) == true)
+				// 	array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El número telefónico no puede contener espacios']);
+				//
+				// if (empty($value[4]))
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El tipo de teléfono no puede quedar vacío']);
+	            // else if ($value[4] != 'Local' AND $value[4] != 'Móvil')
+	            //     array_push($errors, ['xlsx', 'Linea ' . $xlsxRow . '. El tipo de teléfono solo puede ser Local o Móvil']);
 
 				if (!empty($errors))
-				{
 					array_push($fullErrors1, $errors);
-				}
 				else
 				{
-					$phoneNumber = json_encode([
-						'country_code' => $value[2],
-						'number' => $value[3],
-						'type' => $value[4]
-					]);
+					// $exist = $this->checkExistProspect(null, $value[1], $phoneNumber, 'new');
+					//
+					// if ($exist['status'] == true)
+					// 	array_push($fullErrors1, [['xlsx', 'Linea ' . $xlsxRow . '. Este registro ya ha sido ingresado previamente']]);
+					// else
+					// 	array_push($inserts, ['name' => $value[0], 'email' => $value[1], 'phone_number' => $phoneNumber, 'address' => $value[5]]);
 
-					$exist = $this->checkExistProspect(null, $value[1], $phoneNumber, 'new');
-
-					if ($exist['status'] == true)
-						array_push($fullErrors1, [['xlsx', 'Linea ' . $xlsxRow . '. Este registro ya ha sido ingresado previamente']]);
-					else
-						array_push($inserts, ['name' => $value[0], 'email' => $value[1], 'phone_number' => $phoneNumber, 'address' => $value[5]]);
+					if ($type == '1')
+					{
+						// array_push($inserts, [
+						// 	'name' => $value[0],
+						// 	'folio' => !empty($value[1]) ? $value[1] : strtoupper($this->security->randomString(6)),
+						// 	'price' => json_encode([
+						// 		'base_price' => $value[2],
+						// 		'pref_price' => null,
+						// 		'public_price' => $value[3]
+						// 	]),
+						// 	'discount' => null,
+						// 	'coin' => ,
+						// 	'type' => '1'
+						// ]);
+					}
 				}
 
-				$xlsxRow = $xlsxRow + 1;
+				// $xlsxRow = $xlsxRow + 1;
 			}
 
 			if (!empty($fullErrors1))
@@ -281,9 +289,7 @@ class Products_model extends Model
 				foreach ($fullErrors1 as $fullErrors)
 				{
 					foreach ($fullErrors as $error)
-					{
 						array_push($fullErrors2, $error);
-					}
 				}
 
 				return ['status' => 'error', 'errors' => $fullErrors2];
@@ -292,13 +298,8 @@ class Products_model extends Model
 			{
 				foreach ($inserts as $insert)
 				{
-					$query = $this->database->insert('clients', [
-					    'name' => $insert['name'],
-					    'email' => $insert['email'],
-					    'phone_number' => $insert['phone_number'],
-					    'address' => $insert['address'],
-						'prospect' => true,
-					    'registration_date' => $today
+					$query = $this->database->insert('products', [
+
 					]);
 				}
 
