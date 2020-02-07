@@ -264,8 +264,9 @@ $(document).ready(function ()
             {
                 checkValidateFormAjax(self, response, function()
                 {
-                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-                    location.reload();
+                    alert('Listo');
+                    // $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
+                    // location.reload();
                 });
             }
         });
