@@ -187,8 +187,8 @@ class Reports_controller extends Controller
 							<td>' . $value['product'] . '</td>
 							<td>' . $value['quantify'] . '</td>
 							<td>' . $value['date'] . '</td>
-							<td>' . $value['type'] . '</td>
 							<td>' . $value['provider'] . '</td>
+							<td>' . $value['type'] . '</td>
 							<td>' . $value['movement'] . '</td>
 						</tr>';
 					}
