@@ -349,7 +349,7 @@ class Products_controller extends Controller
 					if (!empty($product['id_product_category_two']))
 					{
 						$categoryTwo = $this->model->getCategoryById($product['id_product_category_two'], 'two');
-						$categoryTwo = $categoryTwo['name'];
+						$categoryTwo = ' - ' . $categoryTwo['name'];
 					}
 					else
 						$categoryTwo = '';
@@ -357,7 +357,7 @@ class Products_controller extends Controller
 					if (!empty($product['id_product_category_tree']))
 					{
 						$categoryTree = $this->model->getCategoryById($product['id_product_category_tree'], 'tree');
-						$categoryTree = $categoryTree['name'];
+						$categoryTree = ' - ' . $categoryTree['name'];
 					}
 					else
 						$categoryTree = '';
@@ -365,7 +365,7 @@ class Products_controller extends Controller
 					if (!empty($product['id_product_category_four']))
 					{
 						$categoryFour = $this->model->getCategoryById($product['id_product_category_four'], 'four');
-						$categoryFour = $categoryFour['name'];
+						$categoryFour = ' - ' . $categoryFour['name'];
 					}
 					else
 						$categoryFour = '';
