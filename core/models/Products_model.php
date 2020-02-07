@@ -276,15 +276,15 @@ class Products_model extends Model
 					// 	'id_product_category_two' => $value[4]
 					// ]);
 
-					array_push($inserts, [
-						'name' => ucfirst(strtolower($value[1])),
-						'folio' => $value[0],
-						'price_1' => !empty($value[2]) ? $value[2] : 0,
-						'price_2' => !empty($value[3]) ? $value[3] : 0,
-						'price_3' => !empty($value[4]) ? $value[4] : 0,
-						'id_product_category_one' => $value[5],
-						'id_product_category_two' => $value[6]
-					]);
+					// array_push($inserts, [
+					// 	'name' => ucfirst(strtolower($value[1])),
+					// 	'folio' => $value[0],
+					// 	'price_1' => !empty($value[2]) ? $value[2] : 0,
+					// 	'price_2' => !empty($value[3]) ? $value[3] : 0,
+					// 	'price_3' => !empty($value[4]) ? $value[4] : 0,
+					// 	'id_product_category_one' => $value[5],
+					// 	'id_product_category_two' => $value[6]
+					// ]);
 				}
 
 				// $xlsxRow = $xlsxRow + 1;
@@ -333,29 +333,29 @@ class Products_model extends Model
 					// 	'id_subscription' => 9
 					// ]);
 
-					$query = $this->database->insert('products', [
-						'name' => $insert['name'],
-						'folio' => $insert['folio'],
-						'price' => json_encode([
-							'base_price' => $insert['price_1'],
-							'pref_price' => $insert['price_2'],
-							'public_price' => $insert['price_3']
-						]),
-						'discount' => null,
-						'coin' => 1,
-						'unity' => 5,
-						'type' => 1,
-						'components' => null,
-						'status' => 1,
-						'avatar' => null,
-						'id_product_category_one' => $insert['id_product_category_one'],
-						'id_product_category_two' => $insert['id_product_category_two'],
-						'id_product_category_tree' => null,
-						'id_product_category_four' => null,
-						'observations' => null,
-						'to_ecommerce' => 0,
-						'id_subscription' => 9
-					]);
+					// $query = $this->database->insert('products', [
+					// 	'name' => $insert['name'],
+					// 	'folio' => $insert['folio'],
+					// 	'price' => json_encode([
+					// 		'base_price' => $insert['price_1'],
+					// 		'pref_price' => $insert['price_2'],
+					// 		'public_price' => $insert['price_3']
+					// 	]),
+					// 	'discount' => null,
+					// 	'coin' => 1,
+					// 	'unity' => 5,
+					// 	'type' => 1,
+					// 	'components' => null,
+					// 	'status' => 1,
+					// 	'avatar' => null,
+					// 	'id_product_category_one' => $insert['id_product_category_one'],
+					// 	'id_product_category_two' => $insert['id_product_category_two'],
+					// 	'id_product_category_tree' => null,
+					// 	'id_product_category_four' => null,
+					// 	'observations' => null,
+					// 	'to_ecommerce' => 0,
+					// 	'id_subscription' => 9
+					// ]);
 				}
 
 				return ['status' => 'success'];

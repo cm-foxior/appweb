@@ -78,7 +78,7 @@ class Search_controller extends Controller
 					<div class="data">
 						<strong>Producto: </strong> ' . $product['name'] . ' (' . $categoryOne . ' ' . $categoryTwo . ' ' . $categoryTree . ' ' . $categoryFour . ')
 						<br><strong>Folio: </strong> ' . $product['folio'] . '
-						<br><strong>Précio preferencial: </strong>' . ((!empty($price['pref_price'])) ? '$ ' . $price['pref_price'] . ' ' . $coin : 'No disponible') . '
+						<br><strong>Précio secundario: </strong>' . ((!empty($price['pref_price'])) ? '$ ' . $price['pref_price'] . ' ' . $coin : 'No disponible') . '
 						<br><strong>Précio de venta: </strong>$ ' . $price['public_price'] . ' ' . $coin . '
 						<br><strong>Descuento: </strong> ' . $discount . '
 						<br><strong>Observaciones: </strong> ' . (!empty($product['observations']) ? $product['observations'] : 'Sin observaciones') . '
