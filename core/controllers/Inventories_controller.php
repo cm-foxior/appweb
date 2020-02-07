@@ -723,22 +723,43 @@ class Inventories_controller extends Controller
 					else
 					{
 						if ($action == 'new')
+						{
 							$query = $this->model->newOutput($product, $quantity, $type, $date . ' ' . $time, $id);
+
+							if (empty($query))
+							{
+								echo json_encode([
+									'status' => 'success'
+								]);
+							}
+							else
+							{
+								foreach ($query as $value)
+					                array_push($errors, ['product', $value]);
+
+								echo json_encode([
+									'status' => 'error',
+									'labels' => $errors
+								]);
+							}
+						}
 						else if ($action == 'edit')
+						{
 							$query = $this->model->editOutput($idOutput, $product, $quantity, $type, $date . ' ' . $time);
 
-						if (!empty($query))
-						{
-							echo json_encode([
-								'status' => 'success'
-							]);
-						}
-						else
-						{
-							echo json_encode([
-								'status' => 'error',
-								'message' => 'Error en la operación a la base de datos'
-							]);
+							if (!empty($query))
+							{
+								echo json_encode([
+									'status' => 'success'
+								]);
+							}
+							else
+							{
+								echo json_encode([
+									'status' => 'error',
+									'message' => 'Error en la operación a la base de datos'
+								]);
+							}
 						}
 					}
 				}
@@ -1532,7 +1553,7 @@ class Inventories_controller extends Controller
 
 						$query = $this->model->newOutput($loan['id_product'], $loan['quantity'], 6, null, $idInventory);
 
-						if (!empty($query))
+						if (empty($query))
 						{
 							echo json_encode([
 								'status' => 'success'

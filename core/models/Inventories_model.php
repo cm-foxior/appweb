@@ -216,19 +216,101 @@ class Inventories_model extends Model
 
     public function newOutput($product, $quantity, $type, $datetime, $id)
 	{
-		if (!isset($datetime) OR empty($datetime))
-        	$datetime = Format::getDateHour();
+		$errors = [];
+		$product = $this->database->select('products', '*', ['id_product' => $product]);
 
-        $query = $this->database->insert('inventories_outputs', [
-            'quantity' => $quantity,
-			'type' => $type,
-			'output_date_time' => $datetime,
-            'id_product' => $product,
-            'id_inventory' => $id,
-			'id_subscription' => Session::getValue('id_subscription')
-        ]);
+		if (!empty($product))
+		{
+			if (!isset($datetime) OR empty($datetime))
+				$datetime = Format::getDateHour();
 
-        return $query;
+			if ($product[0]['flirt'] == true)
+			{
+				$flirts = $this->database->select('products_flirts', '*', ['id_product_1' => $product[0]['id_product']]);
+
+				foreach ($flirts as $value)
+				{
+					$a1 = $quantity;
+					$a2 = $value['stock_base'];
+					$a3 = $value['stock_actual'];
+					$a4 = $a3 + $a1;
+
+					if ($a4 < $a2)
+					{
+						$a5 = $this->getProductById($value['id_product_2']);
+
+						$query = $this->database->update('products_flirts', [
+							'stock_actual' => $a4
+						], [
+							'id_product_flirt' => $value['id_product_flirt']
+						]);
+
+						if (empty($query))
+							array_push($errors, $a5['name'] . ': No se pudo actualizar este stock actual.');
+					}
+					else if ($a4 >= $a2)
+					{
+						$a5 = $a4 / $a2;
+						$a5 = explode('.', $a5);
+						$a4 = $a4 - ($a2 * $a5[0]);
+						$a6 = $this->checkExistInInventory($value['id_product_2'], $a5[0], $id, null, 'new');
+						$a7 = $this->getProductById($value['id_product_2']);
+
+						if ($a6['status'] == true)
+						{
+							if ($a6['errors']['errorNotExistInInventory'] == true)
+								array_push($errors, $a7['name'] . ': No hay ninguna entrada al inventario con este producto');
+
+							if ($a6['errors']['errorExceed'] == true)
+								array_push($errors, $a7['name'] . ': Ha exedido la cantidad que existe en el inventario');
+						}
+						else
+						{
+							$query = $this->database->insert('inventories_outputs', [
+					            'quantity' => $a5[0],
+								'type' => $type,
+								'output_date_time' => $datetime,
+					            'id_product' => $value['id_product_2'],
+					            'id_inventory' => $id,
+								'id_subscription' => Session::getValue('id_subscription')
+					        ]);
+
+							if (!empty($query))
+							{
+								$query = $this->database->update('products_flirts', [
+									'stock_actual' => $a4
+								], [
+									'id_product_flirt' => $value['id_product_flirt']
+								]);
+
+								if (empty($query))
+									array_push($errors, $a7['name'] . ': No se pudo actualizar este stock actual.');
+							}
+							else
+								array_push($errors, $a7['name'] . ': No se pudo descontar este producto del inventario.');
+						}
+					}
+				}
+			}
+			else
+			{
+				$query = $this->database->insert('inventories_outputs', [
+					'quantity' => $quantity,
+					'type' => $type,
+					'output_date_time' => $datetime,
+					'id_product' => $product[0]['id_product'],
+					'id_inventory' => $id,
+					'id_subscription' => Session::getValue('id_subscription')
+				]);
+
+				if (empty($query))
+					array_push($errors, 'Error en la operación a la base de datos');
+			}
+		}
+		else
+			array_push($errors, 'Error en la operación a la base de datos');
+
+		return $errors;
 	}
 
 	public function editOutput($id, $product, $quantity, $type, $datetime)
@@ -286,52 +368,59 @@ class Inventories_model extends Model
 
 	public function checkExistInInventory($product, $quantity, $idInventory, $idOutput, $action)
 	{
-		$errorNotExistInInventory = false;
-		$errorExceed = false;
+		$product = $this->database->select('products', '*', ['id_product' => $product]);
 
-		$inputs = $this->database->select('inventories_inputs', '*', [
-			'AND' => [
-				'id_product' => $product,
-				'id_inventory' => $idInventory
-			]
-		]);
-
-		if (empty($inputs))
+		if ($product[0]['flirt'] == false)
 		{
-			$errorNotExistInInventory = true;
-		}
-		else
-		{
-			$totalInputQuantity = 0;
-			$totalOutputQuantity = 0;
-			$totalQuantity = 0;
+			$errorNotExistInInventory = false;
+			$errorExceed = false;
 
-			$outputs = $this->database->select('inventories_outputs', '*', [
+			$inputs = $this->database->select('inventories_inputs', '*', [
 				'AND' => [
-					'id_product' => $product,
+					'id_product' => $product[0]['id_product'],
 					'id_inventory' => $idInventory
 				]
 			]);
 
-			foreach ($inputs as $data)
-				$totalInputQuantity = $totalInputQuantity + $data['quantify'];
-
-			foreach ($outputs as $data)
+			if (empty($inputs))
 			{
-				if ($action == 'new')
-					$totalOutputQuantity = $totalOutputQuantity + $data['quantity'];
-				else if ($action == 'edit' AND $data['id_inventory_output'] != $idOutput)
-					$totalOutputQuantity = $totalOutputQuantity + $data['quantity'];
+				$errorNotExistInInventory = true;
+			}
+			else
+			{
+				$totalInputQuantity = 0;
+				$totalOutputQuantity = 0;
+				$totalQuantity = 0;
+
+				$outputs = $this->database->select('inventories_outputs', '*', [
+					'AND' => [
+						'id_product' => $product[0]['id_product'],
+						'id_inventory' => $idInventory
+					]
+				]);
+
+				foreach ($inputs as $data)
+					$totalInputQuantity = $totalInputQuantity + $data['quantify'];
+
+				foreach ($outputs as $data)
+				{
+					if ($action == 'new')
+						$totalOutputQuantity = $totalOutputQuantity + $data['quantity'];
+					else if ($action == 'edit' AND $data['id_inventory_output'] != $idOutput)
+						$totalOutputQuantity = $totalOutputQuantity + $data['quantity'];
+				}
+
+				$totalQuantity = $totalInputQuantity - $totalOutputQuantity;
+
+				if ($quantity > $totalQuantity)
+					$errorExceed = true;
 			}
 
-			$totalQuantity = $totalInputQuantity - $totalOutputQuantity;
-
-			if ($quantity > $totalQuantity)
-				$errorExceed = true;
+			if ($errorNotExistInInventory == true OR $errorExceed == true)
+				return ['status' => true, 'errors' => ['errorNotExistInInventory' => $errorNotExistInInventory, 'errorExceed' => $errorExceed]];
+			else
+				return ['status' => false];
 		}
-
-		if ($errorNotExistInInventory == true OR $errorExceed == true)
-			return ['status' => true, 'errors' => ['errorNotExistInInventory' => $errorNotExistInInventory, 'errorExceed' => $errorExceed]];
 		else
 			return ['status' => false];
 	}

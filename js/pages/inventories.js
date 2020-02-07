@@ -388,10 +388,8 @@ $(document).ready(function ()
             {
                 checkValidateFormAjax(self, response, function()
                 {
-                    alert('Listo');
-                    $('select[name="product"]').focus();
-                    // $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-                    // location.reload();
+                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
+                    location.reload();
                 });
             }
         });
