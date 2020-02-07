@@ -17,6 +17,19 @@ class Products_model extends Model
 		return $query;
 	}
 
+	public function getAllProductsByType($type)
+	{
+		$query = $this->database->select('products', '*', [
+			'AND' => [
+				'type' => $type,
+				'id_subscription' => Session::getValue('id_subscription')
+			],
+			'ORDER' => 'name ASC'
+		]);
+
+		return $query;
+	}
+
 	public function getAllProductsIntoAllInventories($idBranchOffice, $searchDate = null)
 	{
 		$products = [];
@@ -723,6 +736,80 @@ class Products_model extends Model
 		if (!empty($query) AND $action == 'new')
 			return true;
 		else if (!empty($query) AND $action == 'edit' AND $id != $query[0]['id_product_category_' . $number])
+			return true;
+		else
+			return false;
+	}
+
+	/* Productos ligados
+	--------------------------------------------------------------------------- */
+	public function getAllFlirts()
+	{
+		$query = $this->database->select('products_flirts', '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'id_product_1 ASC']);
+
+		foreach ($query as $key => $value)
+		{
+			$query[$key]['product_1'] = $this->database->select('products', '*', ['id_product' => $value['id_product_1']])[0];
+			$query[$key]['product_2'] = $this->database->select('products', '*', ['id_product' => $value['id_product_2']])[0];
+		}
+
+		return $query;
+	}
+
+	public function getFlirtById($id)
+	{
+		$query = $this->database->select('products_flirts', '*', ['id_product_flirt' => $id]);
+		return !empty($query) ? $query[0] : '';
+	}
+
+	public function newFlirt($product_1, $product_2, $stock_base)
+	{
+		$query = $this->database->insert('products_flirts', [
+			'id_product_1' => $product_1,
+			'id_product_2' => $product_2,
+			'stock_base' => $stock_base,
+			'stock_actual' => 0,
+			'id_subscription' => Session::getValue('id_subscription')
+		]);
+
+		return $query;
+	}
+
+	public function editFlirt($id, $product_1, $product_2, $stock_base)
+	{
+		$query = $this->database->update('products_flirts', [
+			'id_product_1' => $product_1,
+			'id_product_2' => $product_2,
+			'stock_base' => $stock_base
+		], [
+			'id_product_flirt' => $id
+		]);
+
+		return $query;
+	}
+
+	public function deleteFlirts($selection)
+    {
+		$query = $this->database->delete("products_flirts", [
+			'id_product_flirt' => $selection
+		]);
+
+        return $query;
+    }
+
+	public function checkExistFlirt($id, $product_1, $product_2, $action)
+	{
+		$query = $this->database->select('products_flirts', '*', [
+			'AND' => [
+				'id_product_1' => $product_1,
+				'id_product_2' => $product_2,
+				'id_subscription' => Session::getValue('id_subscription')
+			]
+		]);
+
+		if (!empty($query) AND $action == 'new')
+			return true;
+		else if (!empty($query) AND $action == 'edit' AND $id != $query[0]['id_product_flirt'])
 			return true;
 		else
 			return false;

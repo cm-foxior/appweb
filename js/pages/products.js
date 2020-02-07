@@ -783,4 +783,122 @@ $(document).ready(function ()
             location.reload();
         }
     });
+
+    /* Tabla de productos ligados
+    /* ------------------------------------------------------------------------ */
+    var tblFlirtsOrder = myDocument.find("#tblFlirts").data('table-order');
+
+    var tblFlirts = myDocument.find("#tblFlirts").DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+
+        ],
+        "columnDefs": [
+            {
+                "orderable": true,
+                "targets": '_all'
+            },
+            {
+                "className": 'text-left',
+                "targets": '_all'
+            }
+        ],
+        "order": [
+            [tblFlirtsOrder,'asc']
+        ],
+        "searching": true,
+        "info": true,
+        "paging": true,
+        "language": {
+
+        }
+    });
+
+    /* Obtener producto ligado para editar
+    /* ------------------------------------------------------------------------ */
+    var idFlirt;
+
+    $(document).on('click', '[data-action="getFlirtToEdit"]', function()
+    {
+        idFlirt = $(this).data('id');
+
+        $.ajax({
+            url: '/products/getFlirtToEdit/' + idFlirt,
+            type: 'POST',
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response)
+            {
+                if (response.status == 'success')
+                {
+                    $('select[name="product_1"]').val(response.data.id_product_1).trigger('chosen:updated');
+                    $('select[name="product_2"]').val(response.data.id_product_2).trigger('chosen:updated');
+                    $('input[name="stock_base"]').val(response.data.stock_base);
+                    $('[data-modal="flirts"] header > h6').html('Editar producto ligado');
+                    $('[data-modal="flirts"] form').attr('data-submit-action', 'edit');
+                    $('[data-modal="flirts"]').toggleClass('view');
+                }
+            }
+        });
+    });
+
+    /* Crear y editar producto ligado
+    /* ------------------------------------------------------------------------ */
+    var frmFlirts = $('form[name="flirts"]');
+
+    modal('flirts', function(modal)
+    {
+        modal.find('header > h6').html('Nuevo producto ligado');
+        modal.find('form').attr('data-submit-action', 'new');
+        modal.find('form')[0].reset();
+
+    }, function(modal)
+    {
+        frmFlirts.submit();
+    });
+
+    frmFlirts.on('submit', function(e)
+    {
+        e.preventDefault();
+
+        var self    = $(this);
+        var action  = self.data('submit-action');
+        var data    = new FormData(this);
+
+        data.append('action', action);
+        data.append('id', idFlirt);
+
+        $.ajax({
+            url: '/products/flirts',
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response)
+            {
+                checkValidateFormAjax(self, response, function()
+                {
+                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
+                    location.reload();
+                });
+            }
+        });
+    });
+
+    /* Eliminar selección multiple de productos ligados
+    /* ------------------------------------------------------------------------ */
+    var btnDeleteFlirts    = $('[data-action="deleteFlirts"]');
+    var urlDeleteFlirts    = '/products/deleteFlirts';
+
+    multipleSelect(btnDeleteFlirts, urlDeleteFlirts, function(response)
+    {
+        if (response.status == 'success')
+        {
+            $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
+            location.reload();
+        }
+    });
 });

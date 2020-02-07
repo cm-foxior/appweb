@@ -259,7 +259,8 @@ class Products_controller extends Controller
 						<!-- <a data-button-modal="deactivateProducts"><i class="material-icons">block</i><span>Desactivar</span></a>
 			            <a data-button-modal="activateProducts"><i class="material-icons">check</i><span>Activar</span></a>
 						<a data-button-modal="importFromExcel"><i class="material-icons">cloud_upload</i><span>Importar desde excel</span></a> -->
-						<a href="/products/categories_one/"><i class="material-icons">turned_in</i><span>Categorías</span></a>';
+						<a href="/products/flirts"><i class="material-icons">link</i><span>Products ligados</span></a>
+						<a href="/products/categories_one"><i class="material-icons">turned_in</i><span>Categorías</span></a>';
 					}
 
 					$buttons .=
@@ -1793,6 +1794,238 @@ class Products_controller extends Controller
 					$deleteCategories = $this->model->deleteCategories($selection);
 
 					if (!empty($deleteCategories))
+					{
+						echo json_encode([
+							'status' => 'success'
+						]);
+					}
+				}
+			}
+			else
+				Errors::http('404');
+		}
+		else
+			header('Location: /dashboard');
+	}
+
+	/* Lista de productos ligados, nuevo y editar producto ligado
+	--------------------------------------------------------------------------- */
+	public function flirts()
+	{
+		if (Session::getValue('level') == 10)
+		{
+			if (Format::existAjaxRequest() == true)
+			{
+				$action = $_POST['action'];
+				$id = ($action == 'edit') ? $_POST['id'] : null;
+
+				$product_1 = (isset($_POST['product_1']) AND !empty($_POST['product_1'])) ? $_POST['product_1'] : null;
+				$product_2 = (isset($_POST['product_2']) AND !empty($_POST['product_2'])) ? $_POST['product_2'] : null;
+				$stock_base = (isset($_POST['stock_base']) AND !empty($_POST['stock_base'])) ? $_POST['stock_base'] : null;
+
+				$errors = [];
+
+				if (!isset($product_1))
+					array_push($errors, ['product_1', 'No deje este campo vacío']);
+
+				if (!isset($product_2))
+					array_push($errors, ['product_2', 'No deje este campo vacío']);
+
+				if (!isset($stock_base))
+					array_push($errors, ['stock_base', 'No deje este campo vacío']);
+
+				if (empty($errors))
+	            {
+	                $exist = $this->model->checkExistFlirt($id, $product_1, $product_2, $action);
+
+	                if ($exist == true)
+	                {
+						array_push($errors, ['product_1', 'Este registro ya existe']);
+
+						echo json_encode([
+							'status' => 'error',
+							'labels' => $errors
+						]);
+	                }
+	                else
+	                {
+						if ($action == 'new')
+							$query = $this->model->newFlirt($product_1, $product_2, $stock_base);
+						else if ($action == 'edit')
+							$query = $this->model->editFlirt($id, $product_1, $product_2, $stock_base);
+
+	                    if (!empty($query))
+	                    {
+	                        echo json_encode([
+	    						'status' => 'success'
+	    					]);
+	                    }
+	                    else
+	                    {
+	                        echo json_encode([
+	    						'status' => 'error',
+	    						'message' => 'Error en la operación a la base de datos'
+	    					]);
+	                    }
+	                }
+	            }
+	            else
+	            {
+	                echo json_encode([
+						'status' => 'error',
+						'labels' => $errors
+					]);
+	            }
+			}
+			else
+			{
+				define('_title', '{$lang.title} | Dashboard');
+
+				$template = $this->view->render($this, 'flirts');
+				$template = $this->format->replaceFile($template, 'header');
+
+				$flirts = $this->model->getAllFlirts();
+
+				$lstFlirts = '';
+
+				foreach ($flirts as $flirt)
+				{
+					if (!empty($flirt['product_1']['id_product_category_one']))
+					{
+						$categoryOne1 = $this->model->getCategoryById($flirt['product_1']['id_product_category_one'], 'one');
+						$categoryOne1 = ' ' . $categoryOne1['name'];
+					}
+					else
+						$categoryOne1 = '';
+
+					if (!empty($flirt['product_1']['id_product_category_two']))
+					{
+						$categoryTwo1 = $this->model->getCategoryById($flirt['product_1']['id_product_category_two'], 'two');
+						$categoryTwo1 = ' - ' . $categoryTwo1['name'];
+					}
+					else
+						$categoryTwo1 = '';
+
+					if (!empty($flirt['product_1']['id_product_category_tree']))
+					{
+						$categoryTree1 = $this->model->getCategoryById($flirt['product_1']['id_product_category_tree'], 'tree');
+						$categoryTree1 = ' - ' . $categoryTree1['name'];
+					}
+					else
+						$categoryTree1 = '';
+
+					if (!empty($flirt['product_1']['id_product_category_four']))
+					{
+						$categoryFour1 = $this->model->getCategoryById($flirt['product_1']['id_product_category_four'], 'four');
+						$categoryFour1 = ' - ' . $categoryFour1['name'];
+					}
+					else
+						$categoryFour1 = '';
+
+					if (!empty($flirt['product_2']['id_product_category_one']))
+					{
+						$categoryOne2 = $this->model->getCategoryById($flirt['product_2']['id_product_category_one'], 'one');
+						$categoryOne2 = ' ' . $categoryOne2['name'];
+					}
+					else
+						$categoryOne2 = '';
+
+					if (!empty($flirt['product_2']['id_product_category_two']))
+					{
+						$categoryTwo2 = $this->model->getCategoryById($flirt['product_2']['id_product_category_two'], 'two');
+						$categoryTwo2 = ' - ' . $categoryTwo2['name'];
+					}
+					else
+						$categoryTwo2 = '';
+
+					if (!empty($flirt['product_2']['id_product_category_tree']))
+					{
+						$categoryTree2 = $this->model->getCategoryById($flirt['product_2']['id_product_category_tree'], 'tree');
+						$categoryTree2 = ' - ' . $categoryTree2['name'];
+					}
+					else
+						$categoryTree2 = '';
+
+					if (!empty($flirt['product_2']['id_product_category_four']))
+					{
+						$categoryFour2 = $this->model->getCategoryById($flirt['product_2']['id_product_category_four'], 'four');
+						$categoryFour2 = ' - ' . $categoryFour2['name'];
+					}
+					else
+						$categoryFour2 = '';
+
+					$lstFlirts .=
+					'<tr>
+						<td><input type="checkbox" data-check value="' . $flirt['id_product_flirt'] . '" /></td>
+						<td>' . $flirt['product_1']['name'] . $categoryOne1 . $categoryTwo1 . $categoryTree1 . $categoryFour1 . '</td>
+						<td>' . $flirt['product_2']['name'] . $categoryOne2 . $categoryTwo2 . $categoryTree2 . $categoryFour2 . '</td>
+						<td>' . $flirt['stock_base'] . '</td>
+						<td>' . $flirt['stock_actual'] . '</td>
+						<td><a data-action="getFlirtToEdit" data-id="' . $flirt['id_product_flirt'] . '"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
+					</tr>';
+				}
+
+				$products = $this->model->getAllProductsByType(1);
+
+				$lstProducts = '';
+
+				foreach ($products as $value)
+					$lstProducts .= '<option value="' . $value['id_product'] . '">' . $value['name'] . '</option>';
+
+				$replace = [
+					'{$lstFlirts}' => $lstFlirts,
+					'{$lstProducts}' => $lstProducts
+				];
+
+				$template = $this->format->replace($replace, $template);
+
+				echo $template;
+			}
+		}
+		else
+			header('Location: /dashboard');
+	}
+
+	/* Obtener producto ligado para editar
+	--------------------------------------------------------------------------- */
+	public function getFlirtToEdit($id)
+	{
+		if (Session::getValue('level') == 10)
+		{
+			if (Format::existAjaxRequest() == true)
+			{
+				$flirt = $this->model->getFlirtById($id);
+
+	            if (!empty($flirt))
+	            {
+	                echo json_encode([
+						'status' => 'success',
+						'data' => $flirt
+					]);
+	            }
+			}
+			else
+				Errors::http('404');
+		}
+		else
+			header('Location: /dashboard');
+	}
+
+	/* Eliminar selección de productos ligados
+	--------------------------------------------------------------------------- */
+	public function deleteFlirts()
+	{
+		if (Session::getValue('level') == 10)
+		{
+			if (Format::existAjaxRequest() == true)
+			{
+				if(isset($_POST['data']) && !empty($_POST['data']))
+				{
+					$selection = json_decode($_POST['data']);
+
+					$deleteFlirts = $this->model->deleteFlirts($selection);
+
+					if (!empty($deleteFlirts))
 					{
 						echo json_encode([
 							'status' => 'success'
