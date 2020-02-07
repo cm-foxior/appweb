@@ -54,22 +54,22 @@ class Reports_model extends Model
 	{
 		$products = [];
 
-		$and = [
+		$and_input = [
 			'inventories_inputs.input_date_time[<>]' => [$date_start,$date_end],
 			'inventories_inputs.id_inventory' => $id,
 		];
 
 		if (!empty($category_one))
-			$and['products.id_product_category_one'] = $category_one;
+			$and_input['products.id_product_category_one'] = $category_one;
 
 		if (!empty($category_two))
-			$and['products.id_product_category_two'] = $category_two;
+			$and_input['products.id_product_category_two'] = $category_two;
 
 		if (!empty($category_tree))
-			$and['products.id_product_category_tree'] = $category_tree;
+			$and_input['products.id_product_category_tree'] = $category_tree;
 
 		if (!empty($category_four))
-			$and['products.id_product_category_four'] = $category_four;
+			$and_input['products.id_product_category_four'] = $category_four;
 
 		$inputs = $this->database->select('inventories_inputs', [
 			'[>]products' => ['id_product' => 'id_product'],
@@ -87,7 +87,7 @@ class Reports_model extends Model
 			'products_categories_tree.name(category_tree)',
 			'products_categories_four.name(category_four)'
 		], [
-			'AND' => $and
+			'AND' => $and_input
 		]);
 
 		foreach ($inputs as $key => $value)
@@ -134,7 +134,8 @@ class Reports_model extends Model
 			], [
 				'AND' => [
 					'id_product' => $value['id_product'],
-					'id_inventory' => $id
+					'output_date_time[<>]' => [$date_start,$date_end],
+					'id_inventory' => $id,
 				]
 			]);
 
