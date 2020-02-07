@@ -761,7 +761,7 @@ class Inventories_controller extends Controller
 						}
 						else if ($output['type'] == '2')
 						{
-							$type = 'Perdida';
+							$type = 'Merma / Perdida';
 							$typeStyleColor = '#f44336';
 						}
 						else if ($output['type'] == '3')

@@ -91,7 +91,7 @@ $this->dependencies->getDependencies([
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
                             <option value="4">Venta</option>
-                            <option value="2">Perdida</option>
+                            <option value="2">Merma / Perdida</option>
                             <option value="3">Devolución al proveedor</option>
                         </select>
                     </label>

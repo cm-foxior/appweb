@@ -4,7 +4,7 @@ defined('_EXEC') or die;
 
 $this->dependencies->getDependencies([
     'css' => [
-        
+
     ],
     'js' => [
         '{$path.js}pages/search.js'
@@ -17,7 +17,7 @@ $this->dependencies->getDependencies([
 
 %{header}%
 
-<main class="body">
+<main class="body <?php if (Session::getValue('level') == 7) : echo 'droped'; endif; ?>">
     <div class="content padding">
         <div class="search">
             <select name="search" class="chosen-select">

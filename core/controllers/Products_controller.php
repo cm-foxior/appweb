@@ -13,7 +13,7 @@ class Products_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function index()
 	{
-		if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9)
+		if (Session::getValue('level') >= 9)
 		{
 			if (Format::existAjaxRequest() == true)
 			{

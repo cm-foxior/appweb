@@ -27,7 +27,7 @@ $this->dependencies->getDependencies([
 
 %{header}%
 
-<main class="body">
+<main class="body <?php if (Session::getValue('level') == 7) : echo 'droped'; endif; ?>">
     <div class="content">
         <div class="box-buttons">
             {$btnCancelSale}
