@@ -1629,7 +1629,7 @@ class Products_controller extends Controller
 					'<tr>
 						<td><input type="checkbox" data-check value="' . $category['id_product_category_one'] . '_one" /></td>
 						<td>' . (!empty($category['avatar']) ? '<a href="{$path.images}products/categories/' . $category['avatar'] . '" class="fancybox-thumb" rel="fancybox-thumb"><img src="{$path.images}products/categories/' . $category['avatar'] . '" /></a>' : '<img src="{$path.images}empty.png" class="emptyAvatar" />') . '</td>
-						<td>' . $category['id_product_category_one'] . ' - ' . $category['name'] . '</td>
+						<td>' . $category['name'] . '</td>
 						<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_one'] . '" data-number="one"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 					</tr>';
 				}
@@ -1665,7 +1665,7 @@ class Products_controller extends Controller
 				$lstCategories .=
 				'<tr>
 					<td><input type="checkbox" data-check value="' . $category['id_product_category_two'] . '_two" /></td>
-					<td>' . $category['id_product_category_two'] . ' - ' . $category['name'] . '</td>
+					<td>' . $category['name'] . '</td>
 					<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_two'] . '" data-number="two"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 				</tr>';
 			}
