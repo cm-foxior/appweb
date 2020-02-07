@@ -413,7 +413,19 @@ class Inventories_controller extends Controller
 				$product     = (isset($_POST['product']) AND !empty($_POST['product'])) ? $_POST['product'] : null;
 				$quantify    = (isset($_POST['quantify']) AND !empty($_POST['quantify'])) ? $_POST['quantify'] : null;
 				$type		 = (isset($_POST['type']) AND !empty($_POST['type'])) ? $_POST['type'] : null;
+				$price		 = (isset($_POST['price']) AND !empty($_POST['price'])) ? $_POST['price'] : null;
 				$provider    = (isset($_POST['provider']) AND !empty($_POST['provider'])) ? $_POST['provider'] : null;
+
+				if (Session::getValue('level') == 10)
+				{
+					$date = (isset($_POST['date']) AND !empty($_POST['date'])) ? $_POST['date'] : null;
+					$hour = (isset($_POST['hour']) AND !empty($_POST['hour'])) ? $_POST['hour'] : null;
+				}
+				else
+				{
+					$date = null;
+					$hour = null;
+				}
 
 				$errors = [];
 
@@ -432,12 +444,21 @@ class Inventories_controller extends Controller
 	            else if ($type != '1' AND $type != '3')
 	                array_push($errors, ['type', 'Opción no válida']);
 
+				if (Session::getValue('level') == 10)
+				{
+					if (!isset($date))
+		                array_push($errors, ['date', 'No deje este campo vacío']);
+
+					if (!isset($hour))
+		                array_push($errors, ['hour', 'No deje este campo vacío']);
+				}
+
 				if (empty($errors))
 				{
 					if ($action == 'new')
-						$query = $this->model->newInput($product, $quantify, $type, $provider, $id);
+						$query = $this->model->newInput($product, $quantify, $type, $price, $provider, $date . ' ' . $hour, $id);
 					else if ($action == 'edit')
-						$query = $this->model->editInput($id, $product, $quantify, $type, $provider);
+						$query = $this->model->editInput($id, $product, $quantify, $type, $price, $provider, $date . ' ' . $hour);
 
 					if (!empty($query))
 					{
@@ -543,6 +564,7 @@ class Inventories_controller extends Controller
 	    					<td>' . (!empty($provider['name']) ? $provider['name'] : '- - -') . '</td>
 	    					<td>' . $input['input_date_time'] . '</td>
 	    					<td>' . $type . '</td>
+	    					<td>' . ((!empty($input['price'])) ? '$ ' . $input['price'] . ' MXN' : '') . '</td>
 	                        <td>' . $btnEditInput . '</td>
 	    				</tr>';
 	    			}
@@ -585,6 +607,8 @@ class Inventories_controller extends Controller
 
 	            if (!empty($input))
 	            {
+					$input['input_date_time'] = explode(' ', $input['input_date_time']);
+
 	                echo json_encode([
 						'status' => 'success',
 						'data' => $input
@@ -1433,7 +1457,7 @@ class Inventories_controller extends Controller
 
 							if (!empty($query))
 							{
-								$query = $this->model->newInput($loan['id_product'], $loan['quantity'], 4, null, $idInventory, $loan['datetime']);
+								$query = $this->model->newInput($loan['id_product'], $loan['quantity'], 4, null, null, $loan['datetime'], $idInventory);
 
 								if (!empty($query))
 								{

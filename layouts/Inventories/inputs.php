@@ -51,6 +51,7 @@ $this->dependencies->getDependencies([
                         <th>Proveedor</th>
                         <th>Fecha y hora</th>
                         <th>Tipo</th>
+                        <th>Compra</th>
                         <th width="35px"></th>
                     </tr>
                 </thead>
@@ -68,7 +69,7 @@ $this->dependencies->getDependencies([
             <h6>Nuevo entrada</h6>
         </header>
         <main>
-            <form name="inputs" data-submit-action="new">
+            <form name="inputs" class="row" data-submit-action="new">
                 <fieldset class="input-group">
                     <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
                 </fieldset>
@@ -80,13 +81,13 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group">
+                <fieldset class="input-group span4">
                     <label data-important>
                         <span><span class="required-field">*</span>Cantidad</span>
                         <input type="number" name="quantify">
                     </label>
                 </fieldset>
-                <fieldset class="input-group">
+                <fieldset class="input-group span4">
                     <label data-important>
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
@@ -95,6 +96,26 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
+                <fieldset class="input-group span4">
+                    <label data-important>
+                        <span>Precio de compra</span>
+                        <input type="number" name="price">
+                    </label>
+                </fieldset>
+                <?php if (Session::getValue('level') == 10) : ?>
+                <fieldset class="input-group span6">
+                    <label data-important>
+                        <span>Fecha</span>
+                        <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>">
+                    </label>
+                </fieldset>
+                <fieldset class="input-group span6">
+                    <label data-important>
+                        <span>Hora</span>
+                        <input type="time" name="hour" value="<?php echo date('H:i:s', time()); ?>">
+                    </label>
+                </fieldset>
+                <?php endif; ?>
                 <fieldset class="input-group">
                     <label data-important>
                         <span>Proveedor</span>

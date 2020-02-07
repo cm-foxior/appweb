@@ -141,20 +141,20 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function newInput($product, $quantify, $type, $provider, $id, $date = null)
+    public function newInput($product, $quantify, $type, $price, $provider, $datetime, $id)
 	{
-		if (isset($date) AND !empty($date))
-			$today = $date;
-		else
-			$today = Format::getDateHour();
+		if (!isset($datetime) OR empty($datetime))
+			$datetime = Format::getDateHour();
 
         $query = $this->database->insert('inventories_inputs', [
             'quantify' => $quantify,
 			'type' => $type,
-            'input_date_time' => $today,
+            'input_date_time' => $datetime,
             'id_product' => $product,
             'id_provider' => $provider,
             'id_inventory' => $id,
+            'id_inventory_transfer' => null,
+            'price' => !empty($price) ? $price : null,
 			'id_subscription' => Session::getValue('id_subscription')
         ]);
 
@@ -167,14 +167,29 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function editInput($id, $product, $quantify, $type, $provider)
+    public function editInput($id, $product, $quantify, $type, $price, $provider, $datetime)
 	{
-        $query = $this->database->update('inventories_inputs', [
-            'quantify' => $quantify,
-			'type' => $type,
-            'id_product' => $product,
-            'id_provider' => $provider
-        ], ['id_inventory_input' => $id]);
+		if (Session::getValue('level') == 10)
+		{
+			$query = $this->database->update('inventories_inputs', [
+	            'quantify' => $quantify,
+				'type' => $type,
+				'input_date_time' => $datetime,
+	            'id_product' => $product,
+	            'id_provider' => $provider,
+				'price' => !empty($price) ? $price : null
+	        ], ['id_inventory_input' => $id]);
+		}
+		else
+		{
+			$query = $this->database->update('inventories_inputs', [
+	            'quantify' => $quantify,
+				'type' => $type,
+	            'id_product' => $product,
+	            'id_provider' => $provider,
+				'price' => !empty($price) ? $price : null
+	        ], ['id_inventory_input' => $id]);
+		}
 
         return $query;
 	}

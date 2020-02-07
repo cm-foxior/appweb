@@ -193,6 +193,9 @@ $(document).ready(function ()
                     $('select[name="product"]').val(response.data.id_product).trigger('chosen:updated');
                     $('input[name="quantify"]').val(response.data.quantify);
                     $('select[name="type"]').val(response.data.type);
+                    $('input[name="price"]').val(response.data.price);
+                    $('input[name="date"]').val(response.data.input_date_time[0]);
+                    $('input[name="hour"]').val(response.data.input_date_time[1]);
                     $('select[name="provider"]').val(response.data.id_provider).trigger('chosen:updated');
 
                     $('[data-modal="inputs"] header > h6').html('Editar entrada');
