@@ -666,6 +666,17 @@ class Inventories_controller extends Controller
 				$quantity	= (isset($_POST['quantity']) AND !empty($_POST['quantity'])) ? $_POST['quantity'] : null;
 				$type		= (isset($_POST['type']) AND !empty($_POST['type'])) ? $_POST['type'] : null;
 
+				if (Session::getValue('level') == 10)
+				{
+					$date = (isset($_POST['date']) AND !empty($_POST['date'])) ? $_POST['date'] : null;
+					$hour = (isset($_POST['hour']) AND !empty($_POST['hour'])) ? $_POST['hour'] : null;
+				}
+				else
+				{
+					$date = null;
+					$hour = null;
+				}
+
 				$errors = [];
 
 	            if (!isset($product))
@@ -682,6 +693,15 @@ class Inventories_controller extends Controller
 	                array_push($errors, ['type', 'Seleccione una opción']);
 	            else if ($type != '2' AND $type != '3' AND $type != '4')
 	                array_push($errors, ['type', 'Opción no válida']);
+
+				if (Session::getValue('level') == 10)
+				{
+					if (!isset($date))
+		                array_push($errors, ['date', 'No deje este campo vacío']);
+
+					if (!isset($hour))
+		                array_push($errors, ['hour', 'No deje este campo vacío']);
+				}
 
 				if (empty($errors))
 				{
@@ -703,9 +723,9 @@ class Inventories_controller extends Controller
 					else
 					{
 						if ($action == 'new')
-							$query = $this->model->newOutput($product, $quantity, $type, $id);
+							$query = $this->model->newOutput($product, $quantity, $type, $date . ' ' . $time, $id);
 						else if ($action == 'edit')
-							$query = $this->model->editOutput($idOutput, $product, $quantity, $type);
+							$query = $this->model->editOutput($idOutput, $product, $quantity, $type, $date . ' ' . $time);
 
 						if (!empty($query))
 						{
@@ -1510,7 +1530,7 @@ class Inventories_controller extends Controller
 					{
 						$loan = $this->model->getLoan($loan);
 
-						$query = $this->model->newOutput($loan['id_product'], $loan['quantity'], 6, $idInventory);
+						$query = $this->model->newOutput($loan['id_product'], $loan['quantity'], 6, null, $idInventory);
 
 						if (!empty($query))
 						{

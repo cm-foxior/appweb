@@ -319,6 +319,8 @@ $(document).ready(function ()
                     $('select[name="product"]').val(response.data.id_product).trigger('chosen:updated');
                     $('input[name="quantity"]').val(response.data.quantity);
                     $('select[name="type"]').val(response.data.type);
+                    $('input[name="date"]').val(response.data.input_date_time[0]);
+                    $('input[name="hour"]').val(response.data.input_date_time[1]);
 
                     $('[data-modal="outputs"] header > h6').html('Editar salida');
                     $('[data-modal="outputs"] form').attr('data-submit-action', 'edit');

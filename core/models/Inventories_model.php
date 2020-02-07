@@ -214,14 +214,15 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function newOutput($product, $quantity, $type, $id)
+    public function newOutput($product, $quantity, $type, $datetime, $id)
 	{
-        $today = Format::getDateHour();
+		if (!isset($datetime) OR empty($datetime))
+        	$datetime = Format::getDateHour();
 
         $query = $this->database->insert('inventories_outputs', [
             'quantity' => $quantity,
 			'type' => $type,
-			'output_date_time' => $today,
+			'output_date_time' => $datetime,
             'id_product' => $product,
             'id_inventory' => $id,
 			'id_subscription' => Session::getValue('id_subscription')
@@ -230,13 +231,25 @@ class Inventories_model extends Model
         return $query;
 	}
 
-	public function editOutput($id, $product, $quantity, $type)
+	public function editOutput($id, $product, $quantity, $type, $datetime)
 	{
-        $query = $this->database->update('inventories_outputs', [
-            'quantity' => $quantity,
-			'type' => $type,
-            'id_product' => $product
-        ], ['id_inventory_output' => $id]);
+		if (Session::getValue('level') == 10)
+		{
+			$query = $this->database->update('inventories_outputs', [
+	            'quantity' => $quantity,
+				'type' => $type,
+				'output_date_time' => $datetime,
+	            'id_product' => $product
+	        ], ['id_inventory_output' => $id]);
+		}
+		else
+		{
+			$query = $this->database->update('inventories_outputs', [
+	            'quantity' => $quantity,
+				'type' => $type,
+	            'id_product' => $product
+	        ], ['id_inventory_output' => $id]);
+		}
 
         return $query;
 	}
