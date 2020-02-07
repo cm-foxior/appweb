@@ -559,7 +559,7 @@ class Inventories_controller extends Controller
 
 	    				$lstInputs .=
 	    				'<tr style="color:' . $typeStyleColor . ';">
-	    					<td>[' . $product['folio'] . '] ' . $product['name'] . ' ' . $product['category_one']  . ' ' . $product['category_two']  . ' ' . $product['category_tree']  . ' ' . $product['category_four'] . '</td>
+	    					<td>[' . $product['folio'] . '] ' . $product['name'] . (!empty($product['category_one']) ? ' - ' . $product['category_one'] : '')  . (!empty($product['category_two']) ? ' - ' . $product['category_two'] : '')  . (!empty($product['category_tree']) ? ' - ' . $product['category_tree'] : '')  . (!empty($product['category_four']) ? ' - ' . $product['category_four'] : '') . '</td>
 	    					<td>' . $input['quantify'] . ' ' . $unity . '</td>
 	    					<td>' . (!empty($provider['name']) ? $provider['name'] : '- - -') . '</td>
 	    					<td>' . $input['input_date_time'] . '</td>
