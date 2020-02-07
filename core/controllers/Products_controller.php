@@ -1665,7 +1665,7 @@ class Products_controller extends Controller
 				$lstCategories .=
 				'<tr>
 					<td><input type="checkbox" data-check value="' . $category['id_product_category_two'] . '_two" /></td>
-					<td>' . $category['name'] . '</td>
+					<td>' . $category['id_product_category_two'] . ' - ' . $category['name'] . '</td>
 					<td><a data-action="getCategoryToEdit" data-id="' . $category['id_product_category_two'] . '" data-number="two"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 				</tr>';
 			}
