@@ -786,10 +786,10 @@ class Products_model extends Model
 
 	public function editFlirt($id, $product_1, $product_2, $stock_base)
 	{
-		$editer = $this->database->select('products', [
-			'id_product'
+		$editer = $this->database->select('products_flirts', [
+			'id_product_1'
 		], [
-			'id_product' => $product_1
+			'id_product_flirt' => $id
 		]);
 
 		if (!empty($editer))
@@ -807,7 +807,7 @@ class Products_model extends Model
 				$this->database->update('products', [
 					'flirt' => false
 				], [
-					'id_product' => $editer[0]['id_product']
+					'id_product' => $editer[0]['id_product_1']
 				]);
 
 				$this->database->update('products', [
@@ -825,10 +825,10 @@ class Products_model extends Model
 
 	public function deleteFlirts($selection)
     {
-		$deleters = $this->database->select('products', [
-			'id_product'
+		$deleters = $this->database->select('products_flirts', [
+			'id_product_1'
 		], [
-			'id_product' => $selection
+			'id_product_flirt' => $selection
 		]);
 
 		if (!empty($deleters))
@@ -844,7 +844,7 @@ class Products_model extends Model
 					$this->database->update('products', [
 						'flirt' => false
 					], [
-						'id_product' => $value
+						'id_product' => $value['id_product_1']
 					]);
 				}
 			}
