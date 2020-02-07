@@ -656,7 +656,7 @@ class Inventories_controller extends Controller
 
 	            if (!isset($type))
 	                array_push($errors, ['type', 'Seleccione una opción']);
-	            else if ($type != '2' AND $type != '3')
+	            else if ($type != '2' AND $type != '3' AND $type != '4')
 	                array_push($errors, ['type', 'Opción no válida']);
 
 				if (empty($errors))

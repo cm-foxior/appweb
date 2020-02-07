@@ -263,9 +263,9 @@ class Products_model extends Model
 					// else
 					// 	array_push($inserts, ['name' => $value[0], 'email' => $value[1], 'phone_number' => $phoneNumber, 'address' => $value[5]]);
 
-					// array_push($inserts, [
-					// 	'name' => $value[0]
-					// ]);
+					array_push($inserts, [
+						'name' => $value[0]
+					]);
 
 					// array_push($inserts, [
 					// 	'name' => $value[1],
@@ -294,10 +294,10 @@ class Products_model extends Model
 			{
 				foreach ($inserts as $insert)
 				{
-					// $query = $this->database->insert('products_categories_two', [
-					// 	'name' => $insert['name'],
-					// 	'id_subscription' => 9
-					// ]);
+					$query = $this->database->insert('products_categories_two', [
+						'name' => $insert['name'],
+						'id_subscription' => 9
+					]);
 
 					// $query = $this->database->insert('products', [
 					// 	'name' => $insert['name'],

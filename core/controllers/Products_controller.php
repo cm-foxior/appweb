@@ -257,8 +257,8 @@ class Products_controller extends Controller
 						'<a data-button-modal="deleteProducts"><i class="material-icons">delete</i><span>Eliminar</span></a>
 						<a data-button-modal="products"><i class="material-icons">add</i><span>Nuevo</span></a>
 						<!-- <a data-button-modal="deactivateProducts"><i class="material-icons">block</i><span>Desactivar</span></a>
-			            <a data-button-modal="activateProducts"><i class="material-icons">check</i><span>Activar</span></a>
-						<a data-button-modal="importFromExcel"><i class="material-icons">cloud_upload</i><span>Importar desde excel</span></a> -->
+			            <a data-button-modal="activateProducts"><i class="material-icons">check</i><span>Activar</span></a> -->
+						<a data-button-modal="importFromExcel"><i class="material-icons">cloud_upload</i><span>Importar desde excel</span></a>
 						<a href="/products/categories_one/"><i class="material-icons">turned_in</i><span>Categorías</span></a>';
 					}
 
