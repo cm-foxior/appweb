@@ -2,7 +2,7 @@
 
 <header class="topbar">
     <figure class="logotype">
-        <img src="{$path.images}logotype.svg" alt="logotype">
+        <img src="{$path.images}isotype_white.svg" alt="logotype">
     </figure>
     <div class="tools">
         <div class="widgets">
