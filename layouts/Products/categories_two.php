@@ -30,10 +30,10 @@ $this->dependencies->getDependencies([
 <main class="body">
     <div class="content">
         <div class="box-tab-buttons">
-            <a href="/products/categories_one" button-tab>Categorías</a>
-            <a href="/products/categories_two" class="view" button-tab>Subcategorías 1</a>
-            <a href="/products/categories_tree" button-tab>Subcategorías 2</a>
-            <a href="/products/categories_four" button-tab>Subcategorías 3</a>
+            <a href="/products/categories_one" button-tab>Categoría 1</a>
+            <a href="/products/categories_two" class="view" button-tab>Categoría 2</a>
+            <a href="/products/categories_tree" button-tab>Categoría 3</a>
+            <a href="/products/categories_four" button-tab>Categoría 4</a>
             <div class="clear"></div>
         </div>
         <div class="box-buttons">

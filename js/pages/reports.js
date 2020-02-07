@@ -66,7 +66,7 @@ $( document ).ready(function ()
         }
     });
 
-    $('#einv').on('change', function()
+    $('#einv, [name="category_one"], [name="category_two"], [name="category_tree"], [name="category_four"], [name="date_start"], [name="date_end"]').on('change', function()
     {
         $('form[name="existence"]').submit();
     });

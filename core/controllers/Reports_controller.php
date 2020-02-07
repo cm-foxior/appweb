@@ -41,7 +41,7 @@ class Reports_controller extends Controller
 			if (Format::existAjaxRequest() == true)
 			{
 				if ($type == 'existence')
-					$query = $this->model->getExistence($_POST['inventory']);
+					$query = $this->model->getExistence($_POST['inventory'], $_POST['category_one'], $_POST['category_two'], $_POST['category_tree'], $_POST['category_four'], $_POST['date_start'] . ' 00:00:00', $_POST['date_end'] . ' 11:59:59');
 				else if ($type == 'historical')
 				{
 					if ($_POST['action'] == 'report')
@@ -63,12 +63,12 @@ class Reports_controller extends Controller
 				$template = $this->format->replaceFile($template, 'header');
 
 				$html =
-				'<fieldset class="input-group span4">
+				'<fieldset class="input-group span2">
 	                <label data-important>
 	                    <span>Tipo de reporte</span>
 	                    <select id="etyp" name="type">
 	                        <option value="existence" ' . (($type == 'existence') ? 'selected' : '') . '>Existencia</option>
-	        				<option value="historical" ' . (($type == 'historical') ? 'selected' : '') . '>Entradas y salidas (Histórico)</option>
+	        				<option value="historical" ' . (($type == 'historical') ? 'selected' : '') . '>Historico de Entradas y salidas</option>
 	                    </select>
 	                </label>
 	            </fieldset>
@@ -77,8 +77,8 @@ class Reports_controller extends Controller
 				if ($type == 'existence')
 				{
 					$html .=
-					'<form name="existence">
-						<fieldset class="input-group">
+					'<form name="existence" class="row">
+						<fieldset class="input-group span4 pr">
 			                <label data-important>
 			                    <span>Inventario</span>
 								<select id="einv" name="inventory" class="chosen-select">';
@@ -95,11 +95,75 @@ class Reports_controller extends Controller
 				    '			</select>
 			                </label>
 			            </fieldset>
+						<fieldset class="input-group span2 pr">
+			                <label data-important>
+			                    <span>Categoría 1</span>
+								<select name="category_one" class="chosen-select">
+									<option value="">Todo</option>';
+
+					foreach ($this->model->getAllCategories('one') as $value)
+						$html .= '<option value="' . $value['id_product_category_one'] . '">' . $value['name'] . '</option>';
+
+					$html .=
+				    '			</select>
+			                </label>
+			            </fieldset>
+						<fieldset class="input-group span2 pr">
+			                <label data-important>
+			                    <span>Categoría 2</span>
+								<select name="category_two" class="chosen-select">
+									<option value="">Todo</option>';
+
+					foreach ($this->model->getAllCategories('two') as $value)
+						$html .= '<option value="' . $value['id_product_category_two'] . '">' . $value['name'] . '</option>';
+
+					$html .=
+				    '			</select>
+			                </label>
+			            </fieldset>
+						<fieldset class="input-group span2 pr">
+			                <label data-important>
+			                    <span>Categoría 3</span>
+								<select name="category_tree" class="chosen-select">
+									<option value="">Todo</option>';
+
+					foreach ($this->model->getAllCategories('tree') as $value)
+						$html .= '<option value="' . $value['id_product_category_tree'] . '">' . $value['name'] . '</option>';
+
+					$html .=
+				    '			</select>
+			                </label>
+			            </fieldset>
+						<fieldset class="input-group span2">
+			                <label data-important>
+			                    <span>Categoría 4</span>
+								<select name="category_four" class="chosen-select">
+									<option value="">Todo</option>';
+
+					foreach ($this->model->getAllCategories('four') as $value)
+						$html .= '<option value="' . $value['id_product_category_four'] . '">' . $value['name'] . '</option>';
+
+					$html .=
+				    '			</select>
+			                </label>
+			            </fieldset>
+						<fieldset class="input-group span2 pr">
+			                <label data-important>
+			                    <span>Fecha 1</span>
+								<input type="date" name="date_start" value="' . date('Y-m-d', strtotime(date('Y-m-d') . ' - 7 days')) . '">
+			                </label>
+			            </fieldset>
+						<fieldset class="input-group span2 pr">
+			                <label data-important>
+			                    <span>Fecha 2</span>
+								<input type="date" name="date_end" value="' . date('Y-m-d') . '">
+			                </label>
+			            </fieldset>
 					<form>
 		            <table id="existence" class="display" data-page-length="500">
 						<tbody>';
 
-					$existence = $this->model->getExistence($inventories[0]['id_inventory']);
+					$existence = $this->model->getExistence($inventories[0]['id_inventory'], '', '', '', '', date('Y-m-d', strtotime(date('Y-m-d') . ' - 7 days')) . ' 00:00:00', date('Y-m-d') . ' 11:59:59');
 
 					foreach ($existence as $value)
 					{
@@ -123,13 +187,13 @@ class Reports_controller extends Controller
 				{
 					$html .=
 					'<form name="historical">
-						<fieldset class="input-group span3 pr">
+						<fieldset class="input-group ' . ((Session::getValue('level') == 10) ? 'span2' : 'span3') . ' pr">
 			                <label data-important>
 			                    <span>Fecha 1</span>
 								<input id="hda1" type="date" name="date1" value="' . Format::getDate() . '">
 			                </label>
 			            </fieldset>
-						<fieldset class="input-group span3 pr">
+						<fieldset class="input-group ' . ((Session::getValue('level') == 10) ? 'span2' : 'span3') . ' pr">
 			                <label data-important>
 			                    <span>Fecha 2</span>
 								<input id="hda2" type="date" name="date2" value="' . Format::getDate() . '">
@@ -141,7 +205,7 @@ class Reports_controller extends Controller
 						$branchs = $this->model->getBranchs();
 
 						$html .=
-						'<fieldset class="input-group span3 pr">
+						'<fieldset class="input-group span4 pr">
 			                <label data-important>
 			                    <span>Sucursal</span>
 								<select id="hbra" name="branch" class="chosen-select">';
@@ -156,7 +220,7 @@ class Reports_controller extends Controller
 					}
 
 					$html .=
-					'<fieldset class="input-group ' . ((Session::getValue('level') == 10) ? 'span3' : 'span6') . '">
+					'<fieldset class="input-group ' . ((Session::getValue('level') == 10) ? 'span4' : 'span6') . '">
 						<label data-important>
 							<span>Inventario</span>
 							<select id="hinv" name="inventory" class="chosen-select">';

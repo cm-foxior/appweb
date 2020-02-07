@@ -50,16 +50,33 @@ class Reports_model extends Model
 		return $query;
 	}
 
-	public function getExistence($id)
+	public function getExistence($id, $category_one, $category_two, $category_tree, $category_four, $date_start, $date_end)
 	{
 		$products = [];
+
+		$and = [
+			'inventories_inputs.input_date_time[<>]' => [$date_start,$date_end],
+			'inventories_inputs.id_inventory' => $id,
+		];
+
+		if (!empty($category_one))
+			$and['products.id_product_category_one'] = $category_one;
+
+		if (!empty($category_two))
+			$and['products.id_product_category_two'] = $category_two;
+
+		if (!empty($category_tree))
+			$and['products.id_product_category_tree'] = $category_tree;
+
+		if (!empty($category_four))
+			$and['products.id_product_category_four'] = $category_four;
 
 		$inputs = $this->database->select('inventories_inputs', [
 			'[>]products' => ['id_product' => 'id_product'],
 			'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
 			'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
 			'[>]products_categories_tree' => ['products.id_product_category_tree' => 'id_product_category_tree'],
-			'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four'],
+			'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four']
 		], [
 			'inventories_inputs.quantify',
 			'inventories_inputs.id_product',
@@ -68,9 +85,9 @@ class Reports_model extends Model
 			'products_categories_one.name(category_one)',
 			'products_categories_two.name(category_two)',
 			'products_categories_tree.name(category_tree)',
-			'products_categories_four.name(category_four)',
+			'products_categories_four.name(category_four)'
 		], [
-			'inventories_inputs.id_inventory' => $id,
+			'AND' => $and
 		]);
 
 		foreach ($inputs as $key => $value)
@@ -101,7 +118,7 @@ class Reports_model extends Model
 
 				array_push($products, [
 					'id_product' => $value['id_product'],
-					'product' => $value['product'] . ' ' . $value['category_one'] . ' ' . $value['category_two'] . ' ' . $value['category_tree'] . ' ' . $value['category_four'],
+					'product' => $value['product'] . (!empty($value['category_one']) ? ' - ' . $value['category_one'] : '') . (!empty($value['category_two']) ? ' - ' . $value['category_two'] : '') . (!empty($value['category_tree']) ? ' - ' . $value['category_tree'] : '') . (!empty($value['category_four']) ? ' - ' . $value['category_four'] : ''),
 					'unity' => $value['unity'],
 					'inputs' => $value['quantify']
 				]);
@@ -402,5 +419,11 @@ class Reports_model extends Model
 		}
 
 		return [$sales,$total];
+	}
+
+	public function getAllCategories($number)
+	{
+		$query = $this->database->select('products_categories_' . $number, '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'name ASC']);
+		return $query;
 	}
 }
