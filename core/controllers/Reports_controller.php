@@ -172,6 +172,7 @@ class Reports_controller extends Controller
 							<td>' . $value['product'] . '</td>
 							<td>' . $value['inputs'] . '</td>
 							<td>' . $value['outputs'] . '</td>
+							<td>' . $value['flirts'] . '</td>
 							<td>' . $value['existence'] . '</td>
 							<td>' . $value['min'] . '</td>
 							<td>' . $value['max'] . '</td>

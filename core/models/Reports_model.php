@@ -82,6 +82,7 @@ class Reports_model extends Model
 			'inventories_inputs.id_product',
 			'products.name(product)',
 			'products.unity',
+			'products.flirt',
 			'products_categories_one.name(category_one)',
 			'products_categories_two.name(category_two)',
 			'products_categories_tree.name(category_tree)',
@@ -98,10 +99,13 @@ class Reports_model extends Model
 			{
 				if ($value['id_product'] == $subvalue['id_product'])
 				{
-					$break = true;
 					$products[$subkey]['inputs'] = $products[$subkey]['inputs'] + $value['quantify'];
+					$break = true;
 				}
 			}
+
+			if ($value['flirt'] == true)
+				$break = true;
 
 			if ($break == false)
 			{
@@ -116,11 +120,38 @@ class Reports_model extends Model
 				else if ($value['unity'] == 5)
 					$value['unity'] = 'Piezas';
 
+				$flirts = $this->database->select('products_flirts', [
+					'stock_actual',
+					'values'
+				], [
+					'id_product_2' => $value['id_product']
+				]);
+
+				$value['flirt'] = [];
+
+				if (!empty($flirts))
+				{
+					$value['flirt']['status'] = true;
+					$value['flirt']['values'] = [];
+
+					foreach ($flirts as $subvalue)
+					{
+						array_push($value['flirt']['values'], [
+							$subvalue['stock_actual'],
+							json_decode($subvalue['values'], true)['first'],
+							json_decode($subvalue['values'], true)['second']
+						]);
+					}
+				}
+				else
+					$value['flirt']['status'] = false;
+
 				array_push($products, [
 					'id_product' => $value['id_product'],
 					'product' => $value['product'] . (!empty($value['category_one']) ? ' - ' . $value['category_one'] : '') . (!empty($value['category_two']) ? ' - ' . $value['category_two'] : '') . (!empty($value['category_tree']) ? ' - ' . $value['category_tree'] : '') . (!empty($value['category_four']) ? ' - ' . $value['category_four'] : ''),
 					'unity' => $value['unity'],
-					'inputs' => $value['quantify']
+					'inputs' => $value['quantify'],
+					'flirt' => $value['flirt']
 				]);
 			}
 		}
@@ -140,7 +171,21 @@ class Reports_model extends Model
 			]);
 
 			$products[$key]['outputs'] = array_sum(array_map('current', $outputs)) . ' ' . $value['unity'];
-			$products[$key]['existence'] = ($value['inputs'] - $products[$key]['outputs']) . ' ' . $value['unity'];
+			$products[$key]['flirts'] = 0;
+			$products[$key]['existence'] = $value['inputs'] - $products[$key]['outputs'];
+
+			if ($value['flirt']['status'] == true)
+			{
+				foreach ($value['flirt']['values'] as $subvalue)
+					$products[$key]['flirts'] = $products[$key]['flirts'] + (($subvalue[0] * $subvalue[1]) / $subvalue[2]);
+
+				$products[$key]['flirts'] = $products[$key]['flirts'] . ' ' . $value['unity'];
+				$products[$key]['existence'] = $products[$key]['existence'] - $products[$key]['flirts'];
+			}
+			else
+				$products[$key]['flirts'] = '';
+
+			$products[$key]['existence'] = $products[$key]['existence'] . ' ' . $value['unity'];
 
 			$stocks = $this->database->select('inventories_stocks', [
 				'min',

@@ -21,11 +21,15 @@ $( document ).ready(function ()
                 "title": "Producto"
             },
             {
-                "title": "Entradas",
+                "title": "Entrada",
                 "width": "100px"
             },
             {
-                "title": "Salidas",
+                "title": "Salida real",
+                "width": "100px"
+            },
+            {
+                "title": "Salida ligada",
                 "width": "100px"
             },
             {
@@ -94,6 +98,7 @@ $( document ).ready(function ()
                             value.product,
                             value.inputs,
                             value.outputs,
+                            value.flirts,
                             value.existence,
                             value.min,
                             value.max,
