@@ -26,7 +26,6 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body">
     <div class="content">
         <div class="box-buttons">
@@ -53,7 +52,6 @@ $this->dependencies->getDependencies([
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="branchOffices">
     <div class="content">
         <header>
@@ -79,7 +77,7 @@ $this->dependencies->getDependencies([
                 </fieldset>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Número telefónico</span>
+                        <span>Número telefónico</span>
                         <select name="phoneCountryCode" class="span2">
                             <option value="52">[+52] México</option>
                         </select>
@@ -93,40 +91,40 @@ $this->dependencies->getDependencies([
                 </fieldset>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Dirección</span>
+                        <span>Dirección</span>
                         <input type="text" name="address">
                     </label>
                 </fieldset>
                 <h4 class="title margin-top-30">Información fiscal</h4>
-                <fieldset class="input-group">
+                <!-- <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>País</span>
+                        <span>País</span>
                         <select name="fiscalCountry">
                             <option value="México">México</option>
                         </select>
                     </label>
-                </fieldset>
+                </fieldset> -->
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Razón social</span>
+                        <span>Razón social</span>
                         <input type="text" name="fiscalName">
                     </label>
                 </fieldset>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>RFC</span>
+                        <span>RFC</span>
                         <input type="text" name="fiscalCode" class="uppercase">
                     </label>
                 </fieldset>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Régimen Fiscal</span>
+                        <span>Régimen Fiscal</span>
                         <input type="text" name="fiscalRegime">
                     </label>
                 </fieldset>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Dirección fiscal</span>
+                        <span>Dirección fiscal</span>
                         <input type="text" name="fiscalAddress">
                     </label>
                     <label class="checkbox" data-important>

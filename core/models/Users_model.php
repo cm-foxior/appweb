@@ -185,12 +185,6 @@ class Users_model extends Model
 
 	/*
 	--------------------------------------------------------------------------- */
-	public function getAllCountries()
-	{
-		$query = $this->database->select('settings_countries', '*', ['ORDER' => 'name ASC']);
-		return $query;
-	}
-
 	public function getAllBranchOffices()
 	{
 		$query = $this->database->select('branch_offices', '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'name ASC']);

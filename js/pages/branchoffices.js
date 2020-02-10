@@ -66,20 +66,37 @@ $(document).ready(function ()
             {
                 if (response.status == 'success')
                 {
-                    var phoneNumber = eval('(' + response.data.phone_number + ')');
-
                     $('input[name="name"]').val(response.data.name);
-                    $('input[name="email"]').val(response.data.email);
-                    $('select[name="phoneCountryCode"]').val(phoneNumber.country_code);
-                    $('input[name="phoneNumber"]').val(phoneNumber.number);
-                    $('select[name="phoneType"]').val(phoneNumber.type);
-                    $('input[name="address"]').val(response.data.address);
-                    $('select[name="fiscalCountry"]').val(response.data.fiscal_country);
-                    $('input[name="fiscalName"]').val(response.data.fiscal_name);
-                    $('input[name="fiscalCode"]').val(response.data.fiscal_code);
-                    $('input[name="fiscalRegime"]').val(response.data.fiscal_regime);
-                    $('input[name="fiscalAddress"]').val(response.data.fiscal_address);
 
+                    if (response.data.email != null)
+                        $('input[name="email"]').val(response.data.email);
+
+                    if (response.data.phone_number != null)
+                    {
+                        var phoneNumber = eval('(' + response.data.phone_number + ')');
+                        $('select[name="phoneCountryCode"]').val(phoneNumber.country_code);
+                        $('input[name="phoneNumber"]').val(phoneNumber.number);
+                        $('select[name="phoneType"]').val(phoneNumber.type);
+                    }
+
+                    if (response.data.address != null)
+                        $('input[name="address"]').val(response.data.address);
+
+                    if (response.data.fiscal_country != null)
+                        $('select[name="fiscalCountry"]').val(response.data.fiscal_country);
+
+                    if (response.data.fiscal_name != null)
+                        $('input[name="fiscalName"]').val(response.data.fiscal_name);
+
+                    if (response.data.fiscal_code != null)
+                        $('input[name="fiscalCode"]').val(response.data.fiscal_code);
+
+                    if (response.data.fiscal_regime != null)
+                        $('input[name="fiscalRegime"]').val(response.data.fiscal_regime);
+
+                    if (response.data.fiscal_address != null)
+                        $('input[name="fiscalAddress"]').val(response.data.fiscal_address);
+                    
                     $('[data-modal="branchOffices"] header > h6').html('Editar sucursal');
                     $('[data-modal="branchOffices"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="branchOffices"]').toggleClass('view').animate({scrollTop: 0}, 0);

@@ -133,12 +133,13 @@ $(document).ready(function ()
                 if (response.status == 'success')
                 {
                     $('input[name="name"]').val(response.data.name);
-                    $('input[name="email"]').val(response.data.email);
+
+                    if (response.data.email != null)
+                        $('input[name="email"]').val(response.data.email);
 
                     if (response.data.phone_number != null)
                     {
                         var phoneNumber = eval('(' + response.data.phone_number + ')');
-
                         $('select[name="phoneCountryCode"]').val(phoneNumber.country_code);
                         $('input[name="phoneNumber"]').val(phoneNumber.number);
                         $('select[name="phoneType"]').val(phoneNumber.type);
@@ -157,7 +158,6 @@ $(document).ready(function ()
                     }
 
                     $('input[name="password"]').parent().parent().addClass('hidden');
-
                     $('[data-modal="users"] header > h6').html('Editar usuario');
                     $('[data-modal="users"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="users"]').toggleClass('view').animate({scrollTop: 0}, 0);

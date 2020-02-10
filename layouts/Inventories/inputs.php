@@ -46,12 +46,13 @@ $this->dependencies->getDependencies([
             <table id="inputsTable" class="display" data-page-length="100">
                 <thead>
                     <tr>
+                        <th width="150px">Fecha</th>
                         <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Proveedor</th>
-                        <th>Fecha y hora</th>
+                        <th width="100px">Cantidad</th>
                         <th>Tipo</th>
-                        <th>Compra</th>
+                        <th width="100px">Precio</th>
+                        <th width="100px">Factura</th>
+                        <th>Proveedor</th>
                         <th width="35px"></th>
                     </tr>
                 </thead>
@@ -81,13 +82,13 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group span4">
+                <fieldset class="input-group span3 pr">
                     <label data-important>
                         <span><span class="required-field">*</span>Cantidad</span>
                         <input type="number" name="quantify">
                     </label>
                 </fieldset>
-                <fieldset class="input-group span4">
+                <fieldset class="input-group span3 pr">
                     <label data-important>
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
@@ -96,14 +97,20 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group span4">
+                <fieldset class="input-group span3 pr">
                     <label data-important>
                         <span>Precio de compra</span>
                         <input type="number" name="price">
                     </label>
                 </fieldset>
+                <fieldset class="input-group span3">
+                    <label data-important>
+                        <span>Factura</span>
+                        <input type="text" name="bill">
+                    </label>
+                </fieldset>
                 <?php if (Session::getValue('level') == 10) : ?>
-                <fieldset class="input-group span6">
+                <fieldset class="input-group span6 pr">
                     <label data-important>
                         <span>Fecha</span>
                         <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>">

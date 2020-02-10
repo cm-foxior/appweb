@@ -414,6 +414,7 @@ class Inventories_controller extends Controller
 				$quantify    = (isset($_POST['quantify']) AND !empty($_POST['quantify'])) ? $_POST['quantify'] : null;
 				$type		 = (isset($_POST['type']) AND !empty($_POST['type'])) ? $_POST['type'] : null;
 				$price		 = (isset($_POST['price']) AND !empty($_POST['price'])) ? $_POST['price'] : null;
+				$bill		 = (isset($_POST['bill']) AND !empty($_POST['bill'])) ? $_POST['bill'] : null;
 				$provider    = (isset($_POST['provider']) AND !empty($_POST['provider'])) ? $_POST['provider'] : null;
 
 				if (Session::getValue('level') == 10)
@@ -456,9 +457,9 @@ class Inventories_controller extends Controller
 				if (empty($errors))
 				{
 					if ($action == 'new')
-						$query = $this->model->newInput($product, $quantify, $type, $price, $provider, $date . ' ' . $hour, $id);
+						$query = $this->model->newInput($product, $quantify, $type, $price, $bill, $provider, $date . ' ' . $hour, $id);
 					else if ($action == 'edit')
-						$query = $this->model->editInput($id, $product, $quantify, $type, $price, $provider, $date . ' ' . $hour);
+						$query = $this->model->editInput($id, $product, $quantify, $type, $price, $bill, $provider, $date . ' ' . $hour);
 
 					if (!empty($query))
 					{
@@ -559,12 +560,13 @@ class Inventories_controller extends Controller
 
 	    				$lstInputs .=
 	    				'<tr style="color:' . $typeStyleColor . ';">
+							<td>' . $input['input_date_time'] . '</td>
 	    					<td>[' . $product['folio'] . '] ' . $product['name'] . (!empty($product['category_one']) ? ' - ' . $product['category_one'] : '')  . (!empty($product['category_two']) ? ' - ' . $product['category_two'] : '')  . (!empty($product['category_tree']) ? ' - ' . $product['category_tree'] : '')  . (!empty($product['category_four']) ? ' - ' . $product['category_four'] : '') . '</td>
 	    					<td>' . $input['quantify'] . ' ' . $unity . '</td>
-	    					<td>' . (!empty($provider['name']) ? $provider['name'] : '- - -') . '</td>
-	    					<td>' . $input['input_date_time'] . '</td>
-	    					<td>' . $type . '</td>
+							<td>' . $type . '</td>
 	    					<td>' . ((!empty($input['price'])) ? '$ ' . $input['price'] . ' MXN' : '') . '</td>
+	    					<td>' . ((!empty($input['bill'])) ? $input['bill'] : '') . '</td>
+							<td>' . (!empty($provider['name']) ? $provider['name'] : '') . '</td>
 	                        <td>' . $btnEditInput . '</td>
 	    				</tr>';
 	    			}

@@ -141,7 +141,7 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function newInput($product, $quantify, $type, $price, $provider, $datetime, $id)
+    public function newInput($product, $quantify, $type, $price, $bill, $provider, $datetime, $id)
 	{
 		if (!isset($datetime) OR empty($datetime))
 			$datetime = Format::getDateHour();
@@ -155,6 +155,7 @@ class Inventories_model extends Model
             'id_inventory' => $id,
             'id_inventory_transfer' => null,
             'price' => !empty($price) ? $price : null,
+            'bill' => !empty($bill) ? $bill : null,
 			'id_subscription' => Session::getValue('id_subscription')
         ]);
 
@@ -167,7 +168,7 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function editInput($id, $product, $quantify, $type, $price, $provider, $datetime)
+    public function editInput($id, $product, $quantify, $type, $price, $bill, $provider, $datetime)
 	{
 		if (Session::getValue('level') == 10)
 		{
@@ -177,7 +178,8 @@ class Inventories_model extends Model
 				'input_date_time' => $datetime,
 	            'id_product' => $product,
 	            'id_provider' => $provider,
-				'price' => !empty($price) ? $price : null
+				'price' => !empty($price) ? $price : null,
+				'bill' => !empty($bill) ? $bill : null
 	        ], ['id_inventory_input' => $id]);
 		}
 		else

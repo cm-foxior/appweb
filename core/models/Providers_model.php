@@ -79,46 +79,13 @@ class Providers_model extends Model
 
 	public function checkExistProvider($id, $name, $fiscalName, $fiscalCode, $action)
 	{
-
-		if (isset($fiscalName) AND !isset($fiscalCode))
-		{
-			$query	= $this->database->select('providers', '*', [
-				'AND' => [
-					'OR' => [
-						'name' => $name,
-						'fiscal_name' => $fiscalName
-					],
-					'id_subscription' => Session::getValue('id_subscription')
-				]
-			]);
-		}
-		else if (isset($fiscalCode) AND !isset($fiscalName))
-		{
-			$query	= $this->database->select('providers', '*', [
-				'OR' => [
-					'name' => $name,
-					'fiscal_code' => $fiscalCode
-				]
-			]);
-		}
-		else if (isset($fiscalCode) AND isset($fiscalName))
-		{
-			$query	= $this->database->select('providers', '*', [
-				'OR' => [
-					'name' => $name,
-					'fiscal_name' => $fiscalName,
-					'fiscal_code' => $fiscalCode
-				]
-			]);
-		}
-		else if (!isset($fiscalCode) AND !isset($fiscalName))
-			$query	= $this->database->select('providers', '*', ['name' => $name]);
+		$query	= $this->database->select('providers', '*', [
+			'name' => $name
+		]);
 
 		if (!empty($query))
 		{
-			$errorName       = false;
-			$errorFiscalName = false;
-			$errorFiscalCode = false;
+			$errorName = false;
 
 			foreach ($query as $data)
 			{
@@ -126,32 +93,14 @@ class Providers_model extends Model
 					$errorName = true;
 				else if ($action == 'edit' AND $name == $data['name'] AND $id != $data['id_provider'])
 					$errorName = true;
-
-				if ($action == 'new' AND isset($fiscalName) AND $fiscalName == $data['fiscal_name'])
-					$errorFiscalName = true;
-				else if ($action == 'edit' AND isset($fiscalName) AND $fiscalName == $data['fiscal_name'] AND $id != $data['id_provider'])
-					$errorFiscalName = true;
-
-				if ($action == 'new' AND isset($fiscalCode) AND $fiscalCode == $data['fiscal_code'])
-					$errorFiscalCode = true;
-				else if ($action == 'edit' AND isset($fiscalCode) AND $fiscalCode == $data['fiscal_code'] AND $id != $data['id_provider'])
-					$errorFiscalCode = true;
 			}
 
-			if ($errorName == true OR $errorFiscalName == true OR $errorFiscalCode == true)
-				return ['status' => true, 'errors' => ['errorName' => $errorName, 'errorFiscalName' => $errorFiscalName, 'errorFiscalCode' => $errorFiscalCode]];
+			if ($errorName == true)
+				return ['status' => true, 'errors' => ['errorName' => $errorName]];
 			else
 				return ['status' => false];
 		}
 		else
 			return ['status' => false];
-	}
-
-	/* Países
-	--------------------------------------------------------------------------- */
-	public function getAllCountries()
-	{
-		$query = $this->database->select('settings_countries', '*', ['ORDER' => 'name ASC']);
-		return $query;
 	}
 }

@@ -49,24 +49,6 @@ $(document).ready(function ()
             $('input[name="fiscalAddress"]').val('');
     });
 
-    /* Asignar estándares fiscales en México
-    /* ------------------------------------------------------------------------ */
-    var sltFiscalCountry = $('select[name="fiscalCountry"]');
-
-    sltFiscalCountry.on('change', function()
-    {
-        if (sltFiscalCountry.val() == 'México' || sltFiscalCountry.val() == '')
-        {
-            $('#fiscalName').html('Razón Social');
-            $('#fiscalCode').html('RFC');
-        }
-        else if (sltFiscalCountry.val() != 'México')
-        {
-            $('#fiscalName').html('Nombre Fiscal');
-            $('#fiscalCode').html('ID Fiscal');
-        }
-    });
-
     /* Obtener proveedor para editar
     /* ------------------------------------------------------------------------ */
     var idProvider;
@@ -85,33 +67,32 @@ $(document).ready(function ()
                 if (response.status == 'success')
                 {
                     $('input[name="name"]').val(response.data.name);
-                    $('input[name="email"]').val(response.data.email);
+
+                    if (response.data.email != null)
+                        $('input[name="email"]').val(response.data.email);
 
                     if (response.data.phone_number != null)
                     {
                         var phoneNumber = eval('(' + response.data.phone_number + ')');
-
                         $('select[name="phoneCountryCode"]').val(phoneNumber.country_code);
                         $('input[name="phoneNumber"]').val(phoneNumber.number);
                         $('select[name="phoneType"]').val(phoneNumber.type);
                     }
 
-                    $('input[name="address"]').val(response.data.address);
-                    $('select[name="fiscalCountry"]').val(response.data.fiscal_country);
-                    $('input[name="fiscalName"]').val(response.data.fiscal_name);
-                    $('input[name="fiscalCode"]').val(response.data.fiscal_code);
-                    $('input[name="fiscalAddress"]').val(response.data.fiscal_address);
+                    if (response.data.address != null)
+                        $('input[name="address"]').val(response.data.address);
 
-                    if (response.data.fiscal_country == null || response.data.fiscal_country == 'México')
-                    {
-                        $('#fiscalName').html('Razón Social');
-                        $('#fiscalCode').html('RFC');
-                    }
-                    else
-                    {
-                        $('#fiscalName').html('Nombre Fiscal');
-                        $('#fiscalCode').html('ID Fiscal');
-                    }
+                    if (response.data.fiscal_country != null)
+                        $('select[name="fiscalCountry"]').val(response.data.fiscal_country);
+
+                    if (response.data.fiscal_name != null)
+                        $('input[name="fiscalName"]').val(response.data.fiscal_name);
+
+                    if (response.data.fiscal_code != null)
+                        $('input[name="fiscalCode"]').val(response.data.fiscal_code);
+
+                    if (response.data.fiscal_address != null)
+                        $('input[name="fiscalAddress"]').val(response.data.fiscal_address);
 
                     $('[data-modal="providers"] header > h6').html('Editar proveedor');
                     $('[data-modal="providers"] form').attr('data-submit-action', 'edit');

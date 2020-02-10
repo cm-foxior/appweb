@@ -13,15 +13,14 @@ class Users_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function index()
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			$userLogged = $this->model->getUserLogged();
 
 			if (Format::existAjaxRequest() == true)
 			{
-				$action	= $_POST['action'];
-				$id		= ($action == 'edit') ? $_POST['id'] : null;
-
+				$action				= $_POST['action'];
+				$id					= ($action == 'edit') ? $_POST['id'] : null;
 				$name               = (isset($_POST['name']) AND !empty($_POST['name'])) ? $_POST['name'] : null;
 				$email              = (isset($_POST['email']) AND !empty($_POST['email'])) ? $_POST['email'] : null;
 				$phoneCountryCode	= (isset($_POST['phoneCountryCode']) AND !empty($_POST['phoneCountryCode'])) ? $_POST['phoneCountryCode'] : null;
@@ -31,48 +30,12 @@ class Users_controller extends Controller
 	            $password           = (isset($_POST['password']) AND !empty($_POST['password'])) ? $_POST['password'] : null;
 	            $level              = (isset($_POST['level']) AND !empty($_POST['level'])) ? $_POST['level'] : null;
 				$avatar 			= (isset($_FILES['avatar']['name']) AND !empty($_FILES['avatar']['name'])) ? $_FILES['avatar'] : null;
-
-				if (Session::getValue('level') == 10)
-					$branchOffice = (isset($_POST['branchOffice']) AND !empty($_POST['branchOffice'])) ? $_POST['branchOffice'] : null;
-				else if (Session::getValue('level') == 9)
-					$branchOffice = $userLogged['id_branch_office'];
+				$branchOffice 		= (isset($_POST['branchOffice']) AND !empty($_POST['branchOffice'])) ? $_POST['branchOffice'] : null;
 
 				$errors = [];
 
 	            if (!isset($name))
 	                array_push($errors, ['name', 'No deje este campo vacío']);
-
-	            if (isset($email) AND Security::checkMail($email) == false)
-	                array_push($errors, ['email', 'Formato incorrecto']);
-
-				if (!isset($phoneCountryCode) AND isset($phoneNumber))
-	                array_push($errors, ['phoneCountryCode', 'Seleccione una opción']);
-	            else if (isset($phoneCountryCode) AND !is_numeric($phoneCountryCode))
-	                array_push($errors, ['phoneCountryCode', 'Ingrese únicamente números']);
-	            else if (isset($phoneCountryCode) AND $phoneCountryCode < 0)
-	                array_push($errors, ['phoneCountryCode', 'No ingrese números negativos']);
-	            else if (isset($phoneCountryCode) AND Security::checkIsFloat($phoneCountryCode) == true)
-	                array_push($errors, ['phoneCountryCode', 'No ingrese números decimales']);
-				else if (isset($phoneCountryCode) AND Security::checkIfExistSpaces($phoneCountryCode) == true)
-					array_push($errors, ['phoneCountryCode', 'No ingrese espacios']);
-
-				if (isset($phoneNumber) AND !is_numeric($phoneNumber))
-	                array_push($errors, ['phoneNumber', 'Ingrese únicamente números']);
-	            else if (isset($phoneNumber) AND $phoneNumber < 0)
-	                array_push($errors, ['phoneNumber', 'No ingrese números negativos']);
-	            else if (isset($phoneNumber) AND $phoneType == 'Móvil' AND strlen($phoneNumber) != 10)
-	                array_push($errors, ['phoneNumber', 'Ingrese su número telefónico a 10 digitos']);
-	            else if (isset($phoneNumber) AND $phoneType == 'Local' AND strlen($phoneNumber) != 7)
-	                array_push($errors, ['phoneNumber', 'Ingrese su número telefónico a 7 digitos']);
-	            else if (isset($phoneNumber) AND Security::checkIsFloat($phoneNumber) == true)
-	                array_push($errors, ['phoneNumber', 'No ingrese números decimales']);
-				else if (isset($phoneNumber) AND Security::checkIfExistSpaces($phoneNumber) == true)
-					array_push($errors, ['phoneNumber', 'No ingrese espacios']);
-
-				if (!isset($phoneType) AND isset($phoneNumber))
-	                array_push($errors, ['phoneType', 'Seleccione una opción']);
-	            else if (isset($phoneType) AND $phoneType != 'Local' AND isset($phoneType) AND $phoneType != 'Móvil')
-	                array_push($errors, ['phoneType', 'Opción no válida']);
 
 				if (!isset($username))
 					array_push($errors, ['username', 'No deje este campo vacío']);
@@ -81,24 +44,17 @@ class Users_controller extends Controller
 
 				if ($action == 'new' AND !isset($password))
 					array_push($errors, ['password', 'No deje este campo vacío']);
-				else if ($action == 'new' AND strlen($password) < 8)
-					array_push($errors, ['password', 'Ingrese mínimo 8 caracteres']);
 				else if ($action == 'new' AND Security::checkIfExistSpaces($password) == true)
 	                array_push($errors, ['password', 'No ingrese espacios']);
 
 				if (!isset($level))
 					array_push($errors, ['level', 'Seleccione una opción']);
-				else if ($level != '10' AND $level != '9' AND $level != '8' AND $level != '7')
-					array_push($errors, ['level', 'Opción no válida']);
 
-				if (Session::getValue('level') == 10 AND $level != '10' AND !isset($branchOffice))
+				if ($level != '10' AND !isset($branchOffice))
 					array_push($errors, ['branchOffice', 'Seleccione una opción']);
 
 				if (empty($errors))
 				{
-					if (isset($email))
-						$email = strtolower($email);
-
 					if (isset($phoneCountryCode) AND isset($phoneNumber) AND isset($phoneType))
 					{
 						$phoneNumber = json_encode([
@@ -110,13 +66,8 @@ class Users_controller extends Controller
 					else
 						$phoneNumber = null;
 
-					$username = strtolower($username);
-
 					if ($action == 'new')
 						$password = $this->security->createPassword($password);
-
-					if ($level == '10')
-						$branchOffice = null;
 
 					$exist = $this->model->checkExistUser($id, $username, $action);
 
@@ -166,14 +117,9 @@ class Users_controller extends Controller
 
 				$template = $this->view->render($this, 'index');
 				$template = $this->format->replaceFile($template, 'header');
-
-				if (Session::getValue('level') == 10)
-					$users = $this->model->getAllUsers();
-				else if (Session::getValue('level') == 9)
-					$users = $this->model->getAllUsersByBranchOffice($userLogged['id_branch_office']);
-
+				$users = $this->model->getAllUsers();
+				$branchOffices = $this->model->getAllBranchOffices();
 				$tblUsers = '';
-				$lstLevel = '';
 				$lstBranchOffices = '';
 
 				$tblUsers .=
@@ -185,7 +131,7 @@ class Users_controller extends Controller
 	                        <th>Nombre</th>
 	                        <th>Usuario</th>
 	                        <th>Nivel de acceso</th>
-	                        ' . ((Session::getValue('level') == 10) ? '<th>Sucursal</th>' : '') . '
+	                        <th>Sucursal</th>
 	                        <th width="100px">Estado</th>
 	                        <th width="70px"></th>
 	                    </tr>
@@ -195,7 +141,7 @@ class Users_controller extends Controller
 				foreach ($users as $user)
 				{
 					if ($user['level'] == '10')
-						$level = 'Propietario / Administrador';
+						$level = 'Administrador';
 					else if ($user['level'] == '9')
 						$level = 'Supervisor';
 					else if ($user['level'] == '8')
@@ -203,16 +149,13 @@ class Users_controller extends Controller
 					else if ($user['level'] == '7')
 						$level = 'Vendedor';
 
-					if (Session::getValue('level') == 10)
+					if (!empty($user['id_branch_office']))
 					{
-						if (!empty($user['id_branch_office']))
-						{
-							$branchOffice = $this->model->getBranchOfficeById($user['id_branch_office']);
-							$branchOffice = $branchOffice['name'];
-						}
-						else
-							$branchOffice = '-';
+						$branchOffice = $this->model->getBranchOfficeById($user['id_branch_office']);
+						$branchOffice = $branchOffice['name'];
 					}
+					else
+						$branchOffice = '';
 
 					$tblUsers .=
 					'<tr>
@@ -221,12 +164,11 @@ class Users_controller extends Controller
 						<td>' . $user['name'] . '</td>
 						<td>' . $user['username'] . '</td>
 						<td>' . $level . '</td>
-						' . ((Session::getValue('level') == 10) ? '<td>' . $branchOffice . '</td>' : '') . '
+						<td>' . $branchOffice . '</td>
 						<td>' . (($user['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desctivado</span>') . '</td>
 						<td>
 							<a ' . (($user['status'] == true) ? 'data-action="getUserToEdit" data-id="' . $user['id_user'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
 							<a ' . (($user['status'] == true) ? 'data-action="getUserToRestorePassword" data-id="' . $user['id_user'] . '" data-button-modal="restoreUserPassword"' : 'disabled') . '><i class="material-icons">lock_outline</i><span>Restablecer contraseña</span></a>
-							<!-- <a href="/users/view/' . $user['id_user'] . '"><i class="material-icons">more_horiz</i><span>Detalles</span></a> -->
 						</td>
 					</tr>';
 				}
@@ -235,36 +177,26 @@ class Users_controller extends Controller
 	            '    </tbody>
 	            </table>';
 
-				if (Session::getValue('level') == 10)
+				$lstBranchOffices .=
+				'<fieldset class="input-group hidden">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Sucursal</span>
+                        <select name="branchOffice" class="chosen-select">
+                            <option value="">Seleccione una opción</option>';
+
+				foreach ($branchOffices as $branchOffice)
 				{
-					$branchOffices = $this->model->getAllBranchOffices();
-
-					$lstLevel .=
-					'<option value="10">[10] Propietario / Administrador</option>
-					<option value="9">[9] Supervisor</option>';
-
 					$lstBranchOffices .=
-					'<fieldset class="input-group hidden">
-	                    <label data-important>
-	                        <span><span class="required-field">*</span>Sucursal</span>
-	                        <select name="branchOffice" class="chosen-select">
-	                            <option value="">Seleccione una opción</option>';
-
-					foreach ($branchOffices as $branchOffice)
-					{
-						$lstBranchOffices .=
-						'<option value="' . $branchOffice['id_branch_office'] . '">' . $branchOffice['name'] . '</option>';
-					}
-
-					$lstBranchOffices .=
-					'		</select>
-	                    </label>
-	                </fieldset>';
+					'<option value="' . $branchOffice['id_branch_office'] . '">' . $branchOffice['name'] . '</option>';
 				}
+
+				$lstBranchOffices .=
+				'		</select>
+                    </label>
+                </fieldset>';
 
 				$replace = [
 					'{$tblUsers}' => $tblUsers,
-					'{$lstLevel}' => $lstLevel,
 					'{$lstBranchOffices}' => $lstBranchOffices
 				];
 
@@ -281,7 +213,7 @@ class Users_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function getUserToEdit($id)
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -306,7 +238,7 @@ class Users_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function restoreUserPassword()
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -318,8 +250,6 @@ class Users_controller extends Controller
 
 				if (!isset($password))
 					array_push($errors, ['newPassword', 'No deje este campo vacío']);
-				else if (strlen($password) < 6)
-					array_push($errors, ['newPassword', 'Ingrese mínimo 6 caracteres']);
 				else if (Security::checkIfExistSpaces($password) == true)
 	                array_push($errors, ['newPassword', 'No ingrese espacios']);
 
@@ -362,7 +292,7 @@ class Users_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function changeStatusUsers($action)
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -396,7 +326,7 @@ class Users_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function deleteUsers()
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -420,51 +350,4 @@ class Users_controller extends Controller
 		else
 			header('Location: /dashboard');
 	}
-
-	/* Detalles del usuario seleccionado
-	--------------------------------------------------------------------------- */
-    public function view($id)
-    {
-        if (Session::getValue('level') >= 9)
-		{
-			define('_title', '{$lang.title} | Dashboard');
-
-	        $template = $this->view->render($this, 'view');
-	        $template = $this->format->replaceFile($template, 'header');
-
-	        $user = $this->model->getUserById($id);
-
-			if (!empty($user['id_branch_office']))
-				$branchOffice = $this->model->getBranchOfficeById($user['id_branch_office']);
-
-	        $phoneNumber = json_decode($user['phone_number'], true);
-
-			if ($user['level'] == '10')
-				$level = 'Super usuario';
-			else if ($user['level'] == '9')
-				$level = 'Administrador';
-			else if ($user['level'] == '8')
-				$level = 'Inventarista';
-			else if ($user['level'] == '7')
-				$level = 'Vendedor';
-
-	        $replace = [
-	            '{$name}' => $user['name'],
-	            '{$email}' => $user['email'],
-	            '{$phoneNumber}' => $phoneNumber['type'] . '. + ' . $phoneNumber['country_code'] . ' (' . $phoneNumber['lada'] . ') ' . $phoneNumber['number'],
-				'{$username}' => $user['username'],
-				'{$level}' => $level,
-				'{$status}' => ($user['status'] == true) ? 'Activo' : 'Desactivado',
-	            '{$registrationDate}' => $user['registration_date'],
-				'{$avatar}' => !empty($user['avatar']) ? '{$path.images}users/' . $user['avatar'] : '',
-				'{$branchOffice}' => !empty($user['id_branch_office']) ? $branchOffice['name'] : ''
-	        ];
-
-	        $template = $this->format->replace($replace, $template);
-
-	        echo $template;
-		}
-		else
-			header('Location: /dashboard');
-    }
 }

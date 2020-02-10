@@ -6,10 +6,12 @@
     </figure>
     <div class="tools">
         <div class="widgets">
-            <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
+            <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 8 OR Session::getValue('level') == 10) : ?>
             <div class="shortcut-menu">
                 <a href="/search"><i class="material-icons">search</i>Buscar producto</a>
             </div>
+            <?php endif; ?>
+            <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
             <div class="shortcut-menu">
                 <a href="/pointsale/add"><i class="material-icons">add</i>Nueva venta</a>
             </div>
@@ -21,8 +23,6 @@
                 <button type="button"><i class="material-icons">more_vert</i></button>
                 <div class="dropdown md--shadow">
                     <!-- <a><i class="material-icons">settings</i>Mi perfil</a>
-                    <span class="space"></span>
-                    <a><i class="material-icons">settings</i>Manual de usuario</a>
                     <span class="space"></span> -->
                     <a href="?session=logout"><i class="material-icons">power_settings_new</i>Cerrar sesion</a>
                 </div>
@@ -35,22 +35,22 @@
 </header>
 <aside class="leftbar <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <ul>
-        <?php if (Session::getValue('level') >= 8) : ?>
+        <?php if (Session::getValue('level') == 8 OR Session::getValue('level') == 10) : ?>
         <li data-target="inventories">
             <a href="/inventories"><i class="material-icons">assignment_turned_in</i>Inventarios</a>
         </li>
         <?php endif; ?>
-        <?php if (Session::getValue('level') == 7 OR Session::getValue('level') >= 9) : ?>
+        <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
         <li data-target="sales">
             <a href="/pointsale"><i class="material-icons">shopping_cart</i>Punto de venta</a>
         </li>
         <?php endif; ?>
-        <?php if (Session::getValue('level') >= 9) : ?>
+        <?php if (Session::getValue('level') == 10) : ?>
         <li data-target="reports">
             <a href="/reports/inventories/existence"><i class="material-icons">crop_portrait</i>Reportes</a>
         </li>
         <?php endif; ?>
-        <?php if (Session::getValue('level') >= 9) : ?>
+        <?php if (Session::getValue('level') == 10) : ?>
         <li data-target="products">
             <a href="/products"><i class="material-icons">shopping_basket</i>Productos</a>
         </li>
@@ -70,7 +70,7 @@
             <a href="/branchoffices"><i class="material-icons">account_balance</i>Sucursales</a>
         </li>
         <?php endif; ?>
-        <?php if (Session::getValue('level') >= 9) : ?>
+        <?php if (Session::getValue('level') == 10) : ?>
         <li data-target="users">
             <a href="/users"><i class="material-icons">people</i>Usuarios</a>
         </li>

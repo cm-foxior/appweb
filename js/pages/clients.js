@@ -24,7 +24,7 @@ $(document).ready(function ()
             }
         ],
         "order": [
-            [5,'asc']
+            [1,'asc']
         ],
         "searching": true,
         "info": true,
@@ -49,24 +49,6 @@ $(document).ready(function ()
             $('input[name="fiscalAddress"]').val('');
     });
 
-    /* Asignar estándares fiscales en México
-    /* ------------------------------------------------------------------------ */
-    var sltFiscalCountry = $('select[name="fiscalCountry"]');
-
-    sltFiscalCountry.on('change', function()
-    {
-        if (sltFiscalCountry.val() == 'México' || sltFiscalCountry.val() == '')
-        {
-            $('#fiscalName').html('Razón Social');
-            $('#fiscalCode').html('RFC');
-        }
-        else if (sltFiscalCountry.val() != 'México')
-        {
-            $('#fiscalName').html('Nombre Fiscal');
-            $('#fiscalCode').html('ID Fiscal');
-        }
-    });
-
     /* Obtener cliente para editar
     /* ------------------------------------------------------------------------ */
     var idClient;
@@ -84,30 +66,34 @@ $(document).ready(function ()
             {
                 if (response.status == 'success')
                 {
-                    var phoneNumber = eval('(' + response.data.phone_number + ')');
-
                     $('input[name="name"]').val(response.data.name);
                     $('select[name="type"]').val(response.data.type);
-                    $('input[name="email"]').val(response.data.email);
-                    $('select[name="phoneCountryCode"]').val(phoneNumber.country_code);
-                    $('input[name="phoneNumber"]').val(phoneNumber.number);
-                    $('select[name="phoneType"]').val(phoneNumber.type);
-                    $('input[name="address"]').val(response.data.address);
-                    $('select[name="fiscalCountry"]').val(response.data.fiscal_country);
-                    $('input[name="fiscalName"]').val(response.data.fiscal_name);
-                    $('input[name="fiscalCode"]').val(response.data.fiscal_code);
-                    $('input[name="fiscalAddress"]').val(response.data.fiscal_address);
 
-                    if (response.data.fiscal_country == null || response.data.fiscal_country == 'México')
+                    if (response.data.email != null)
+                        $('input[name="email"]').val(response.data.email);
+
+                    if (response.data.phone_number != null)
                     {
-                        $('#fiscalName').html('Razón Social');
-                        $('#fiscalCode').html('RFC');
+                        var phoneNumber = eval('(' + response.data.phone_number + ')');
+                        $('select[name="phoneCountryCode"]').val(phoneNumber.country_code);
+                        $('input[name="phoneNumber"]').val(phoneNumber.number);
+                        $('select[name="phoneType"]').val(phoneNumber.type);
                     }
-                    else
-                    {
-                        $('#fiscalName').html('Nombre Fiscal');
-                        $('#fiscalCode').html('ID Fiscal');
-                    }
+
+                    if (response.data.address != null)
+                        $('input[name="address"]').val(response.data.address);
+
+                    if (response.data.fiscal_country != null)
+                        $('select[name="fiscalCountry"]').val(response.data.fiscal_country);
+
+                    if (response.data.fiscal_name != null)
+                        $('input[name="fiscalName"]').val(response.data.fiscal_name);
+
+                    if (response.data.fiscal_code != null)
+                        $('input[name="fiscalCode"]').val(response.data.fiscal_code);
+
+                    if (response.data.fiscal_address != null)
+                        $('input[name="fiscalAddress"]').val(response.data.fiscal_address);
 
                     $('[data-modal="clients"] header > h6').html('Editar cliente');
                     $('[data-modal="clients"] form').attr('data-submit-action', 'edit');
@@ -153,76 +139,6 @@ $(document).ready(function ()
             {
                 checkValidateFormAjax(self, response, function()
                 {
-                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-                    location.reload();
-                });
-            }
-        });
-    });
-
-    /* Enviar correo masivo a clientes
-    /* ------------------------------------------------------------------------ */
-    var frmSendMassEmail = $('form[name="sendMassEmail"]');
-    var selected = [];
-
-    $('[data-check]').change(function ()
-    {
-        var self = $(this);
-
-        if ( !self.is(':checked') )
-        {
-            $("[data-check-all]").prop('checked', false);
-
-            var removeItem = self.val();
-            selected = jQuery.grep(selected, function ( value )
-            {
-                return value != removeItem;
-            });
-        }
-        else
-        {
-            var value = $(this).val();
-
-            if( isNaN(value) == false )
-                selected.push(value);
-        }
-    });
-
-    modal('sendMassEmail', function(modal)
-    {
-        modal.find('form')[0].reset();
-
-    }, function(modal)
-    {
-        frmSendMassEmail.submit();
-    });
-
-    frmSendMassEmail.on('submit', function(e)
-    {
-        e.preventDefault();
-
-        var self = $(this);
-        var data = new FormData(this);
-
-        if (selected.length > 0)
-        {
-            var jsonSelected = JSON.stringify(selected);
-            data.append('selected', jsonSelected);
-        }
-
-        $.ajax({
-            url: '/clients/sendMassEmail',
-            type: 'POST',
-            data: data,
-            contentType: false,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                checkValidateFormAjax(self, response, function()
-                {
-                    alert('Correo masivo enviado correctamente');
                     $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
                     location.reload();
                 });

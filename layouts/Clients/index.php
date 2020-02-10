@@ -26,15 +26,13 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body">
     <div class="content">
         <div class="box-buttons">
-            {$btnDeleteClients}
+            <a data-button-modal="deleteClients"><i class="material-icons">delete</i><span>Eliminar</span></a>
+            <!-- <a data-button-modal="deactivateClients"><i class="material-icons">block</i><span>Desactivar</span></a>
+            <a data-button-modal="activateClients"><i class="material-icons">check</i><span>Activar</span></a> -->
             <a data-button-modal="clients"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <!-- {$btnDeactivateClients}
-            {$btnActivateClients} -->
-            <!-- <a data-button-modal="sendMassEmail"><i class="material-icons">mail</i><span>Enviar correo masivo</span></a> -->
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">
@@ -43,10 +41,10 @@ $this->dependencies->getDependencies([
                     <tr>
                         <th width="20px"></th>
                         <th>Nombre</th>
+                        <th>Tipo</th>
                         <th>Correo electrónico</th>
                         <th>Número Teléfonico</th>
                         <th>RFC</th>
-                        <th>Tipo</th>
                         <th width="100px">Estado</th>
                         <th width="35px"></th>
                     </tr>
@@ -58,7 +56,6 @@ $this->dependencies->getDependencies([
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="clients">
     <div class="content">
         <header>
@@ -88,16 +85,15 @@ $this->dependencies->getDependencies([
                 <h4 class="title margin-top-30">Información de contacto</h4>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Email</span>
+                        <span>Email</span>
                         <input type="email" name="email">
                     </label>
                 </fieldset>
                 <fieldset class="input-group">
                     <label data-important>
-                        <span><span class="required-field">*</span>Número telefónico</span>
+                        <span>Número telefónico</span>
                         <select name="phoneCountryCode" class="span2">
                             <option value="52">[+52] México</option>
-                            <!-- {$lstCountriesPhoneCodes} -->
                         </select>
                         <input type="number" name="phoneNumber" class="span8 margin-left-right">
                         <select name="phoneType" class="span2">
@@ -114,15 +110,14 @@ $this->dependencies->getDependencies([
                     </label>
                 </fieldset>
                 <h4 class="title margin-top-30">Información fiscal</h4>
-                <fieldset class="input-group">
+                <!-- <fieldset class="input-group">
                     <label data-important>
                         <span>País</span>
                         <select name="fiscalCountry">
                             <option value="México">México</option>
-                            <!-- {$lstCountries} -->
                         </select>
                     </label>
-                </fieldset>
+                </fieldset> -->
                 <fieldset class="input-group">
                     <label data-important>
                         <span id="fiscalName">Razón social</span>
@@ -154,51 +149,45 @@ $this->dependencies->getDependencies([
         </footer>
     </div>
 </section>
-<section class="modal" data-modal="sendMassEmail">
+<section class="modal alert" data-modal="activateClients">
     <div class="content">
         <header>
-            <h6>Enviar correo masivo</h6>
+            <h6>Alerta</h6>
         </header>
         <main>
-            <form name="sendMassEmail">
-                <fieldset class="input-group">
-                    <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
-                </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span><span class="required-field">*</span>Asunto</span>
-                        <input type="text" name="subject" autofocus>
-                    </label>
-                </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Mensaje</span>
-                        <textarea name="message"></textarea>
-                    </label>
-                </fieldset>
-                <div class="upload-image">
-                    <div class="image-preview" image-preview="image-preview"></div>
-                    <a select-image>Seleccionar imagen</a>
-                    <a clear-image>Eliminar imagen</a>
-                    <input id="image-preview" name="image" type="file" accept="image/*" image-preview="image-preview"/>
-                </div>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span><span class="required-field">*</span>Enviar a</span>
-                        <select name="sendTo">
-                            <option value="all">Todos los clientes</option>
-                            <option value="selected">Clientes seleccionados</option>
-                        </select>
-                    </label>
-                </fieldset>
-            </form>
+            <p>¿Está seguro de que desea activar está selección de clientes?</p>
         </main>
         <footer>
-            <a button-cancel>Cancelar</a>
-            <a button-success>Aceptar</a>
+            <a button-close>Cancelar</a>
+            <a data-action="activateClients">Aceptar</a>
         </footer>
     </div>
 </section>
-{$mdlActivateClients}
-{$mdlDeactivateClients}
-{$mdlDeleteClients}
+<section class="modal alert" data-modal="deactivateClients">
+    <div class="content">
+        <header>
+            <h6>Alerta</h6>
+        </header>
+        <main>
+            <p>¿Está seguro de que desea desactivar está selección de clientes?</p>
+        </main>
+        <footer>
+            <a button-close>Cancelar</a>
+            <a data-action="deactivateClients">Aceptar</a>
+        </footer>
+    </div>
+</section>
+<section class="modal alert" data-modal="deleteClients">
+    <div class="content">
+        <header>
+            <h6>Alerta</h6>
+        </header>
+        <main>
+            <p>¿Está seguro de que desea eliminar está selección de clientes?</p>
+        </main>
+        <footer>
+            <a button-close>Cancelar</a>
+            <a data-action="deleteClients">Aceptar</a>
+        </footer>
+    </div>
+</section>

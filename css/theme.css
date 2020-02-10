@@ -2402,7 +2402,7 @@ div.upload-image > input {
 ------------------------------------------------------------------------------ */
 .box-tab-buttons {
     width: auto;
-    padding-left: 20px;
+    padding: 20px 20px 0px 20px;
     box-sizing: border-box;
     background-color: #fff;
 }

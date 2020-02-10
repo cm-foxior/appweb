@@ -48,14 +48,13 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body">
     <div class="content">
         <div class="box-buttons">
             <a data-button-modal="deleteUsers"><i class="material-icons">delete</i><span>Eliminar</span></a>
-            <a data-button-modal="users"><i class="material-icons">add</i><span>Nuevo</span></a>
             <a data-button-modal="deactivateUsers"><i class="material-icons">block</i><span>Desactivar</span></a>
             <a data-button-modal="activateUsers"><i class="material-icons">check</i><span>Activar</span></a>
+            <a data-button-modal="users"><i class="material-icons">add</i><span>Nuevo</span></a>
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">
@@ -63,7 +62,6 @@ $this->dependencies->getDependencies([
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="users">
     <div class="content">
         <header>
@@ -126,9 +124,10 @@ $this->dependencies->getDependencies([
                     <label data-important>
                         <span><span class="required-field">*</span>Nivel de acceso</span>
                         <select name="level">
-                            {$lstLevel}
-                            <option value="8">[8] Inventarista</option>
-        					<option value="7">[7] Vendedor</option>
+                            <option value="10">Administrador</option>
+                            <!-- <option value="9">Supervisor</option> -->
+                            <option value="8">Inventarista</option>
+        					<option value="7">Vendedor</option>
                         </select>
                     </label>
                 </fieldset>

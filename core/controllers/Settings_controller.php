@@ -180,52 +180,30 @@ class Settings_controller extends Controller
 
 				if (!isset($mainCoin))
 					array_push($errors, ['mainCoin', 'Seleccione una opción']);
-				else if ($mainCoin != 'MXN' AND $mainCoin != 'USD')
-					array_push($errors, ['mainCoin', 'Opciones no válidas']);
 
 				if (!isset($saleTicketPrint))
 					array_push($errors, ['saleTicketPrint', 'Seleccione una opción']);
-				else if ($saleTicketPrint != 'true' AND $saleTicketPrint != 'false')
-					array_push($errors, ['saleTicketPrint', 'Opciones no válidas']);
 
 				if (!isset($saleTicketTotalsBreakdown))
 					array_push($errors, ['saleTicketTotalsBreakdown', 'Seleccione una opción']);
-				else if ($saleTicketTotalsBreakdown != 'true' AND $saleTicketTotalsBreakdown != 'false')
-					array_push($errors, ['saleTicketTotalsBreakdown', 'Opciones no válidas']);
 
 				if (!isset($applyDiscounds))
 					array_push($errors, ['applyDiscounds', 'Seleccione una opción']);
-				else if ($applyDiscounds != 'true' AND $applyDiscounds != 'false')
-					array_push($errors, ['applyDiscounds', 'Opciones no válidas']);
 
 				if (!isset($deferred_payments))
 					array_push($errors, ['deferred_payments', 'Seleccione una opción']);
-				else if ($deferred_payments != 'true' AND $deferred_payments != 'false')
-					array_push($errors, ['deferred_payments', 'Opciones no válidas']);
 
 				if (!isset($sync_point_sale_with_inventories))
 					array_push($errors, ['sync_point_sale_with_inventories', 'Seleccione una opción']);
-				else if ($sync_point_sale_with_inventories != 'true' AND $sync_point_sale_with_inventories != 'false')
-					array_push($errors, ['sync_point_sale_with_inventories', 'Opciones no válidas']);
 
 				if (!isset($sync_quotations_with_inventories))
 					array_push($errors, ['sync_quotations_with_inventories', 'Seleccione una opción']);
-				else if ($sync_quotations_with_inventories != 'true' AND $sync_quotations_with_inventories != 'false')
-					array_push($errors, ['sync_quotations_with_inventories', 'Opciones no válidas']);
 
 				if (!isset($ivaRate))
 					array_push($errors, ['ivaRate', 'No deje este campo vacío']);
-				else if (!is_numeric($ivaRate))
-	                array_push($errors, ['ivaRate', 'Ingrese únicamente números']);
-	            else if ($ivaRate < 0)
-	                array_push($errors, ['ivaRate', 'No ingrese números negativos']);
 
 				if (!isset($usdRate))
 					array_push($errors, ['usdRate', 'No deje este campo vacío']);
-				else if (!is_numeric($usdRate))
-	                array_push($errors, ['usdRate', 'Ingrese únicamente números']);
-	            else if ($usdRate < 0)
-	                array_push($errors, ['usdRate', 'No ingrese números negativos']);
 
 				if (empty($errors))
 				{
@@ -347,7 +325,7 @@ class Settings_controller extends Controller
 	                    </label>
 	                </fieldset>
 					<fieldset class="input-group">
-						<a data-action="getSalesSettingsToEdit">Editar configuraciones de venta</a>
+						<a data-action="getSalesSettingsToEdit">Editar</a>
 	                </fieldset>
 	            </div>
 				<div class="span6 pl">';
@@ -391,8 +369,8 @@ class Settings_controller extends Controller
 				$tblPdisSettings .=
 				'	</tbody>
 				</table>
-				<fieldset class="input-group">
-					<a data-button-modal="updatePdisSettings">Actualizar configuraciones PDIS</a>
+				<fieldset class="input-group" style="margin-top:20px;">
+					<a data-button-modal="updatePdisSettings">Actualizar</a>
 				</fieldset>';
 
 				$tblPdisSettings .=

@@ -54,11 +54,10 @@ $this->dependencies->getDependencies([
                         <input type="text" value="{$website}" disabled>
                     </label>
                 </fieldset>
+                <fieldset class="input-group">
+                    <a data-action="getBusinessSettingsToEdit">Editar</a>
+                </fieldset>
             </div>
-            <div class="clear"></div>
-            <fieldset class="input-group">
-                <a data-action="getBusinessSettingsToEdit">Editar</a>
-            </fieldset>
         </div>
     </div>
 </main>

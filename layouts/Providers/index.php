@@ -26,7 +26,6 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body">
     <div class="content">
         <div class="box-buttons">
@@ -56,7 +55,6 @@ $this->dependencies->getDependencies([
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="providers">
     <div class="content">
         <header>
@@ -85,7 +83,6 @@ $this->dependencies->getDependencies([
                         <span>Número telefónico</span>
                         <select name="phoneCountryCode" class="span2">
                             <option value="52">[+52] México</option>
-                            <!-- {$lstCountriesPhoneCodes} -->
                         </select>
                         <input type="number" name="phoneNumber" class="span8 margin-left-right">
                         <select name="phoneType" class="span2">
@@ -102,15 +99,14 @@ $this->dependencies->getDependencies([
                     </label>
                 </fieldset>
                 <h4 class="title margin-top-30">Información fiscal</h4>
-                <fieldset class="input-group">
+                <!-- <fieldset class="input-group">
                     <label data-important>
                         <span>País</span>
                         <select name="fiscalCountry">
                             <option value="México">México</option>
-                            <!-- {$lstCountries} -->
                         </select>
                     </label>
-                </fieldset>
+                </fieldset> -->
                 <fieldset class="input-group">
                     <label data-important>
                         <span id="fiscalName">Razón social</span>
