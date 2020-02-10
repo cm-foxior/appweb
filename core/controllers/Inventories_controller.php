@@ -95,6 +95,8 @@ class Inventories_controller extends Controller
 				$template = $this->view->render($this, 'index');
 				$template = $this->format->replaceFile($template, 'header');
 
+				$this->model->sql();
+
 				if (Session::getValue('level') == 10)
 				{
 					$inventories = $this->model->getAllInventories();

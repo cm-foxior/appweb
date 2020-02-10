@@ -13,7 +13,7 @@ class Products_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function index()
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -236,7 +236,7 @@ class Products_controller extends Controller
 
 					$tblProducts .=
 					'<tr>
-						' . ((Session::getValue('level') == 10) ? '<td><input type="checkbox" data-check value="' . $product['id_product'] . '" /></td>' : '') . '
+						<td><input type="checkbox" data-check value="' . $product['id_product'] . '" /></td>
 						<td>' . $pAvatar . '</td>
 						<td>' . $product['folio'] . '</td>
 						<td>' . $product['name'] . '</td>
@@ -576,7 +576,7 @@ class Products_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function tags($idProduct)
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -899,7 +899,7 @@ class Products_controller extends Controller
 	--------------------------------------------------------------------------- */
 	public function createFreeList()
 	{
-		if (Session::getValue('level') >= 9)
+		if (Session::getValue('level') == 10)
 		{
 			if (Format::existAjaxRequest() == true)
 			{
@@ -969,7 +969,6 @@ class Products_controller extends Controller
 				$action = $_POST['action'];
 				$number = $_POST['number'];
 				$id = ($action == 'edit') ? $_POST['id'] : null;
-
 				$name = (isset($_POST['name']) AND !empty($_POST['name'])) ? $_POST['name'] : null;
 				$avatar = ($number == 'one' AND isset($_FILES['avatar']['name']) AND !empty($_FILES['avatar']['name'])) ? $_FILES['avatar'] : null;
 
@@ -1027,9 +1026,7 @@ class Products_controller extends Controller
 
 				$template = $this->view->render($this, 'categories_one');
 				$template = $this->format->replaceFile($template, 'header');
-
 				$categories = $this->model->getAllCategories('one');
-
 				$lstCategories = '';
 
 				foreach ($categories as $category)
@@ -1064,9 +1061,7 @@ class Products_controller extends Controller
 
 			$template = $this->view->render($this, 'categories_two');
 			$template = $this->format->replaceFile($template, 'header');
-
 			$categories = $this->model->getAllCategories('two');
-
 			$lstCategories = '';
 
 			foreach ($categories as $category)
@@ -1099,9 +1094,7 @@ class Products_controller extends Controller
 
 			$template = $this->view->render($this, 'categories_tree');
 			$template = $this->format->replaceFile($template, 'header');
-
 			$categories = $this->model->getAllCategories('tree');
-
 			$lstCategories = '';
 
 			foreach ($categories as $category)
@@ -1134,9 +1127,7 @@ class Products_controller extends Controller
 
 			$template = $this->view->render($this, 'categories_four');
 			$template = $this->format->replaceFile($template, 'header');
-
 			$categories = $this->model->getAllCategories('four');
-
 			$lstCategories = '';
 
 			foreach ($categories as $category)
@@ -1226,7 +1217,6 @@ class Products_controller extends Controller
 			{
 				$action = $_POST['action'];
 				$id = ($action == 'edit') ? $_POST['id'] : null;
-
 				$product_1 = (isset($_POST['product_1']) AND !empty($_POST['product_1'])) ? $_POST['product_1'] : null;
 				$product_2 = (isset($_POST['product_2']) AND !empty($_POST['product_2'])) ? $_POST['product_2'] : null;
 				$stock_base = (isset($_POST['stock_base']) AND !empty($_POST['stock_base'])) ? $_POST['stock_base'] : null;
@@ -1291,10 +1281,10 @@ class Products_controller extends Controller
 
 				$template = $this->view->render($this, 'flirts');
 				$template = $this->format->replaceFile($template, 'header');
-
 				$flirts = $this->model->getAllFlirts();
-
+				$products = $this->model->getAllProductsByType(1);
 				$lstFlirts = '';
+				$lstProducts = '';
 
 				foreach ($flirts as $flirt)
 				{
@@ -1372,10 +1362,6 @@ class Products_controller extends Controller
 						<td><a data-action="getFlirtToEdit" data-id="' . $flirt['id_product_flirt'] . '"><i class="material-icons">edit</i><span>Detalles / Editar</span></a></td>
 					</tr>';
 				}
-
-				$products = $this->model->getAllProductsByType(1);
-
-				$lstProducts = '';
 
 				foreach ($products as $value)
 					$lstProducts .= '<option value="' . $value['id_product'] . '">' . $value['name'] . '</option>';

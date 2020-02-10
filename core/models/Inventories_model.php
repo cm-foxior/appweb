@@ -9,6 +9,18 @@ class Inventories_model extends Model
 		parent::__construct();
 	}
 
+	public function sql()
+	{
+		// $this->database->update('products', [
+		// 	'type' => '1'
+		// ], [
+		// 	'AND' => [
+		// 		'type' => '3',
+		// 		'id_subscription' => 9
+		// 	]
+		// ]);
+	}
+
 	/* Inventarios
 	--------------------------------------------------------------------------- */
 	public function getAllInventories()
