@@ -199,7 +199,7 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function newOutput($product, $quantity, $type, $datetime, $id)
+    public function newOutput($product, $quantity, $type, $client, $datetime, $id)
 	{
 		$errors = [];
 		$product = $this->database->select('products', '*', ['id_product' => $product]);
@@ -257,6 +257,7 @@ class Inventories_model extends Model
 								'output_date_time' => $datetime,
 					            'id_product' => $value['id_product_2'],
 					            'id_inventory' => $id,
+					            'id_client' => ($type == '7') ? $client : null,
 								'id_subscription' => Session::getValue('id_subscription')
 					        ]);
 
@@ -285,6 +286,7 @@ class Inventories_model extends Model
 					'output_date_time' => $datetime,
 					'id_product' => $product[0]['id_product'],
 					'id_inventory' => $id,
+					'id_client' => ($type == '7') ? $client : null,
 					'id_subscription' => Session::getValue('id_subscription')
 				]);
 
@@ -298,13 +300,14 @@ class Inventories_model extends Model
 		return $errors;
 	}
 
-	public function editOutput($id, $product, $quantity, $type, $datetime)
+	public function editOutput($id, $product, $quantity, $type, $client, $datetime)
 	{
 		$query = $this->database->update('inventories_outputs', [
             'quantity' => $quantity,
 			'type' => $type,
 			'output_date_time' => $datetime,
-            'id_product' => $product
+            'id_product' => $product,
+			'id_client' => ($type == '7') ? $client : null
         ], ['id_inventory_output' => $id]);
 
         return $query;
@@ -611,6 +614,12 @@ class Inventories_model extends Model
 			],
 			'ORDER' => 'name ASC'
 		]);
+		return $query;
+	}
+
+	public function getAllClients()
+	{
+		$query = $this->database->select('clients', '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'name ASC']);
 		return $query;
 	}
 

@@ -77,10 +77,19 @@ $this->dependencies->getDependencies([
                     <label data-important>
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
-                            <!-- <option value="4">Venta</option> -->
+                            <option value="4">Venta</option>
                             <option value="2">Merma / Perdida</option>
                             <option value="3">Devolución al proveedor</option>
                             <option value="7">Préstamo</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group hidden">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Cliente</span>
+                        <select name="client" class="chosen-select">
+                            <option value="">Seleccione una opción</option>
+                            {$lstClients}
                         </select>
                     </label>
                 </fieldset>

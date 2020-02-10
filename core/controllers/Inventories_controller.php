@@ -636,6 +636,7 @@ class Inventories_controller extends Controller
 				$product    = (isset($_POST['product']) AND !empty($_POST['product'])) ? $_POST['product'] : null;
 				$quantity	= (isset($_POST['quantity']) AND !empty($_POST['quantity'])) ? $_POST['quantity'] : null;
 				$type		= (isset($_POST['type']) AND !empty($_POST['type'])) ? $_POST['type'] : null;
+				$client		= (isset($_POST['client']) AND !empty($_POST['client'])) ? $_POST['client'] : null;
 
 				if (Session::getValue('level') == 10)
 				{
@@ -658,6 +659,9 @@ class Inventories_controller extends Controller
 
 	            if (!isset($type))
 	                array_push($errors, ['type', 'Seleccione una opción']);
+
+	            if ($type == '7' AND !isset($client))
+	                array_push($errors, ['client', 'Seleccione una opción']);
 
 				if (Session::getValue('level') == 10)
 				{
@@ -689,7 +693,7 @@ class Inventories_controller extends Controller
 					{
 						if ($action == 'new')
 						{
-							$query = $this->model->newOutput($product, $quantity, $type, $date . ' ' . $hour, $id);
+							$query = $this->model->newOutput($product, $quantity, $type, $client, $date . ' ' . $hour, $id);
 
 							if (empty($query))
 							{
@@ -710,7 +714,7 @@ class Inventories_controller extends Controller
 						}
 						else if ($action == 'edit')
 						{
-							$query = $this->model->editOutput($idOutput, $product, $quantity, $type, $date . ' ' . $hour);
+							$query = $this->model->editOutput($idOutput, $product, $quantity, $type, $client, $date . ' ' . $hour);
 
 							if (!empty($query))
 							{
@@ -759,8 +763,10 @@ class Inventories_controller extends Controller
 	    			$template = $this->format->replaceFile($template, 'header');
 	    			$outputs = $this->model->getAllOutputs($id);
 	                $products = $this->model->getAllProducts($inventory['type']);
+	                $clients = $this->model->getAllClients();
 	    			$lstOutputs = '';
 	                $lstProducts = '';
+	                $lstClients = '';
 					$mdlTransferProduct = '';
 
 					$lstOutputs .=
@@ -829,7 +835,7 @@ class Inventories_controller extends Controller
 
 						if (Session::getValue('level') == 10)
 						{
-							if ($output['type'] == '2' OR $output['type'] == '3')
+							if ($output['type'] == '2' OR $output['type'] == '3' OR $output['type'] == '7')
 								$btnEditOutput = '<a data-action="getOutputToEdit" data-id="' . $output['id_inventory_output'] . '"><i class="material-icons">edit</i><span>Detalles / Editar</span></a>';
 							else
 								$btnEditOutput = '';
@@ -851,6 +857,9 @@ class Inventories_controller extends Controller
 
 	                foreach ($products as $product)
 	                    $lstProducts .= '<option value="' . $product['id_product'] . '">[' . $product['folio'] . '] ' . $product['name'] . ' ' . $product['category_one'] . ' ' . $product['category_two'] . ' ' . $product['category_tree'] . ' ' . $product['category_four'] . '</option>';
+
+					foreach ($clients as $value)
+	                    $lstClients .= '<option value="' . $value['id_client'] . '">' . $value['name'] . '</option>';
 
 					$mdlTransferProduct .=
 					'<section class="modal" data-modal="transferProduct">
@@ -914,6 +923,7 @@ class Inventories_controller extends Controller
 						'{$title}' => 'Inv: ' . $inventory['name'] . ', Suc: ' . $inventory['branch_office'],
 	    				'{$lstOutputs}' => $lstOutputs,
 	    				'{$lstProducts}' => $lstProducts,
+	    				'{$lstClients}' => $lstClients,
 						'{$mdlTransferProduct}' => $mdlTransferProduct,
 						'{$idInventory}' => $id
 	    			];
@@ -942,6 +952,8 @@ class Inventories_controller extends Controller
 
 				if (!empty($output))
 				{
+					$output['output_date_time'] = explode(' ', $output['output_date_time']);
+
 					echo json_encode([
 						'status' => 'success',
 						'data' => $output

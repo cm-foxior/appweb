@@ -305,14 +305,29 @@ $(document).ready(function ()
                     $('select[name="product"]').val(response.data.id_product).trigger('chosen:updated');
                     $('input[name="quantity"]').val(response.data.quantity);
                     $('select[name="type"]').val(response.data.type);
-                    $('input[name="date"]').val(response.data.input_date_time[0]);
-                    $('input[name="hour"]').val(response.data.input_date_time[1]);
+                    $('input[name="date"]').val(response.data.output_date_time[0]);
+                    $('input[name="hour"]').val(response.data.output_date_time[1]);
+
+                    if (response.data.type == '7')
+                    {
+                        $('[name="client"]').parent().parent().removeClass('hidden');
+                        $('[name="client"]').val(response.data.id_client).trigger('chosen:updated');
+                    }
+
                     $('[data-modal="outputs"] header > h6').html('Editar salida');
                     $('[data-modal="outputs"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="outputs"]').toggleClass('view');
                 }
             }
         });
+    });
+
+    $('[name="type"]').on('change', function()
+    {
+        if ($(this).val() == '7')
+            $('[name="client"]').parent().parent().removeClass('hidden');
+        else
+            $('[name="client"]').parent().parent().addClass('hidden');
     });
 
     /* Crear y editar salida del inventario
@@ -323,6 +338,8 @@ $(document).ready(function ()
     {
         modal.find('header > h6').html('Nueva salida');
         modal.find('form').attr('data-submit-action', 'new');
+        $('[name="client"]').parent().parent().addClass('hidden');
+        $('[name="client"]').val('').trigger('chosen:updated');
         modal.find('form')[0].reset();
 
     }, function(modal)
