@@ -49,6 +49,11 @@
         </li>
         <?php endif; ?>
         <?php if (Session::getValue('level') == 10) : ?>
+        <li data-target="expenses">
+            <a href="/expenses"><i class="material-icons">credit_card</i>Gastos</a>
+        </li>
+        <?php endif; ?>
+        <?php if (Session::getValue('level') == 10) : ?>
         <li data-target="products">
             <a href="/products"><i class="material-icons">shopping_basket</i>Productos</a>
         </li>
