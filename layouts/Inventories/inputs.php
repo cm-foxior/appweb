@@ -26,44 +26,27 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <div class="content">
         <div class="box-tab-buttons">
-            <a href="" class="view" button-tab>Entradas</a>
+            <a href="/inventories" button-tab>Inventarios</a>
+            <a href="/inventories/inputs/{$idInventory}" class="view" button-tab>Entradas</a>
             <a href="/inventories/outputs/{$idInventory}" button-tab>Salidas</a>
-            <div class="clear"></div>
-        </div>
-        <div class="box-buttons not-margin">
-            <a data-button-modal="inputs"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <a href="/inventories"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
+            <a href="/inventories/stocks/{$idInventory}" button-tab>Stocks</a>
             <div class="clear"></div>
         </div>
         <div class="title">
             <h2>{$title}</h2>
         </div>
+        <div class="box-buttons not-margin">
+            <a data-button-modal="inputs"><i class="material-icons">add</i><span>Nuevo</span></a>
+            <div class="clear"></div>
+        </div>
         <div class="table-responsive-vertical padding">
-            <table id="inputsTable" class="display" data-page-length="100">
-                <thead>
-                    <tr>
-                        <th width="150px">Fecha</th>
-                        <th>Producto</th>
-                        <th width="100px">Cantidad</th>
-                        <th>Tipo</th>
-                        <th width="100px">Precio</th>
-                        <th width="100px">Factura</th>
-                        <th>Proveedor</th>
-                        <th width="35px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {$lstInputs}
-                </tbody>
-            </table>
+            {$lstInputs}
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="inputs">
     <div class="content">
         <header>
@@ -74,7 +57,7 @@ $this->dependencies->getDependencies([
                 <fieldset class="input-group">
                     <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
                 </fieldset>
-                <fieldset class="input-group">
+                <fieldset class="input-group span6">
                     <label data-important>
                         <span><span class="required-field">*</span>Producto</span>
                         <select name="product" class="chosen-select">
@@ -82,43 +65,55 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group span3 pr">
+                <fieldset class="input-group span3 pl">
                     <label data-important>
                         <span><span class="required-field">*</span>Cantidad</span>
                         <input type="number" name="quantify">
                     </label>
                 </fieldset>
-                <fieldset class="input-group span3 pr">
+                <fieldset class="input-group span3 pl">
                     <label data-important>
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
                             <option value="1">Compra</option>
                             <option value="3">Devolución de venta</option>
+                            <option value="4">Devolución de prestamo</option>
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group span3 pr">
-                    <label data-important>
-                        <span>Precio de compra</span>
-                        <input type="number" name="price">
-                    </label>
-                </fieldset>
-                <fieldset class="input-group span3">
+                <fieldset class="input-group span4 pr">
                     <label data-important>
                         <span>Factura</span>
                         <input type="text" name="bill">
                     </label>
                 </fieldset>
+                <fieldset class="input-group span4 pr">
+                    <label data-important>
+                        <span>Precio</span>
+                        <input type="number" name="price">
+                    </label>
+                </fieldset>
+                <fieldset class="input-group span4">
+                    <label data-important>
+                        <span>Pago</span>
+                        <select name="payment">
+                            <option value="">Sin pago</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </label>
+                </fieldset>
                 <?php if (Session::getValue('level') == 10) : ?>
                 <fieldset class="input-group span6 pr">
                     <label data-important>
-                        <span>Fecha</span>
+                        <span><span class="required-field">*</span>Fecha</span>
                         <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>">
                     </label>
                 </fieldset>
                 <fieldset class="input-group span6">
                     <label data-important>
-                        <span>Hora</span>
+                        <span><span class="required-field">*</span>Hora</span>
                         <input type="time" name="hour" value="<?php echo date('H:i:s', time()); ?>">
                     </label>
                 </fieldset>
@@ -137,33 +132,6 @@ $this->dependencies->getDependencies([
         <footer>
             <a button-cancel>Cancelar</a>
             <a button-success>Aceptar</a>
-        </footer>
-    </div>
-</section>
-
-<section class="modal" data-modal="transferInfo">
-    <div class="content">
-        <header>
-            <h6>Transferido desde:</h6>
-        </header>
-        <main>
-            <form>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Inventario</span>
-                        <input id="transferInfoInventory" type="text" disabled>
-                    </label>
-                </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Sucursal</span>
-                        <input id="transferInfoBranchOffice" type="text" disabled>
-                    </label>
-                </fieldset>
-            </form>
-        </main>
-        <footer>
-            <a button-close>Aceptar</a>
         </footer>
     </div>
 </section>

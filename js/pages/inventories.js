@@ -56,7 +56,6 @@ $(document).ready(function ()
                     $('input[name="name"]').val(response.data.name);
                     $('select[name="type"]').val(response.data.type);
                     $('select[name="branchOffice"]').val(response.data.id_branch_office).trigger('chosen:updated');
-
                     $('[data-modal="inventories"] header > h6').html('Editar inventario');
                     $('[data-modal="inventories"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="inventories"]').toggleClass('view').animate({scrollTop: 0}, 0);
@@ -166,7 +165,7 @@ $(document).ready(function ()
             }
         ],
         "order": [
-            [3,'desc']
+            [0,'desc']
         ],
         "language": {
 
@@ -193,38 +192,25 @@ $(document).ready(function ()
                     $('select[name="product"]').val(response.data.id_product).trigger('chosen:updated');
                     $('input[name="quantify"]').val(response.data.quantify);
                     $('select[name="type"]').val(response.data.type);
-                    $('input[name="price"]').val(response.data.price);
+
+                    if (response.data.bill != null)
+                        $('input[name="bill"]').val(response.data.bill);
+
+                    if (response.data.price != null)
+                        $('input[name="price"]').val(response.data.price);
+
+                    if (response.data.payment != null)
+                        $('select[name="payment"]').val(response.data.payment);
+
                     $('input[name="date"]').val(response.data.input_date_time[0]);
                     $('input[name="hour"]').val(response.data.input_date_time[1]);
-                    $('select[name="provider"]').val(response.data.id_provider).trigger('chosen:updated');
+
+                    if (response.data.id_provider != null)
+                        $('select[name="provider"]').val(response.data.id_provider).trigger('chosen:updated');
 
                     $('[data-modal="inputs"] header > h6').html('Editar entrada');
                     $('[data-modal="inputs"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="inputs"]').toggleClass('view');
-                }
-            }
-        });
-    });
-
-    /* Obtener información de transferencia de entrada
-    /* ------------------------------------------------------------------------ */
-    $(document).on('click', '[data-action="getInputTransferInfo"]', function()
-    {
-        idInput = $(this).data('id');
-
-        $.ajax({
-            url: '/inventories/getInputTransferInfo/' + idInput,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                if (response.status == 'success')
-                {
-                    $('#transferInfoInventory').val(response.data.inventory);
-                    $('#transferInfoBranchOffice').val(response.data.branchOffice);
-
-                    $('[data-modal="transferInfo"]').toggleClass('view');
                 }
             }
         });
@@ -289,7 +275,7 @@ $(document).ready(function ()
             }
         ],
         "order": [
-            [2,'desc']
+            [0,'desc']
         ],
         "searching": true,
         "info": true,
@@ -321,34 +307,9 @@ $(document).ready(function ()
                     $('select[name="type"]').val(response.data.type);
                     $('input[name="date"]').val(response.data.input_date_time[0]);
                     $('input[name="hour"]').val(response.data.input_date_time[1]);
-
                     $('[data-modal="outputs"] header > h6').html('Editar salida');
                     $('[data-modal="outputs"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="outputs"]').toggleClass('view');
-                }
-            }
-        });
-    });
-
-    /* Obtener información de transferencia de salida
-    /* ------------------------------------------------------------------------ */
-    $(document).on('click', '[data-action="getOutputTransferInfo"]', function()
-    {
-        idOutput = $(this).data('id');
-
-        $.ajax({
-            url: '/inventories/getOutputTransferInfo/' + idOutput,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                if (response.status == 'success')
-                {
-                    $('#transferInfoInventory').val(response.data.inventory);
-                    $('#transferInfoBranchOffice').val(response.data.branchOffice);
-
-                    $('[data-modal="transferInfo"]').toggleClass('view');
                 }
             }
         });
@@ -661,7 +622,6 @@ $(document).ready(function ()
                     $('input[name="min"]').val(response.data.min);
                     $('input[name="max"]').val(response.data.max);
                     $('select[name="product"]').val(response.data.id_product).trigger('chosen:updated');
-
                     $('[data-modal="stocks"] header > h6').html('Editar stock');
                     $('[data-modal="stocks"] form').attr('data-submit-action', 'edit');
                     $('[data-modal="stocks"]').toggleClass('view');

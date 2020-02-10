@@ -113,10 +113,10 @@ class Providers_controller extends Controller
 					'<tr>
 						<td><input type="checkbox" data-check value="' . $provider['id_provider'] . '" /></td>
 						<td>' . $provider['name'] . '</td>
+						<td>' . (!empty($provider['fiscal_code']) ? $provider['fiscal_code'] : '') . '</td>
 						<td>' . (!empty($provider['email']) ? $provider['email'] : '') . '</td>
 						<td>' . $phoneNumber . '</td>
-						<td>' . (!empty($provider['fiscal_code']) ? $provider['fiscal_code'] : '') . '</td>
-						<td>' . (($provider['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>
+						<!-- <td>' . (($provider['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td> -->
 						<td>
 							<a ' . (($provider['status'] == true) ? 'data-action="getProviderToEdit" data-id="' . $provider['id_provider'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
 						</td>

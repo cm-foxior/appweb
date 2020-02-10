@@ -26,7 +26,6 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <div class="content">
         {$buttons}
@@ -35,7 +34,6 @@ $this->dependencies->getDependencies([
         </div>
     </div>
 </main>
-
 {$mdlInventories}
 {$mdlActivateInventories}
 {$mdlDeactivateInventories}

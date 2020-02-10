@@ -58,7 +58,22 @@ $this->dependencies->getDependencies([
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">
-            {$tblUsers}
+            <table class="display" data-page-length="100">
+                <thead>
+                    <tr>
+                        <th width="20px"></th>
+                        <th width="40px"></th>
+                        <th>Nombre</th>
+                        <th>Sucursal</th>
+                        <th width="130px">Nivel de acceso</th>
+                        <th width="100px">Estado</th>
+                        <th width="70px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {$tblUsers}
+                </tbody>
+            </table>
         </div>
     </div>
 </main>

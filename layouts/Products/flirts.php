@@ -46,8 +46,8 @@ $this->dependencies->getDependencies([
                         <th></th>
                         <th>Producto ligado</th>
                         <th>Producto principal</th>
-                        <th>Stock base</th>
-                        <th>Stock actual</th>
+                        <th width="100px">Stock base</th>
+                        <th width="100px">Stock actual</th>
                         <th width="35px"></th>
                     </tr>
                 </thead>

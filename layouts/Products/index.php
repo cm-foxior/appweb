@@ -72,7 +72,7 @@ $this->dependencies->getDependencies([
                         <th width="50px">Unidad</th>
                         <th width="180px">Precio</th>
                         <th width="50px">Tipo</th>
-                        <th width="100px">Estado</th>
+                        <!-- <th width="100px">Estado</th> -->
                         <th width="35px"></th>
                     </tr>
                 </thead>

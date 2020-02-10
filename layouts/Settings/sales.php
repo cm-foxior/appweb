@@ -30,20 +30,132 @@ $this->dependencies->getDependencies([
 <main class="body">
     <div class="content">
         <div class="box-tab-buttons">
-            <!-- <a href="/settings/generals" button-tab>Generales</a> -->
-            <a href="/settings/business" button-tab>Mi Empresa</a>
+            <a href="/settings/business" button-tab>Cuenta</a>
             <a href="/settings/sales" class="view" button-tab>Ventas</a>
             <div class="clear"></div>
         </div>
         <div class="padding">
             {$htmlSalesSettings}
-            {$tblPdisSettings}
+            <div class="span6 pl">
+                <table id="tblPdisSettings" class="display" data-page-length="20">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Inventario</th>
+                            <th>Sucursal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {$tblPdisSettings}
+                    </tbody>
+                </table>
+                <fieldset class="input-group" style="margin-top:20px;">
+                    <a data-button-modal="updatePdisSettings">Actualizar</a>
+                </fieldset>
+            </div>
+            <div class="clear"></div>
         </div>
     </div>
 </main>
-
-{$mdlEditSalesSettings}
-
+<section class="modal" data-modal="editSalesSettings">
+    <div class="content">
+        <header>
+            <h6>Editar</h6>
+        </header>
+        <main>
+            <form name="editSalesSettings">
+                <fieldset class="input-group">
+                    <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Moneda principal</span>
+                        <select name="mainCoin">
+                            <option value="MXN">MXN</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Impresión de ticket de venta</span>
+                        <select name="saleTicketPrint">
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Desglose de totales en ticket de venta</span>
+                        <select name="saleTicketTotalsBreakdown">
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Aplicar descuentos en ventas</span>
+                        <select name="applyDiscounds">
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Permitir pagos diferidos</span>
+                        <select name="deferred_payments">
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Sincronizar Punto de venta con Invetarios</span>
+                        <select name="sync_point_sale_with_inventories">
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Sincronizar Cotizaciones con Invetarios</span>
+                        <select name="sync_quotations_with_inventories">
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Tarífa de IVA</span>
+                        <input type="number" name="ivaRate">
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Tarífa de cambio de USD</span>
+                        <input type="number" name="usdRate">
+                    </label>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span>Leyenda de ticket de venta</span>
+                        <textarea name="saleTicketLegend"></textarea>
+                    </label>
+                </fieldset>
+            </form>
+        </main>
+        <footer>
+            <a button-cancel>Cancelar</a>
+            <a button-success>Aceptar</a>
+        </footer>
+    </div>
+</section>
 <section class="modal" data-modal="updatePdisSettings">
     <div class="content">
         <header>

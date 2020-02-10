@@ -117,11 +117,11 @@ class Clients_controller extends Controller
 					'<tr>
 						<td><input type="checkbox" data-check value="' . $client['id_client'] . '" /></td>
 						<td>' . $client['name'] . '</td>
+						<td>' . (!empty($client['fiscal_code']) ? $client['fiscal_code'] : '') . '</td>
 						<td>' . $client['type'] . '</td>
 						<td>' . (!empty($client['email']) ? $client['email'] : '') . '</td>
 						<td>' . $phoneNumber . '</td>
-						<td>' . (!empty($client['fiscal_code']) ? $client['fiscal_code'] : '') . '</td>
-						<td>' . (($client['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>
+						<!-- <td>' . (($client['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td> -->
 						<td>
 							<a ' . (($client['status'] == true) ? 'data-action="getClientToEdit" data-id="' . $client['id_client'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
 						</td>

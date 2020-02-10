@@ -6,12 +6,10 @@
     </figure>
     <div class="tools">
         <div class="widgets">
-            <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 8 OR Session::getValue('level') == 10) : ?>
+            <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
             <div class="shortcut-menu">
                 <a href="/search"><i class="material-icons">search</i>Buscar producto</a>
             </div>
-            <?php endif; ?>
-            <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
             <div class="shortcut-menu">
                 <a href="/pointsale/add"><i class="material-icons">add</i>Nueva venta</a>
             </div>

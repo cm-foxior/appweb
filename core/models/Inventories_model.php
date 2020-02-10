@@ -9,18 +9,6 @@ class Inventories_model extends Model
 		parent::__construct();
 	}
 
-	public function sql()
-	{
-		// $this->database->update('products', [
-		// 	'type' => '1'
-		// ], [
-		// 	'AND' => [
-		// 		'type' => '3',
-		// 		'id_subscription' => 9
-		// 	]
-		// ]);
-	}
-
 	/* Inventarios
 	--------------------------------------------------------------------------- */
 	public function getAllInventories()
@@ -153,7 +141,7 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-    public function newInput($product, $quantify, $type, $price, $bill, $provider, $datetime, $id)
+    public function newInput($product, $quantify, $type, $bill, $price, $payment, $provider, $datetime, $id)
 	{
 		if (!isset($datetime) OR empty($datetime))
 			$datetime = Format::getDateHour();
@@ -166,44 +154,27 @@ class Inventories_model extends Model
             'id_provider' => $provider,
             'id_inventory' => $id,
             'id_inventory_transfer' => null,
+			'bill' => !empty($bill) ? $bill : null,
             'price' => !empty($price) ? $price : null,
-            'bill' => !empty($bill) ? $bill : null,
+            'payment' => !empty($payment) ? $payment : null,
 			'id_subscription' => Session::getValue('id_subscription')
         ]);
 
         return $query;
 	}
 
-	public function getCategoryById($id, $number)
+    public function editInput($id, $product, $quantify, $type, $bill, $price, $payment, $provider, $datetime)
 	{
-		$query = $this->database->select('products_categories_' . $number, '*', ['id_product_category_' . $number => $id]);
-		return !empty($query) ? $query[0] : '';
-	}
-
-    public function editInput($id, $product, $quantify, $type, $price, $bill, $provider, $datetime)
-	{
-		if (Session::getValue('level') == 10)
-		{
-			$query = $this->database->update('inventories_inputs', [
-	            'quantify' => $quantify,
-				'type' => $type,
-				'input_date_time' => $datetime,
-	            'id_product' => $product,
-	            'id_provider' => $provider,
-				'price' => !empty($price) ? $price : null,
-				'bill' => !empty($bill) ? $bill : null
-	        ], ['id_inventory_input' => $id]);
-		}
-		else
-		{
-			$query = $this->database->update('inventories_inputs', [
-	            'quantify' => $quantify,
-				'type' => $type,
-	            'id_product' => $product,
-	            'id_provider' => $provider,
-				'price' => !empty($price) ? $price : null
-	        ], ['id_inventory_input' => $id]);
-		}
+		$query = $this->database->update('inventories_inputs', [
+            'quantify' => $quantify,
+			'type' => $type,
+			'input_date_time' => $datetime,
+            'id_product' => $product,
+            'id_provider' => $provider,
+			'bill' => !empty($bill) ? $bill : null,
+			'price' => !empty($price) ? $price : null,
+			'payment' => !empty($payment) ? $payment : null
+        ], ['id_inventory_input' => $id]);
 
         return $query;
 	}
@@ -329,23 +300,12 @@ class Inventories_model extends Model
 
 	public function editOutput($id, $product, $quantity, $type, $datetime)
 	{
-		if (Session::getValue('level') == 10)
-		{
-			$query = $this->database->update('inventories_outputs', [
-	            'quantity' => $quantity,
-				'type' => $type,
-				'output_date_time' => $datetime,
-	            'id_product' => $product
-	        ], ['id_inventory_output' => $id]);
-		}
-		else
-		{
-			$query = $this->database->update('inventories_outputs', [
-	            'quantity' => $quantity,
-				'type' => $type,
-	            'id_product' => $product
-	        ], ['id_inventory_output' => $id]);
-		}
+		$query = $this->database->update('inventories_outputs', [
+            'quantity' => $quantity,
+			'type' => $type,
+			'output_date_time' => $datetime,
+            'id_product' => $product
+        ], ['id_inventory_output' => $id]);
 
         return $query;
 	}
@@ -360,7 +320,8 @@ class Inventories_model extends Model
 			'output_date_time' => $today,
             'id_product' => $product,
             'id_inventory' => $idInventory,
-            'id_inventory_transfer' => $idTransferInventory
+            'id_inventory_transfer' => $idTransferInventory,
+			'id_subscription' => Session::getValue('id_subscription')
         ]);
 
 		if (!empty($query1))
@@ -371,7 +332,8 @@ class Inventories_model extends Model
 				'input_date_time' => $today,
 	            'id_product' => $product,
 	            'id_inventory' => $idTransferInventory,
-				'id_inventory_transfer' => $idInventory
+				'id_inventory_transfer' => $idInventory,
+				'id_subscription' => Session::getValue('id_subscription')
 	        ]);
 
 			return $query2;
@@ -663,184 +625,4 @@ class Inventories_model extends Model
         $query = $this->database->select('users', '*', ['id_user' => $_SESSION['id_user']]);
         return !empty($query) ? $query[0] : '';
     }
-
-	public function getLoans($idInventory)
-	{
-		$query = $this->database->select('inventories_loans', [
-			'[>]products' => ['id_product' => 'id_product'],
-			'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
-			'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
-			'[>]products_categories_tree' => ['products.id_product_category_tree' => 'id_product_category_tree'],
-			'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four'],
-			'[>]clients' => ['id_client' => 'id_client'],
-		], [
-			'loans.id_loan',
-			'loans.quantity',
-			'loans.datetime',
-			'products.name(product)',
-			'products.folio',
-			'products.unity',
-			'clients.name(client)',
-			'loans.status',
-			'products_categories_one.name(category_one)',
-			'products_categories_two.name(category_two)',
-			'products_categories_tree.name(category_tree)',
-			'products_categories_four.name(category_four)',
-		], [
-			'AND' => [
-				'loans.id_inventory' => $idInventory,
-				'loans.id_subscription' => Session::getValue('id_subscription')
-			]
-		]);
-
-		return $query;
-	}
-
-	public function getLoan($idLoan)
-	{
-		$query = $this->database->select('inventories_loans', [
-			'quantity',
-			'id_product',
-			'id_inventory'
-		], [
-			'id_loan' => $idLoan
-		]);
-
-		return !empty($query) ? $query[0] : null;
-	}
-
-	public function getProducts()
-	{
-		$query = $this->database->select('products', [
-			'[>]products_categories_one' => ['id_product_category_one' => 'id_product_category_one'],
-			'[>]products_categories_two' => ['id_product_category_two' => 'id_product_category_two'],
-			'[>]products_categories_tree' => ['id_product_category_tree' => 'id_product_category_tree'],
-			'[>]products_categories_four' => ['id_product_category_four' => 'id_product_category_four']
-		], [
-			'products.id_product',
-			'products.name',
-			'products.folio',
-			'products_categories_one.name(category_one)',
-			'products_categories_two.name(category_two)',
-			'products_categories_tree.name(category_tree)',
-			'products_categories_four.name(category_four)'
-		], [
-			'AND' => [
-				'products.status' => true,
-				'products.id_subscription' => Session::getValue('id_subscription')
-			]
-		]);
-
-		return $query;
-	}
-
-	public function getInventories($idBranchOffice = null)
-	{
-		$w1 = 'branch_offices.id_branch_office[>=]';
-		$w2 = 1;
-
-		if (isset($idBranchOffice) AND !empty($idBranchOffice))
-		{
-			$w1 = 'branch_offices.id_branch_office';
-			$w2 = $idBranchOffice;
-		}
-
-		$query = $this->database->select('inventories', [
-			'[>]branch_offices' => ['id_branch_office' => 'id_branch_office']
-		], [
-			'inventories.id_inventory',
-			'inventories.name',
-			'branch_offices.name(branch_office)'
-		], [
-			'AND' => [
-				$w1 => $w2,
-				'inventories.id_subscription' => Session::getValue('id_subscription')
-			]
-		]);
-
-		return $query;
-	}
-
-	public function getClients()
-	{
-		$query = $this->database->select('clients', [
-			'id_client',
-			'name'
-		], [
-			'AND' => [
-				'type' => 'Empresarial',
-				'status' => true,
-				'id_subscription' => Session::getValue('id_subscription')
-			]
-		]);
-
-		return $query;
-	}
-
-	public function getExistence($idProduct, $idInventory)
-	{
-		$existence = 0;
-		$inputsTotal = 0;
-		$outputsTotal = 0;
-
-		$inputs = $this->database->select('inventories_inputs', [
-			'quantify'
-		], [
-			'AND' => [
-				'id_product' => $idProduct,
-				'id_inventory' => $idInventory
-			]
-		]);
-
-		if (!empty($inputs))
-		{
-			$outputs = $this->database->select('inventories_outputs', [
-				'quantity'
-			], [
-				'AND' => [
-					'id_product' => $idProduct,
-					'id_inventory' => $idInventory
-				]
-			]);
-
-			foreach ($inputs as $input)
-				$inputsTotal = $inputsTotal + $input['quantify'];
-
-			if (!empty($outputs))
-			{
-				foreach ($outputs as $output)
-					$outputsTotal = $outputsTotal + $output['quantity'];
-			}
-
-			$existence = $inputsTotal - $outputsTotal;
-		}
-
-		return $existence;
-	}
-
-	public function newLoan($loan)
-	{
-		$query = $this->database->insert('inventories_loans', [
-			'quantity' => $loan['quantity'],
-			'datetime' => $loan['datetime'],
-			'id_product' => $loan['id_product'],
-			'id_inventory' => $loan['id_inventory'],
-			'id_client' => $loan['id_client'],
-			'status' => true,
-			'id_subscription' => Session::getValue('id_subscription')
-		]);
-
-		return $query;
-	}
-
-	public function closeLoan($idLoan)
-	{
-		$query = $this->database->update('inventories_loans', [
-			'status' => false
-		], [
-			'id_loan' => $idLoan
-		]);
-
-		return $query;
-	}
 }

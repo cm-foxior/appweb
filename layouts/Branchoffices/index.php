@@ -41,7 +41,7 @@ $this->dependencies->getDependencies([
                     <tr>
                         <th width="20px"></th>
                         <th>Nombre</th>
-                        <th width="100px">Estado</th>
+                        <!-- <th width="100px">Estado</th> -->
                         <th width="35px"></th>
                     </tr>
                 </thead>

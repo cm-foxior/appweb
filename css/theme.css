@@ -2343,6 +2343,8 @@ div.upload-image > input {
     width: 100%;
     height: auto;
     background-color: #fff;
+    padding: 0px 20px;
+    box-sizing: border-box;
 }
 
 .box-buttons.not-margin {

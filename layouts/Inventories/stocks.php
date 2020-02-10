@@ -29,21 +29,28 @@ $this->dependencies->getDependencies([
 
 <main class="body <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <div class="content">
-        <div class="box-buttons">
-            {$btnDeleteStocks}
-            <a data-button-modal="stocks"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <a href="/inventories"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
+        <div class="box-tab-buttons">
+            <a href="/inventories" button-tab>Inventarios</a>
+            <a href="/inventories/inputs/{$idInventory}" button-tab>Entradas</a>
+            <a href="/inventories/outputs/{$idInventory}" button-tab>Salidas</a>
+            <a href="/inventories/stocks/{$idInventory}" class="view" button-tab>Stocks</a>
             <div class="clear"></div>
         </div>
         <div class="title">
             <h2>{$title}</h2>
+        </div>
+        <div class="box-buttons">
+            <?php if (Session::getValue('level') == 10) : ?>
+            <a data-button-modal="deleteStocks"><i class="material-icons">delete</i><span>Eliminar</span></a>
+            <?php endif; ?>
+            <a data-button-modal="stocks"><i class="material-icons">add</i><span>Nuevo</span></a>
+            <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">
             {$tblStocks}
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="stocks">
     <div class="content">
         <header>
@@ -82,5 +89,19 @@ $this->dependencies->getDependencies([
         </footer>
     </div>
 </section>
-
-{$mdlDeleteStocks}
+<?php if (Session::getValue('level') == 10) : ?>
+    <section class="modal alert" data-modal="deleteStocks">
+        <div class="content">
+            <header>
+                <h6>Alerta</h6>
+            </header>
+            <main>
+                <p>¿Está seguro de que desea eliminar este stock?</p>
+            </main>
+            <footer>
+                <a button-close>Cancelar</a>
+                <a data-action="deleteStocks">Aceptar</a>
+            </footer>
+        </div>
+    </section>
+<?php endif; ?>

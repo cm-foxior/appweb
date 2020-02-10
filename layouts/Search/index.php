@@ -16,7 +16,6 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body <?php if (Session::getValue('level') == 7) : echo 'droped'; endif; ?>">
     <div class="content padding">
         <div class="search">

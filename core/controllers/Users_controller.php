@@ -122,24 +122,16 @@ class Users_controller extends Controller
 				$tblUsers = '';
 				$lstBranchOffices = '';
 
-				$tblUsers .=
-				'<table class="display" data-page-length="100">
-	                <thead>
-	                    <tr>
-	                        <th width="20px"></th>
-	                        <th width="40px"></th>
-	                        <th>Nombre</th>
-	                        <th>Usuario</th>
-	                        <th>Nivel de acceso</th>
-	                        <th>Sucursal</th>
-	                        <th width="100px">Estado</th>
-	                        <th width="70px"></th>
-	                    </tr>
-	                </thead>
-	                <tbody>';
-
 				foreach ($users as $user)
 				{
+					if (!empty($user['id_branch_office']))
+					{
+						$branchOffice = $this->model->getBranchOfficeById($user['id_branch_office']);
+						$branchOffice = $branchOffice['name'];
+					}
+					else
+						$branchOffice = '';
+
 					if ($user['level'] == '10')
 						$level = 'Administrador';
 					else if ($user['level'] == '9')
@@ -149,22 +141,13 @@ class Users_controller extends Controller
 					else if ($user['level'] == '7')
 						$level = 'Vendedor';
 
-					if (!empty($user['id_branch_office']))
-					{
-						$branchOffice = $this->model->getBranchOfficeById($user['id_branch_office']);
-						$branchOffice = $branchOffice['name'];
-					}
-					else
-						$branchOffice = '';
-
 					$tblUsers .=
 					'<tr>
 						<td><input type="checkbox" data-check value="' . $user['id_user'] . '" /></td>
 						<td>' . (!empty($user['avatar']) ? '<a href="{$path.images}users/' . $user['avatar'] . '" class="fancybox-thumb" rel="fancybox-thumb"><img src="{$path.images}users/' . $user['avatar'] . '" /></a>' : '<img src="{$path.images}users/avatar.png" class="emptyAvatar" />') . '</td>
 						<td>' . $user['name'] . '</td>
-						<td>' . $user['username'] . '</td>
-						<td>' . $level . '</td>
 						<td>' . $branchOffice . '</td>
+						<td>' . $level . '</td>
 						<td>' . (($user['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desctivado</span>') . '</td>
 						<td>
 							<a ' . (($user['status'] == true) ? 'data-action="getUserToEdit" data-id="' . $user['id_user'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
@@ -172,10 +155,6 @@ class Users_controller extends Controller
 						</td>
 					</tr>';
 				}
-
-				$tblUsers .=
-	            '    </tbody>
-	            </table>';
 
 				$lstBranchOffices .=
 				'<fieldset class="input-group hidden">

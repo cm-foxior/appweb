@@ -30,38 +30,25 @@ $this->dependencies->getDependencies([
 <main class="body <?php if (Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <div class="content">
         <div class="box-tab-buttons">
+            <a href="/inventories" button-tab>Inventarios</a>
             <a href="/inventories/inputs/{$idInventory}" button-tab>Entradas</a>
-            <a href="" class="view" button-tab>Salidas</a>
-            <div class="clear"></div>
-        </div>
-        <div class="box-buttons not-margin">
-            <a data-button-modal="outputs"><i class="material-icons">add</i><span>Nuevo</span></a>
-            {$btnTransferProduct}
-            <a href="/inventories"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
+            <a href="/inventories/outputs/{$idInventory}" class="view" button-tab>Salidas</a>
+            <a href="/inventories/stocks/{$idInventory}" button-tab>Stocks</a>
             <div class="clear"></div>
         </div>
         <div class="title">
             <h2>{$title}</h2>
         </div>
+        <div class="box-buttons not-margin">
+            <a data-button-modal="outputs"><i class="material-icons">add</i><span>Nuevo</span></a>
+            <a data-button-modal="transferProduct"><i class="material-icons">forward</i><span>Transferir</span></a>
+            <div class="clear"></div>
+        </div>
         <div class="table-responsive-vertical padding">
-            <table id="outputsTable" class="display" data-page-length="100">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Fecha y hora</th>
-                        <th>Tipo</th>
-                        <th width="35px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {$lstOutputs}
-                </tbody>
-            </table>
+            {$lstOutputs}
         </div>
     </div>
 </main>
-
 <section class="modal" data-modal="outputs">
     <div class="content">
         <header>
@@ -72,7 +59,7 @@ $this->dependencies->getDependencies([
                 <fieldset class="input-group">
                     <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
                 </fieldset>
-                <fieldset class="input-group">
+                <fieldset class="input-group span6">
                     <label data-important>
                         <span><span class="required-field">*</span>Producto</span>
                         <select name="product" class="chosen-select">
@@ -80,19 +67,20 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group span6">
+                <fieldset class="input-group span3 pl">
                     <label data-important>
                         <span><span class="required-field">*</span>Cantidad</span>
                         <input type="number" name="quantity" min="1">
                     </label>
                 </fieldset>
-                <fieldset class="input-group span6">
+                <fieldset class="input-group span3 pl">
                     <label data-important>
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
-                            <option value="4">Venta</option>
+                            <!-- <option value="4">Venta</option> -->
                             <option value="2">Merma / Perdida</option>
                             <option value="3">Devolución al proveedor</option>
+                            <option value="7">Préstamo</option>
                         </select>
                     </label>
                 </fieldset>
@@ -103,7 +91,7 @@ $this->dependencies->getDependencies([
                         <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>">
                     </label>
                 </fieldset>
-                <fieldset class="input-group span6">
+                <fieldset class="input-group span6 pl">
                     <label data-important>
                         <span>Hora</span>
                         <input type="time" name="hour" value="<?php echo date('H:i:s', time()); ?>">
@@ -118,32 +106,4 @@ $this->dependencies->getDependencies([
         </footer>
     </div>
 </section>
-
 {$mdlTransferProduct}
-
-<section class="modal" data-modal="transferInfo">
-    <div class="content">
-        <header>
-            <h6>Transferido a:</h6>
-        </header>
-        <main>
-            <form>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Inventario</span>
-                        <input id="transferInfoInventory" type="text" disabled>
-                    </label>
-                </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Sucursal</span>
-                        <input id="transferInfoBranchOffice" type="text" disabled>
-                    </label>
-                </fieldset>
-            </form>
-        </main>
-        <footer>
-            <a button-close>Aceptar</a>
-        </footer>
-    </div>
-</section>

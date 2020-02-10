@@ -246,7 +246,7 @@ class Products_controller extends Controller
 							' . $price . '
 						</td>
 						<td>' . $type . '</td>
-						<td>' . (($product['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>
+						<!-- <td>' . (($product['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td> -->
 						<td>
 							<a ' . (($product['status'] == true) ? 'data-action="getProductToEdit" data-id="' . $product['id_product'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
 							' . (!empty($product['components']) ? '<a ' . (($product['status'] == true) ? 'href="/products/components/' . $product['id_product'] . '"' : 'disabled') . '><i class="material-icons">format_list_bulleted</i><span>Componentes</span></a>' : '') . '

@@ -41,11 +41,11 @@ $this->dependencies->getDependencies([
                     <tr>
                         <th width="20px"></th>
                         <th>Nombre</th>
-                        <th>Tipo</th>
+                        <th width="130px">RFC</th>
+                        <th width="100px">Tipo</th>
                         <th>Correo electrónico</th>
-                        <th>Número Teléfonico</th>
-                        <th>RFC</th>
-                        <th width="100px">Estado</th>
+                        <th width="130px">Teléfono</th>
+                        <!-- <th width="100px">Estado</th> -->
                         <th width="35px"></th>
                     </tr>
                 </thead>

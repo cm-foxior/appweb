@@ -9,59 +9,6 @@ class Settings_controller extends Controller
 		parent::__construct();
 	}
 
-	/*
-	--------------------------------------------------------------------------- */
-	public function index()
-	{
-		if (Session::getValue('level') == 10)
-        {
-			define('_title', '{$lang.title} | Dashboard');
-
-            $template = $this->view->render($this, 'index');
-            $template = $this->format->replaceFile($template, 'header');
-
-            $replace = [
-
-            ];
-
-            $template = $this->format->replace($replace, $template);
-
-            echo $template;
-        }
-        else
-            header('Location: /dashboard');
-	}
-
-	/* Configuraciones generales
-	--------------------------------------------------------------------------- */
-	public function generals()
-	{
-		if (Session::getValue('level') == 10)
-        {
-			if (Format::existAjaxRequest() == true)
-			{
-
-			}
-			else
-			{
-				define('_title', '{$lang.title} | Dashboard');
-
-	            $template = $this->view->render($this, 'generals');
-	            $template = $this->format->replaceFile($template, 'header');
-
-	            $replace = [
-
-	            ];
-
-	            $template = $this->format->replace($replace, $template);
-
-	            echo $template;
-			}
-        }
-        else
-            header('Location: /settings');
-	}
-
 	/* Configuraciones del negocio
 	--------------------------------------------------------------------------- */
 	public function business()
@@ -111,7 +58,6 @@ class Settings_controller extends Controller
 
 	            $template = $this->view->render($this, 'business');
 	            $template = $this->format->replaceFile($template, 'header');
-
 				$settings = $this->model->getAllSettings();
 				$settings = json_decode($settings['business'], true);
 
@@ -254,13 +200,10 @@ class Settings_controller extends Controller
 
 	            $template = $this->view->render($this, 'sales');
 	            $template = $this->format->replaceFile($template, 'header');
-
 				$settings = $this->model->getAllSettings();
 				$settings = json_decode($settings['sales'], true);
-
 				$htmlSalesSettings = '';
 				$tblPdisSettings = '';
-				$mdlEditSalesSettings = '';
 
 				$htmlSalesSettings .=
 				'<div class="span6 pr">
@@ -327,19 +270,7 @@ class Settings_controller extends Controller
 					<fieldset class="input-group">
 						<a data-action="getSalesSettingsToEdit">Editar</a>
 	                </fieldset>
-	            </div>
-				<div class="span6 pl">';
-
-				$tblPdisSettings .=
-				'<table id="tblPdisSettings" class="display" data-page-length="20">
-					<thead>
-						<tr>
-							<th>Producto</th>
-							<th>Inventario</th>
-							<th>Sucursal</th>
-						</tr>
-					</thead>
-					<tbody>';
+	            </div>';
 
 				foreach ($settings['pdis'] as $pdis)
 				{
@@ -366,122 +297,9 @@ class Settings_controller extends Controller
 					</tr>';
 				}
 
-				$tblPdisSettings .=
-				'	</tbody>
-				</table>
-				<fieldset class="input-group" style="margin-top:20px;">
-					<a data-button-modal="updatePdisSettings">Actualizar</a>
-				</fieldset>';
-
-				$tblPdisSettings .=
-				'</div>
-				<div class="clear"></div>';
-
-				$mdlEditSalesSettings .=
-				'<section class="modal" data-modal="editSalesSettings">
-				    <div class="content">
-				        <header>
-				            <h6>Editar</h6>
-				        </header>
-				        <main>
-				            <form name="editSalesSettings">
-								<fieldset class="input-group">
-				                    <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Moneda principal</span>
-				                        <select name="mainCoin">
-				                            <option value="MXN">MXN</option>
-				                            <option value="USD">USD</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Impresión de ticket de venta</span>
-				                        <select name="saleTicketPrint">
-				                            <option value="true">Activado</option>
-				                            <option value="false">Desactivado</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Desglose de totales en ticket de venta</span>
-				                        <select name="saleTicketTotalsBreakdown">
-				                            <option value="true">Activado</option>
-				                            <option value="false">Desactivado</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Aplicar descuentos en ventas</span>
-				                        <select name="applyDiscounds">
-				                            <option value="true">Activado</option>
-				                            <option value="false">Desactivado</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Permitir pagos diferidos</span>
-				                        <select name="deferred_payments">
-				                            <option value="true">Activado</option>
-				                            <option value="false">Desactivado</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Sincronizar Punto de venta con Invetarios</span>
-				                        <select name="sync_point_sale_with_inventories">
-				                            <option value="true">Activado</option>
-				                            <option value="false">Desactivado</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Sincronizar Cotizaciones con Invetarios</span>
-				                        <select name="sync_quotations_with_inventories">
-				                            <option value="true">Activado</option>
-				                            <option value="false">Desactivado</option>
-				                        </select>
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Tarífa de IVA</span>
-				                        <input type="number" name="ivaRate">
-				                    </label>
-				                </fieldset>
-				                <fieldset class="input-group">
-				                    <label data-important>
-				                        <span><span class="required-field">*</span>Tarífa de cambio de USD</span>
-				                        <input type="number" name="usdRate">
-				                    </label>
-				                </fieldset>
-								<fieldset class="input-group">
-				                    <label data-important>
-				                        <span>Leyenda de ticket de venta</span>
-				                        <textarea name="saleTicketLegend"></textarea>
-				                    </label>
-				                </fieldset>
-				            </form>
-				        </main>
-				        <footer>
-				            <a button-cancel>Cancelar</a>
-				            <a button-success>Aceptar</a>
-				        </footer>
-				    </div>
-				</section>';
-
 	            $replace = [
 					'{$htmlSalesSettings}' => $htmlSalesSettings,
-					'{$tblPdisSettings}' => $tblPdisSettings,
-					'{$mdlEditSalesSettings}' => $mdlEditSalesSettings
+					'{$tblPdisSettings}' => $tblPdisSettings
 	            ];
 
 	            $template = $this->format->replace($replace, $template);

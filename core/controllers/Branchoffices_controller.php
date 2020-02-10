@@ -105,7 +105,7 @@ class Branchoffices_controller extends Controller
 					'<tr>
 						<td><input type="checkbox" data-check value="' . $branchOffice['id_branch_office'] . '" /></td>
 						<td>' . $branchOffice['name'] . '</td>
-						<td>' . (($branchOffice['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td>
+						<!-- <td>' . (($branchOffice['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td> -->
 						<td>
 							<a ' . (($branchOffice['status'] == true) ? 'data-action="getBranchOfficeToEdit" data-id="' . $branchOffice['id_branch_office'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
 						</td>
