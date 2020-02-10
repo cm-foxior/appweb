@@ -220,7 +220,9 @@ class Reports_model extends Model
 		if (!empty($data['category_four']))
 			$and_input['products.id_product_category_four'] = $data['category_four'];
 
-		if ($data['search'] == 'dates_range')
+		if ($data['search'] == 'total')
+			$and_input['inventories_inputs.input_date_time[<=]'] = $data['date_end'];
+		else if ($data['search'] == 'dates_range')
 			$and_input['inventories_inputs.input_date_time[<>]'] = [$data['date_start'],$data['date_end']];
 
 		$inputs = $this->database->select('inventories_inputs', [
@@ -317,7 +319,9 @@ class Reports_model extends Model
 				'id_inventory' => $data['inventory'],
 			];
 
-			if ($data['search'] == 'dates_range')
+			if ($data['search'] == 'total')
+				$and_output['output_date_time[<=]'] = $data['date_end'];
+			else if ($data['search'] == 'dates_range')
 				$and_output['output_date_time[<>]'] = [$data['date_start'],$data['date_end']];
 
 			$outputs = $this->database->select('inventories_outputs', [

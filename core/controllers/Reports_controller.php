@@ -268,15 +268,15 @@ class Reports_controller extends Controller
 			                <label data-important>
 			                    <span>Busqueda</span>
 								<select name="search">
-									<option value="dates_range">Rango de fechas</option>
 									<option value="total">Total</option>
+									<option value="dates_range">Rango de fechas</option>
 								</select>
 			                </label>
 			            </fieldset>
 						<fieldset class="input-group span2 pr">
 			                <label data-important>
 			                    <span>Fecha de inicio</span>
-								<input type="date" name="date_start" value="' . date('Y-m-d') . '">
+								<input type="date" name="date_start" value="' . date('Y-m-d') . '" disabled>
 			                </label>
 			            </fieldset>
 						<fieldset class="input-group span2 pr">
@@ -294,7 +294,7 @@ class Reports_controller extends Controller
 
 					$existence = $this->model->getExistence([
 						'inventory' => $inventories[0]['id_inventory'],
-						'search' => 'dates_range',
+						'search' => 'total',
 						'date_start' => date('Y-m-d') . ' 00:00:00',
 						'date_end' => date('Y-m-d') . ' 23:59:59'
 					]);
