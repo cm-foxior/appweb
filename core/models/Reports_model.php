@@ -205,7 +205,6 @@ class Reports_model extends Model
 		$products = [];
 
 		$and_input = [
-			'inventories_inputs.input_date_time[<>]' => [$data['date_start'],$data['date_end']],
 			'inventories_inputs.id_inventory' => $data['inventory'],
 		];
 
@@ -220,6 +219,9 @@ class Reports_model extends Model
 
 		if (!empty($data['category_four']))
 			$and_input['products.id_product_category_four'] = $data['category_four'];
+
+		if ($data['search'] == 'dates_range')
+			$and_input['inventories_inputs.input_date_time[<>]'] = [$data['date_start'],$data['date_end']];
 
 		$inputs = $this->database->select('inventories_inputs', [
 			'[>]products' => ['id_product' => 'id_product'],
@@ -310,14 +312,18 @@ class Reports_model extends Model
 		{
 			$products[$key]['inputs'] = $value['inputs'] . ' ' . $value['unity'];
 
+			$and_output = [
+				'id_product' => $value['id_product'],
+				'id_inventory' => $data['inventory'],
+			];
+
+			if ($data['search'] == 'dates_range')
+				$and_output['output_date_time[<>]'] = [$data['date_start'],$data['date_end']];
+
 			$outputs = $this->database->select('inventories_outputs', [
 				'quantity'
 			], [
-				'AND' => [
-					'id_product' => $value['id_product'],
-					'output_date_time[<>]' => [$data['date_start'],$data['date_end']],
-					'id_inventory' => $data['inventory'],
-				]
+				'AND' => $and_output
 			]);
 
 			$products[$key]['outputs'] = array_sum(array_map('current', $outputs)) . ' ' . $value['unity'];

@@ -170,13 +170,27 @@ $( document ).ready(function ()
             }
         ],
         "order": [
-
+            [0,'asc']
         ],
         "searching": true,
         "info": false,
         "paging": true,
         "language": {
 
+        }
+    });
+
+    $('form[name="existence"]').find('select[name="search"]').on('change', function()
+    {
+        if ($(this).val() == 'dates_range')
+        {
+            $('form[name="existence"]').find('input[name="date_start"]').removeAttr('disabled');
+            $('form[name="existence"]').find('input[name="date_end"]').removeAttr('disabled');
+        }
+        else if ($(this).val() == 'total')
+        {
+            $('form[name="existence"]').find('input[name="date_start"]').attr('disabled', true);
+            $('form[name="existence"]').find('input[name="date_end"]').attr('disabled', true);
         }
     });
 
