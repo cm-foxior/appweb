@@ -35,7 +35,7 @@
     <ul>
         <?php if (Session::getValue('level') == 10) : ?>
         <li data-target="reports">
-            <a href="/reports/inventories/existence"><i class="material-icons">menu</i>Reportes</a>
+            <a href="/reports/inventories/historical"><i class="material-icons">menu</i>Reportes</a>
         </li>
         <?php endif; ?>
         <?php if (Session::getValue('level') == 8 OR Session::getValue('level') == 10) : ?>

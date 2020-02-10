@@ -6,9 +6,119 @@ $( document ).ready(function ()
 {
     var MyDocument = $(this);
 
-    $('#etyp').on('change', function()
+    $('[name="report"]').on('change', function()
     {
-        window.location.href = '/reports/inventories/' + $('select[name="type"]').val()
+        window.location.href = '/reports/inventories/' + $(this).val()
+    });
+
+    var tblHistorical = MyDocument.find("#historical").DataTable({
+        dom: "Bfrtip",
+        buttons: [
+            "pdf"
+        ],
+        "columns": [
+            {
+                "title": "Fecha",
+                "width": "170px"
+            },
+            {
+                "title": "Producto"
+            },
+            {
+                "title": "Cantidad",
+                "width": "100px"
+            },
+            {
+                "title": "Proveedor"
+            },
+            {
+                "title": "Tipo",
+                "width": "120px"
+            },
+            {
+                "title": "Movimiento",
+                "width": "100px"
+            },
+        ],
+        "columnDefs": [
+            {
+                "orderable": false,
+                "targets": "_all"
+            },
+            {
+                "className": "text-left",
+                "targets": "_all"
+            }
+        ],
+        "order": [
+            [0,'desc']
+        ],
+        "searching": true,
+        "info": false,
+        "paging": true,
+        "language": {
+
+        }
+    });
+
+    $('form[name="historical"]').find('select[name="type"]').on('change', function()
+    {
+        if ($(this).val() == 'historical')
+            $('form[name="historical"]').find('select[name="movement"]').html('<option value="">Todo</option>');
+        else if ($(this).val() == 'inputs')
+        {
+            $('form[name="historical"]').find('select[name="movement"]').html(
+                '<option value="">Todo</option>' +
+                '<option value="1">Compra</option>' +
+                '<option value="2">Transferencia</option>' +
+                '<option value="3">Devolución de venta</option>' +
+                '<option value="4">Devolución de préstamo</option>'
+            );
+        }
+        else if ($(this).val() == 'outputs')
+        {
+            $('form[name="historical"]').find('select[name="movement"]').html(
+                '<option value="">Todo</option>' +
+                '<option value="1">Transferencia</option>' +
+                '<option value="2">Merma / Pérdida</option>' +
+                '<option value="3">Devolución a proveedor</option>' +
+                '<option value="4">Venta</option>' +
+                '<option value="6">Préstamo</option>'
+            );
+        }
+    });
+
+    $('form[name="historical"]').on('submit', function(e)
+    {
+        e.preventDefault();
+
+        $.ajax({
+            url: '',
+            type: 'POST',
+            data: $(this).serialize() + '&action=report',
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response)
+            {
+                tblHistorical.clear().draw();
+
+                if (response.data.length > 0)
+                {
+                    $.each(response.data, function (key, value)
+                    {
+                        tblHistorical.row.add([
+                            value.date,
+                            value.product,
+                            value.quantify,
+                            value.provider,
+                            value.type,
+                            value.movement,
+                        ]).draw();
+                    });
+                }
+            }
+        });
     });
 
     var tblExistence = MyDocument.find("#existence").DataTable({
@@ -70,11 +180,6 @@ $( document ).ready(function ()
         }
     });
 
-    $('#einv, [name="category_one"], [name="category_two"], [name="category_tree"], [name="category_four"], [name="date_start"], [name="date_end"]').on('change', function()
-    {
-        $('form[name="existence"]').submit();
-    });
-
     $('form[name="existence"]').on('submit', function(e)
     {
         e.preventDefault();
@@ -103,130 +208,6 @@ $( document ).ready(function ()
                             value.min,
                             value.max,
                             value.status,
-                        ]).draw();
-                    });
-                }
-            }
-        });
-    });
-
-    var tblHistorical = MyDocument.find("#historical").DataTable({
-        dom: "Bfrtip",
-        buttons: [
-            "pdf"
-        ],
-        "columns": [
-            {
-                "title": "Producto"
-            },
-            {
-                "title": "Cantidad",
-                "width": "100px"
-            },
-            {
-                "title": "Fecha"
-            },
-            {
-                "title": "Proveedor"
-            },
-            {
-                "title": "Tipo"
-            },
-            {
-                "title": "Movimiento",
-                "width": "100px"
-            },
-        ],
-        "columnDefs": [
-            {
-                "orderable": false,
-                "targets": "_all"
-            },
-            {
-                "className": "text-left",
-                "targets": "_all"
-            }
-        ],
-        "order": [
-
-        ],
-        "searching": true,
-        "info": false,
-        "paging": true,
-        "language": {
-
-        }
-    });
-
-    $('#hda1').on('change', function()
-    {
-        $('form[name="historical"]').submit();
-    });
-
-    $('#hda2').on('change', function()
-    {
-        $('form[name="historical"]').submit();
-    });
-
-    $('#hbra').on('change', function()
-    {
-        $.ajax({
-            url: '',
-            type: 'POST',
-            data: 'branch=' + $(this).val() + '&action=inventories',
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                tblHistorical.clear().draw();
-
-                $('#hinv').empty().trigger('chosen:updated');
-
-                if (response.data.length > 0)
-                {
-                    $.each(response.data, function (key, value)
-                    {
-                        $('#hinv').append('<option value="' + value.id_inventory + '">' + value.name + ' (' + value.type + ') Suc. ' + value.branch + '</option>').trigger('chosen:updated');
-                    });
-
-                    $('form[name="historical"]').submit();
-                }
-            }
-        });
-    });
-
-    $('#hinv').on('change', function()
-    {
-        $('form[name="historical"]').submit();
-    });
-
-    $('form[name="historical"]').on('submit', function(e)
-    {
-        e.preventDefault();
-
-        $.ajax({
-            url: '',
-            type: 'POST',
-            data: $(this).serialize() + '&action=report',
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                tblHistorical.clear().draw();
-
-                if (response.data.length > 0)
-                {
-                    $.each(response.data, function (key, value)
-                    {
-                        tblHistorical.row.add([
-                            value.product,
-                            value.quantify,
-                            value.date,
-                            value.provider,
-                            value.type,
-                            value.movement,
                         ]).draw();
                     });
                 }

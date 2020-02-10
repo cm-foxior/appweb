@@ -23,13 +23,11 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body">
     <div class="content">
         <div class="box-tab-buttons">
-            <a href="/reports/inventories/existence" class="view" button-tab>Invetarios</a>
+            <a href="/reports/inventories/historical" class="view" button-tab>Invetarios</a>
             <a href="/reports/sales" button-tab>Ventas</a>
-            <!-- <a href="/reports/graphs" button-tab>Estadísticas</a> -->
             <div class="clear"></div>
         </div>
         <div class="padding">

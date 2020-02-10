@@ -9,23 +9,8 @@ class Reports_model extends Model
 		parent::__construct();
 	}
 
-	public function getInventories($id = null)
+	public function getInventories()
 	{
-		if (!empty($id))
-		{
-			$where = [
-				'inventories.status' => true,
-				'inventories.id_branch_office' => $id,
-			];
-		}
-		else
-		{
-			$where = [
-				'inventories.status' => true,
-				'inventories.id_subscription' => Session::getValue('id_subscription'),
-			];
-		}
-
 		$query = $this->database->select('inventories', [
 			'[>]branch_offices' => ['id_branch_office' => 'id_branch_office']
 		], [
@@ -34,7 +19,10 @@ class Reports_model extends Model
 			'inventories.type',
 			'branch_offices.name(branch)',
 		], [
-			'AND' => $where
+			'AND' => [
+				'inventories.status' => true,
+				'inventories.id_subscription' => Session::getValue('id_subscription'),
+			]
 		]);
 
 		foreach ($query as $key => $value)
@@ -50,26 +38,188 @@ class Reports_model extends Model
 		return $query;
 	}
 
-	public function getExistence($id, $category_one, $category_two, $category_tree, $category_four, $date_start, $date_end)
+	public function getHistorical($data)
+	{
+		$products = [];
+
+		if ($data['type'] == 'historical' OR $data['type'] == 'inputs')
+		{
+			$and_input = [
+				'inventories_inputs.input_date_time[<>]' => [$data['date_start'],$data['date_end']],
+				'inventories_inputs.id_inventory' => $data['inventory'],
+			];
+
+			if (!empty($data['category_one']))
+				$and_input['products.id_product_category_one'] = $data['category_one'];
+
+			if (!empty($data['category_two']))
+				$and_input['products.id_product_category_two'] = $data['category_two'];
+
+			if (!empty($data['category_tree']))
+				$and_input['products.id_product_category_tree'] = $data['category_tree'];
+
+			if (!empty($data['category_four']))
+				$and_input['products.id_product_category_four'] = $data['category_four'];
+
+			if (!empty($data['bill']))
+				$and_input['inventories_inputs.bill'] = $data['bill'];
+
+			if (!empty($data['movement']) AND $data['type'] == 'inputs')
+				$and_input['inventories_inputs.type'] = $data['movement'];
+
+			$inputs = $this->database->select('inventories_inputs', [
+				'[>]products' => ['id_product' => 'id_product'],
+				'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
+				'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
+				'[>]products_categories_tree' => ['products.id_product_category_tree' => 'id_product_category_tree'],
+				'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four'],
+				'[>]providers' => ['id_provider' => 'id_provider']
+			], [
+				'inventories_inputs.quantify',
+				'inventories_inputs.type',
+				'inventories_inputs.input_date_time',
+				'products.name(product)',
+				'products.unity',
+				'products_categories_one.name(category_one)',
+				'products_categories_two.name(category_two)',
+				'products_categories_tree.name(category_tree)',
+				'products_categories_four.name(category_four)',
+				'providers.name(provider)'
+			], [
+				'AND' => $and_input
+			]);
+
+			foreach ($inputs as $value)
+			{
+				if ($value['unity'] == '1')
+					$value['unity'] = 'Kilogramos';
+				else if ($value['unity'] == '2')
+					$value['unity'] = 'Gramos';
+				else if ($value['unity'] == '3')
+					$value['unity'] = 'Mililitros';
+				else if ($value['unity'] == '4')
+					$value['unity'] = 'Litros';
+				else if ($value['unity'] == '5')
+					$value['unity'] = 'Piezas';
+
+				if ($value['type'] == '1')
+					$value['type'] = '<span class="active">Compra</span>';
+				else if ($value['type'] == '2')
+					$value['type'] = '<span class="expired">Transferencia</span>';
+				else if ($value['type'] == '3')
+					$value['type'] = '<span class="expired">Dev. venta</span>';
+				else if ($value['type'] == '4')
+					$value['type'] = '<span class="expired">Dev. préstamo</span>';
+
+				array_push($products, [
+					'product' => $value['product'] . ' ' . $value['category_one'] . ' ' . $value['category_two'] . ' ' . $value['category_tree'] . ' ' . $value['category_four'],
+					'quantify' => $value['quantify'] . ' ' . $value['unity'],
+					'date' => $value['input_date_time'],
+					'type' => $value['type'],
+					'provider' => (!empty($value['provider']) ? $value['provider'] : ''),
+					'movement' => '<span class="active">Entrada</span>'
+				]);
+			}
+		}
+
+		if ($data['type'] == 'historical' OR $data['type'] == 'outputs')
+		{
+			$and_output = [
+				'inventories_outputs.output_date_time[<>]' => [$data['date_start'],$data['date_end']],
+				'inventories_outputs.id_inventory' => $data['inventory'],
+			];
+
+			if (!empty($data['movement']) AND $data['type'] == 'outputs')
+				$and_output['inventories_outputs.type'] = $data['movement'];
+
+			$outputs = $this->database->select('inventories_outputs', [
+				'[>]products' => ['id_product' => 'id_product'],
+				'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
+				'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
+				'[>]products_categories_tree' => ['products.id_product_category_tree' => 'id_product_category_tree'],
+				'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four'],
+			], [
+				'inventories_outputs.quantity',
+				'inventories_outputs.type',
+				'inventories_outputs.output_date_time',
+				'products.name(product)',
+				'products.unity',
+				'products_categories_one.name(category_one)',
+				'products_categories_two.name(category_two)',
+				'products_categories_tree.name(category_tree)',
+				'products_categories_four.name(category_four)',
+			], [
+				'AND' => $and_output
+			]);
+
+			foreach ($outputs as $value)
+			{
+				if ($value['unity'] == '1')
+					$value['unity'] = 'Kilogramos';
+				else if ($value['unity'] == '2')
+					$value['unity'] = 'Gramos';
+				else if ($value['unity'] == '3')
+					$value['unity'] = 'Mililitros';
+				else if ($value['unity'] == '4')
+					$value['unity'] = 'Litros';
+				else if ($value['unity'] == '5')
+					$value['unity'] = 'Piezas';
+
+				if ($value['type'] == '1')
+					$value['type'] = '<span class="expired">Transferencia</span>';
+				else if ($value['type'] == '2')
+					$value['type'] = '<span class="missing">Pérdida</span>';
+				else if ($value['type'] == '3')
+					$value['type'] = '<span class="same">Dev. proveedor</span>';
+				else if ($value['type'] == '4')
+					$value['type'] = '<span class="active">Venta</span>';
+				else if ($value['type'] == '5')
+					$value['type'] = '<span class="expired">Cambio de venta</span>';
+				else if ($value['type'] == '6')
+					$value['type'] = '<span class="expired">Prestamo</span>';
+
+				array_push($products, [
+					'product' => $value['product'] . ' ' . $value['category_one'] . ' ' . $value['category_two'] . ' ' . $value['category_tree'] . ' ' . $value['category_four'],
+					'quantify' => $value['quantity'] . ' ' . $value['unity'],
+					'date' => $value['output_date_time'],
+					'type' => $value['type'],
+					'provider' => '',
+					'movement' => '<span class="expired">Salida</span>'
+				]);
+			}
+		}
+
+		if (!empty($products))
+		{
+			foreach ($products as $key => $value)
+				$aux[$key] = $value['date'];
+
+			array_multisort($aux, SORT_DESC, $products);
+		}
+
+		return $products;
+	}
+
+	public function getExistence($data)
 	{
 		$products = [];
 
 		$and_input = [
-			'inventories_inputs.input_date_time[<>]' => [$date_start,$date_end],
-			'inventories_inputs.id_inventory' => $id,
+			'inventories_inputs.input_date_time[<>]' => [$data['date_start'],$data['date_end']],
+			'inventories_inputs.id_inventory' => $data['inventory'],
 		];
 
-		if (!empty($category_one))
-			$and_input['products.id_product_category_one'] = $category_one;
+		if (!empty($data['category_one']))
+			$and_input['products.id_product_category_one'] = $data['category_one'];
 
-		if (!empty($category_two))
-			$and_input['products.id_product_category_two'] = $category_two;
+		if (!empty($data['category_two']))
+			$and_input['products.id_product_category_two'] = $data['category_two'];
 
-		if (!empty($category_tree))
-			$and_input['products.id_product_category_tree'] = $category_tree;
+		if (!empty($data['category_tree']))
+			$and_input['products.id_product_category_tree'] = $data['category_tree'];
 
-		if (!empty($category_four))
-			$and_input['products.id_product_category_four'] = $category_four;
+		if (!empty($data['category_four']))
+			$and_input['products.id_product_category_four'] = $data['category_four'];
 
 		$inputs = $this->database->select('inventories_inputs', [
 			'[>]products' => ['id_product' => 'id_product'],
@@ -165,8 +315,8 @@ class Reports_model extends Model
 			], [
 				'AND' => [
 					'id_product' => $value['id_product'],
-					'output_date_time[<>]' => [$date_start,$date_end],
-					'id_inventory' => $id,
+					'output_date_time[<>]' => [$data['date_start'],$data['date_end']],
+					'id_inventory' => $data['inventory'],
 				]
 			]);
 
@@ -193,194 +343,35 @@ class Reports_model extends Model
 			], [
 				'AND' => [
 					'id_product' => $value['id_product'],
-					'id_inventory' => $id,
+					'id_inventory' => $data['inventory'],
 				]
 			]);
 
-			$products[$key]['min'] = !empty($stocks) ? $stocks[0]['min'] . ' ' . $value['unity'] : 'No disponible';
-			$products[$key]['max'] = !empty($stocks) ? $stocks[0]['max'] . ' ' . $value['unity'] : 'No disponible';
+			$products[$key]['min'] = !empty($stocks) ? $stocks[0]['min'] . ' ' . $value['unity'] : '';
+			$products[$key]['max'] = !empty($stocks) ? $stocks[0]['max'] . ' ' . $value['unity'] : '';
 
-			if (!empty($stocks[0]['min']))
-				$products[$key]['status'] = ($products[$key]['existence'] >= $stocks[0]['min']) ?  '<span class="stable">Estable</span>' : '<span class="missing">Faltante</span>';
+			if (!empty($stocks[0]['max']))
+			{
+				if ($stocks[0]['max'] < $products[$key]['existence'])
+					$products[$key]['status'] = '<span class="missing">Alto</span>';
+			}
+			else if (!empty($stocks[0]['min']))
+			{
+				if ($stocks[0]['min'] >= $products[$key]['existence'] AND $stocks[0]['min'] <= ($products[$key]['existence'] + 10))
+					$products[$key]['status'] = '<span class="same">Bajo</span>';
+				else if ($stocks[0]['min'] >= ($products[$key]['existence'] + 10))
+					$products[$key]['status'] = '<span class="stable">Normal</span>';
+				else if ($stocks[0]['min'] < $products[$key]['existence'])
+					$products[$key]['status'] = '<span class="missing">Faltante</span>';
+			}
 			else
-				$products[$key]['status'] = 'No disponible';
+				$products[$key]['status'] = '';
 
 			unset($products[$key]['id_product']);
 			unset($products[$key]['unity']);
 		}
 
 		return $products;
-	}
-
-	public function getBranchs()
-	{
-		$query = $this->database->select('branch_offices', [
-			'id_branch_office',
-			'name'
-		], [
-			'id_subscription' => Session::getValue('id_subscription')
-		]);
-
-		return $query;
-	}
-
-	public function getHistorical($date1, $date2, $id)
-	{
-		$products = [];
-
-		$inputs = $this->database->select('inventories_inputs', [
-			'[>]products' => ['id_product' => 'id_product'],
-			'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
-			'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
-			'[>]products_categories_tree' => ['products.id_product_category_tree' => 'id_product_category_tree'],
-			'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four'],
-			'[>]providers' => ['id_provider' => 'id_provider'],
-		], [
-			'inventories_inputs.quantify',
-			'inventories_inputs.type',
-			'inventories_inputs.input_date_time',
-			'products.name(product)',
-			'products.unity',
-			'products_categories_one.name(category_one)',
-			'products_categories_two.name(category_two)',
-			'products_categories_tree.name(category_tree)',
-			'products_categories_four.name(category_four)',
-			'providers.name(provider)',
-		], [
-			'AND' => [
-				'inventories_inputs.input_date_time[<>]' => [$date1,$date2],
-				'inventories_inputs.id_inventory' => $id,
-			]
-		]);
-
-		foreach ($inputs as $value)
-		{
-			if ($value['unity'] == '1')
-				$value['unity'] = 'Kilogramos';
-			else if ($value['unity'] == '2')
-				$value['unity'] = 'Gramos';
-			else if ($value['unity'] == '3')
-				$value['unity'] = 'Mililitros';
-			else if ($value['unity'] == '4')
-				$value['unity'] = 'Litros';
-			else if ($value['unity'] == '5')
-				$value['unity'] = 'Piezas';
-
-			if ($value['type'] == '1')
-				$value['type'] = '<span class="active">Compra</span>';
-			else if ($value['type'] == '2')
-				$value['type'] = '<span class="expired">Transferencia</span>';
-			else if ($value['type'] == '3')
-				$value['type'] = '<span class="same">Devolución de venta</span>';
-			else if ($value['type'] == '4')
-				$value['type'] = '<span class="expired">Prestamo</span>';
-
-			array_push($products, [
-				'product' => $value['product'] . ' ' . $value['category_one'] . ' ' . $value['category_two'] . ' ' . $value['category_tree'] . ' ' . $value['category_four'],
-				'quantify' => $value['quantify'] . ' ' . $value['unity'],
-				'date' => $value['input_date_time'],
-				'type' => $value['type'],
-				'provider' => (!empty($value['provider']) ? $value['provider'] : 'No disponible'),
-				'movement' => '<span class="active">Entrada</span>'
-			]);
-		}
-
-		$outputs = $this->database->select('inventories_outputs', [
-			'[>]products' => ['id_product' => 'id_product'],
-			'[>]products_categories_one' => ['products.id_product_category_one' => 'id_product_category_one'],
-			'[>]products_categories_two' => ['products.id_product_category_two' => 'id_product_category_two'],
-			'[>]products_categories_tree' => ['products.id_product_category_tree' => 'id_product_category_tree'],
-			'[>]products_categories_four' => ['products.id_product_category_four' => 'id_product_category_four'],
-		], [
-			'inventories_outputs.quantity',
-			'inventories_outputs.type',
-			'inventories_outputs.output_date_time',
-			'products.name(product)',
-			'products.unity',
-			'products_categories_one.name(category_one)',
-			'products_categories_two.name(category_two)',
-			'products_categories_tree.name(category_tree)',
-			'products_categories_four.name(category_four)',
-		], [
-			'AND' => [
-				'inventories_outputs.output_date_time[<>]' => [$date1,$date2],
-				'inventories_outputs.id_inventory' => $id,
-			]
-		]);
-
-		foreach ($outputs as $value)
-		{
-			if ($value['unity'] == '1')
-				$value['unity'] = 'Kilogramos';
-			else if ($value['unity'] == '2')
-				$value['unity'] = 'Gramos';
-			else if ($value['unity'] == '3')
-				$value['unity'] = 'Mililitros';
-			else if ($value['unity'] == '4')
-				$value['unity'] = 'Litros';
-			else if ($value['unity'] == '5')
-				$value['unity'] = 'Piezas';
-
-			if ($value['type'] == '1')
-				$value['type'] = '<span class="expired">Transferencia</span>';
-			else if ($value['type'] == '2')
-				$value['type'] = '<span class="missing">Pérdida</span>';
-			else if ($value['type'] == '3')
-				$value['type'] = '<span class="same">Devolución a proveedor</span>';
-			else if ($value['type'] == '4')
-				$value['type'] = '<span class="active">Venta</span>';
-			else if ($value['type'] == '5')
-				$value['type'] = '<span class="expired">Cambio de venta</span>';
-			else if ($value['type'] == '6')
-				$value['type'] = '<span class="expired">Devolución de prestamo</span>';
-
-			array_push($products, [
-				'product' => $value['product'] . ' ' . $value['category_one'] . ' ' . $value['category_two'] . ' ' . $value['category_tree'] . ' ' . $value['category_four'],
-				'quantify' => $value['quantity'] . ' ' . $value['unity'],
-				'date' => $value['output_date_time'],
-				'type' => $value['type'],
-				'provider' => 'No aplica',
-				'movement' => '<span class="expired">Salida</span>'
-			]);
-		}
-
-		if (!empty($products))
-		{
-			foreach ($products as $key => $value)
-				$aux[$key] = $value['date'];
-
-			array_multisort($aux, SORT_DESC, $products);
-		}
-
-		return $products;
-	}
-
-	public function getSellers($id)
-	{
-		$query1 = $this->database->select('users', [
-			'id_user',
-			'name',
-		], [
-			'AND' => [
-				'level' => ['10'],
-				'status' => true,
-				'id_subscription' => Session::getValue('id_subscription'),
-			]
-		]);
-
-		$query2 = $this->database->select('users', [
-			'id_user',
-			'name',
-		], [
-			'AND' => [
-				'level' => ['9','7'],
-				'status' => true,
-				'id_branch_office' => $id,
-				'id_subscription' => Session::getValue('id_subscription'),
-			]
-		]);
-
-		return array_merge($query1, $query2);
 	}
 
 	public function getSales($date1, $date2, $branch, $seller = null)
@@ -471,5 +462,63 @@ class Reports_model extends Model
 	{
 		$query = $this->database->select('products_categories_' . $number, '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'name ASC']);
 		return $query;
+	}
+
+	public function getBills($inventory)
+	{
+		$query = $this->database->select('inventories_inputs', [
+			'bill'
+		], [
+			'id_inventory' => $inventory
+		]);
+
+		if (!empty($query))
+		{
+			$query = array_map('current', $query);
+			$query = array_unique($query);
+	        $query = array_values($query);
+		}
+
+		return $query;
+	}
+
+	public function getBranchs()
+	{
+		$query = $this->database->select('branch_offices', [
+			'id_branch_office',
+			'name'
+		], [
+			'id_subscription' => Session::getValue('id_subscription')
+		]);
+
+		return $query;
+	}
+
+	public function getSellers($id)
+	{
+		$query1 = $this->database->select('users', [
+			'id_user',
+			'name',
+		], [
+			'AND' => [
+				'level' => ['10'],
+				'status' => true,
+				'id_subscription' => Session::getValue('id_subscription'),
+			]
+		]);
+
+		$query2 = $this->database->select('users', [
+			'id_user',
+			'name',
+		], [
+			'AND' => [
+				'level' => ['7'],
+				'status' => true,
+				'id_branch_office' => $id,
+				'id_subscription' => Session::getValue('id_subscription'),
+			]
+		]);
+
+		return array_merge($query1, $query2);
 	}
 }

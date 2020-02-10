@@ -80,7 +80,7 @@ $this->dependencies->getDependencies([
                             <option value="4">Venta</option>
                             <option value="2">Merma / Perdida</option>
                             <option value="3">Devolución al proveedor</option>
-                            <option value="7">Préstamo</option>
+                            <option value="6">Préstamo</option>
                         </select>
                     </label>
                 </fieldset>

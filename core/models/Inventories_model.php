@@ -257,7 +257,7 @@ class Inventories_model extends Model
 								'output_date_time' => $datetime,
 					            'id_product' => $value['id_product_2'],
 					            'id_inventory' => $id,
-					            'id_client' => ($type == '7') ? $client : null,
+					            'id_client' => ($type == '6') ? $client : null,
 								'id_subscription' => Session::getValue('id_subscription')
 					        ]);
 
@@ -286,7 +286,7 @@ class Inventories_model extends Model
 					'output_date_time' => $datetime,
 					'id_product' => $product[0]['id_product'],
 					'id_inventory' => $id,
-					'id_client' => ($type == '7') ? $client : null,
+					'id_client' => ($type == '6') ? $client : null,
 					'id_subscription' => Session::getValue('id_subscription')
 				]);
 
@@ -307,7 +307,7 @@ class Inventories_model extends Model
 			'type' => $type,
 			'output_date_time' => $datetime,
             'id_product' => $product,
-			'id_client' => ($type == '7') ? $client : null
+			'id_client' => ($type == '6') ? $client : null
         ], ['id_inventory_output' => $id]);
 
         return $query;

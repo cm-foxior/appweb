@@ -308,7 +308,7 @@ $(document).ready(function ()
                     $('input[name="date"]').val(response.data.output_date_time[0]);
                     $('input[name="hour"]').val(response.data.output_date_time[1]);
 
-                    if (response.data.type == '7')
+                    if (response.data.type == '6')
                     {
                         $('[name="client"]').parent().parent().removeClass('hidden');
                         $('[name="client"]').val(response.data.id_client).trigger('chosen:updated');
@@ -324,7 +324,7 @@ $(document).ready(function ()
 
     $('[name="type"]').on('change', function()
     {
-        if ($(this).val() == '7')
+        if ($(this).val() == '6')
             $('[name="client"]').parent().parent().removeClass('hidden');
         else
             $('[name="client"]').parent().parent().addClass('hidden');

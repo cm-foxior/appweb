@@ -660,7 +660,7 @@ class Inventories_controller extends Controller
 	            if (!isset($type))
 	                array_push($errors, ['type', 'Seleccione una opción']);
 
-	            if ($type == '7' AND !isset($client))
+	            if ($type == '6' AND !isset($client))
 	                array_push($errors, ['client', 'Seleccione una opción']);
 
 				if (Session::getValue('level') == 10)
@@ -824,18 +824,13 @@ class Inventories_controller extends Controller
 						}
 						else if ($output['type'] == '6')
 						{
-							$type = 'Devolución de prestamo';
-							$typeStyleColor = '#000';
-						}
-						else if ($output['type'] == '7')
-						{
 							$type = 'Préstamo';
 							$typeStyleColor = '#000';
 						}
 
 						if (Session::getValue('level') == 10)
 						{
-							if ($output['type'] == '2' OR $output['type'] == '3' OR $output['type'] == '7')
+							if ($output['type'] == '2' OR $output['type'] == '3' OR $output['type'] == '6')
 								$btnEditOutput = '<a data-action="getOutputToEdit" data-id="' . $output['id_inventory_output'] . '"><i class="material-icons">edit</i><span>Detalles / Editar</span></a>';
 							else
 								$btnEditOutput = '';
@@ -1265,10 +1260,10 @@ class Inventories_controller extends Controller
 
 						if (!empty($stock['max']) AND $currentStock > $stock['max'])
 							$status = '<span class="missing">Alto</span>';
-						else if ($currentStock > $stock['min'])
-							$status = '<span class="stable">Normal</span>';
-						else if ($currentStock >= $stock['min'] OR $currentStock <= ($stock['min'] + 10))
+						else if ($currentStock >= $stock['min'] AND $currentStock <= ($stock['min'] + 10))
 							$status = '<span class="same">Bajo</span>';
+						else if ($currentStock > ($stock['min'] + 10))
+							$status = '<span class="stable">Normal</span>';
 						else if ($currentStock < $stock['min'])
 							$status = '<span class="missing">Faltante</span>';
 
