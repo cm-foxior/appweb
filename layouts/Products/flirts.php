@@ -29,10 +29,14 @@ $this->dependencies->getDependencies([
 
 <main class="body">
     <div class="content">
+        <div class="box-tab-buttons">
+            <a href="/products" button-tab>Productos</a>
+            <a href="/products/flirts" class="view" button-tab>Productos ligados</a>
+            <div class="clear"></div>
+        </div>
         <div class="box-buttons">
             <a data-button-modal="deleteFlirts"><i class="material-icons">delete</i><span>Eliminar</span></a>
             <a data-button-modal="flirts" data-number="one"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <a href="/products"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">

@@ -29,8 +29,9 @@ $this->dependencies->getDependencies([
 
 <main class="body">
     <div class="content">
-        <div class="box-buttons">
-            <a href="/products"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
+        <div class="box-tab-buttons">
+            <a href="/products" button-tab>Productos</a>
+            <a href="/products/tags" class="view" button-tab>Etiquetas</a>
             <div class="clear"></div>
         </div>
         <div class="padding">

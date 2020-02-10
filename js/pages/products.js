@@ -8,8 +8,6 @@ $(document).ready(function ()
 
     /* Tabla de productos
     /* ------------------------------------------------------------------------ */
-    var tableOrder = myDocument.find("#tblProducts").data('table-order');
-
     var tblProducts = myDocument.find("#tblProducts").DataTable({
         dom: 'Bfrtip',
         buttons: [
@@ -26,27 +24,13 @@ $(document).ready(function ()
             }
         ],
         "order": [
-            [tableOrder,'desc']
+            [3,'desc']
         ],
         "searching": true,
         "info": true,
         "paging": true,
         "language": {
 
-        }
-    });
-
-    $('input[name="name_compound"]').on('change', function()
-    {
-        if ($('input[name="name_compound"]').is(':checked') == true)
-        {
-            $('input[name="name"]').val('');
-            $('input[name="name"]').attr('disabled', true);
-        }
-        else
-        {
-            $('input[name="name"]').val('');
-            $('input[name="name"]').attr('disabled', false);
         }
     });
 
@@ -79,9 +63,8 @@ $(document).ready(function ()
 
     sltType.on('change', function()
     {
-        if (sltType.val() == '1' || sltType.val() == '2')
+        if (sltType.val() == '1')
         {
-            $('select[name="components"]').parent().parent().removeClass('hidden');
             $('input[name="basePrice"]').parent().parent().removeClass('hidden');
             $('input[name="prefPrice"]').parent().parent().removeClass('hidden');
             $('input[name="publicPrice"]').parent().parent().removeClass('hidden');
@@ -90,15 +73,12 @@ $(document).ready(function ()
         }
         else
         {
-            $('select[name="components"]').val('1');
             $('input[name="basePrice"]').val('');
             $('input[name="prefPrice"]').val('');
             $('input[name="publicPrice"]').val('');
             $('input[name="discountQuantity"]').val('');
             $('select[name="discountType"]').val('');
             $('select[name="coin"]').val('1');
-
-            $('select[name="components"]').parent().parent().addClass('hidden');
             $('input[name="basePrice"]').parent().parent().addClass('hidden');
             $('input[name="prefPrice"]').parent().parent().addClass('hidden');
             $('input[name="publicPrice"]').parent().parent().addClass('hidden');
@@ -113,7 +93,7 @@ $(document).ready(function ()
 
     sltDiscountType.on('change', function()
     {
-        if (sltDiscountType.val() == '1' || sltDiscountType.val() == '2')
+        if (sltDiscountType.val() == '1' || sltDiscountType.val() == '4')
         {
             $('input[name="discountQuantity"]').val('');
             document.getElementById('discountQuantity').disabled = false;
@@ -146,15 +126,9 @@ $(document).ready(function ()
                     $('input[name="folio"]').val(response.data.folio);
                     $('select[name="type"]').val(response.data.type);
 
-                    if (response.data.type == '1' || response.data.type == '2')
+                    if (response.data.type == '1')
                     {
-                        if (response.data.components != null)
-                            $('select[name="components"]').val('2');
-                        else
-                            $('select[name="components"]').val('1');
-
                         var price = eval('(' + response.data.price + ')');
-
                         $('input[name="basePrice"]').val(price.base_price);
                         $('input[name="prefPrice"]').val(price.pref_price);
                         $('input[name="publicPrice"]').val(price.public_price);
@@ -162,14 +136,11 @@ $(document).ready(function ()
                         if (response.data.discount != null)
                         {
                             var discount = eval('(' + response.data.discount + ')');
-
                             $('input[name="discountQuantity"]').val(discount.quantity);
                             $('select[name="discountType"]').val(discount.type);
                         }
 
                         $('select[name="coin"]').val(response.data.coin);
-
-                        $('select[name="components"]').parent().parent().removeClass('hidden');
                         $('input[name="basePrice"]').parent().parent().removeClass('hidden');
                         $('input[name="prefPrice"]').parent().parent().removeClass('hidden');
                         $('input[name="publicPrice"]').parent().parent().removeClass('hidden');
@@ -183,11 +154,20 @@ $(document).ready(function ()
                     if (response.data.avatar != null)
                         $('div[image-preview="image-preview"]').attr('style', 'background-image: url(/images/products/' + response.data.avatar + ')');
 
-                    $('select[name="category_one"]').val(response.data.id_product_category_one).trigger('chosen:updated');
-                    $('select[name="category_two"]').val(response.data.id_product_category_two).trigger('chosen:updated');
-                    $('select[name="category_tree"]').val(response.data.id_product_category_tree).trigger('chosen:updated');
-                    $('select[name="category_four"]').val(response.data.id_product_category_four).trigger('chosen:updated');
-                    $('textarea[name="observations"]').val(response.data.observations);
+                    if (response.data.id_product_category_one != null)
+                        $('select[name="category_one"]').val(response.data.id_product_category_one).trigger('chosen:updated');
+
+                    if (response.data.id_product_category_two != null)
+                        $('select[name="category_two"]').val(response.data.id_product_category_two).trigger('chosen:updated');
+
+                    if (response.data.id_product_category_tree != null)
+                        $('select[name="category_tree"]').val(response.data.id_product_category_tree).trigger('chosen:updated');
+
+                    if (response.data.id_product_category_four != null)
+                        $('select[name="category_four"]').val(response.data.id_product_category_four).trigger('chosen:updated');
+
+                    if (response.data.observations != null)
+                        $('textarea[name="observations"]').val(response.data.observations);
 
                     $('[data-modal="products"] header > h6').html('Editar producto');
                     $('[data-modal="products"] form').attr('data-submit-action', 'edit');
@@ -204,12 +184,11 @@ $(document).ready(function ()
     modal('products', function(modal)
     {
         modal.find('header > h6').html('Nuevo producto');
-        modal.find('select[name="components"]').parent().parent().addClass('hidden');
-        modal.find('input[name="basePrice"]').parent().parent().addClass('hidden');
-        modal.find('input[name="prefPrice"]').parent().parent().addClass('hidden');
-        modal.find('input[name="publicPrice"]').parent().parent().addClass('hidden');
-        modal.find('select[name="discountType"]').parent().parent().addClass('hidden');
-        modal.find('select[name="coin"]').parent().parent().addClass('hidden');
+        modal.find('input[name="basePrice"]').parent().parent().removeClass('hidden');
+        modal.find('input[name="prefPrice"]').parent().parent().removeClass('hidden');
+        modal.find('input[name="publicPrice"]').parent().parent().removeClass('hidden');
+        modal.find('select[name="discountType"]').parent().parent().removeClass('hidden');
+        modal.find('select[name="coin"]').parent().parent().removeClass('hidden');
         modal.find('form').attr('data-submit-action', 'new');
         modal.find('form')[0].reset();
 
@@ -221,11 +200,9 @@ $(document).ready(function ()
     frmProducts.on('submit', function(e)
     {
         e.preventDefault();
-
         var self    = $(this);
         var action  = self.data('submit-action');
         var data    = new FormData(this);
-
         data.append('action', action);
         data.append('id', idProduct);
 
@@ -327,134 +304,6 @@ $(document).ready(function ()
             $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
             location.reload();
         }
-    });
-
-    /* Publicar selección de productos en tienda en linea
-    /* ------------------------------------------------------------------------ */
-    var btnPostProductsToEcommerce = $('[data-action="postProductsToEcommerce"]');
-    var urlPostProductsToEcommerce = '/products/postProductsToEcommerce';
-
-    multipleSelect(btnPostProductsToEcommerce, urlPostProductsToEcommerce, function(response)
-    {
-        if(response.status == 'success')
-        {
-            $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-            location.reload();
-        }
-    });
-
-    /* Remover selección de productos de tienda en linea
-    /* ------------------------------------------------------------------------ */
-    var btnUnpostProductsToEcommerce = $('[data-action="unpostProductsToEcommerce"]');
-    var urlUnpostProductsToEcommerce = '/products/unpostProductsToEcommerce';
-
-    multipleSelect(btnUnpostProductsToEcommerce, urlUnpostProductsToEcommerce, function(response)
-    {
-        if(response.status == 'success')
-        {
-            $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-            location.reload();
-        }
-    });
-
-    /* Tabla de componentes
-    /* ------------------------------------------------------------------------ */
-    var tblComponents = myDocument.find("#tblComponents").DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-
-        ],
-        "columnDefs": [
-            {
-                "orderable": true,
-                "targets": '_all'
-            },
-            {
-                "className": 'text-left',
-                "targets": '_all'
-            }
-        ],
-        "order": [
-            [1,'desc']
-        ],
-        "searching": false,
-        "info": false,
-        "paging": false,
-        "language": {
-
-        }
-    });
-
-    /* Nuevo componente
-    /* ------------------------------------------------------------------------ */
-    var frmNewComponent = $('form[name="newComponent"]');
-
-    modal('newComponent', function(modal)
-    {
-        modal.find('form')[0].reset();
-
-    }, function(modal)
-    {
-        frmNewComponent.submit();
-    });
-
-    frmNewComponent.on('submit', function(e)
-    {
-        e.preventDefault();
-
-        var self = $(this);
-        var data = self.serialize();
-
-        $.ajax({
-            url: '',
-            type: 'POST',
-            data: data,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                checkValidateFormAjax(self, response, function()
-                {
-                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-                    location.reload();
-                });
-            }
-        });
-    });
-
-    /* Eliminar componente
-    /* ------------------------------------------------------------------------ */
-    var btnSendIdComponentToDelete = $('[data-action="sendIdComponentToDelete"]');
-    var btnDeleteComponent = $('[data-action="deleteComponent"]');
-
-    var idComponent;
-
-    btnSendIdComponentToDelete.on('click', function()
-    {
-        idComponent = $(this).data('id');
-    });
-
-    btnDeleteComponent.on('click', function()
-    {
-        idProduct = $(this).data('id');
-
-        $.ajax({
-            url: '/products/deleteComponent',
-            type: 'POST',
-            data: 'idProduct=' + idProduct + '&idComponent=' + idComponent,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                if (response.status == 'success')
-                {
-                    $('body').prepend('<div data-loader-ajax><div class="loader-01"></div></div>');
-                    location.reload();
-                }
-            }
-        });
     });
 
     /* Lista de etiquetas para imprimir
@@ -653,8 +502,6 @@ $(document).ready(function ()
 
     /* Tabla de categorías
     /* ------------------------------------------------------------------------ */
-    var tableCOrder = myDocument.find("#tblCategories").data('table-order');
-
     var tblCategories = myDocument.find("#tblCategories").DataTable({
         dom: 'Bfrtip',
         buttons: [
@@ -671,7 +518,7 @@ $(document).ready(function ()
             }
         ],
         "order": [
-            [tableCOrder,'asc']
+            [1,'asc']
         ],
         "searching": true,
         "info": true,
@@ -786,8 +633,6 @@ $(document).ready(function ()
 
     /* Tabla de productos ligados
     /* ------------------------------------------------------------------------ */
-    var tblFlirtsOrder = myDocument.find("#tblFlirts").data('table-order');
-
     var tblFlirts = myDocument.find("#tblFlirts").DataTable({
         dom: 'Bfrtip',
         buttons: [
@@ -804,7 +649,7 @@ $(document).ready(function ()
             }
         ],
         "order": [
-            [tblFlirtsOrder,'asc']
+            [1,'asc']
         ],
         "searching": true,
         "info": true,

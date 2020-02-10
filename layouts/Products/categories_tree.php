@@ -30,6 +30,7 @@ $this->dependencies->getDependencies([
 <main class="body">
     <div class="content">
         <div class="box-tab-buttons">
+            <a href="/products" button-tab>Productos</a>
             <a href="/products/categories_one" button-tab>Categoría 1</a>
             <a href="/products/categories_two" button-tab>Categoría 2</a>
             <a href="/products/categories_tree" class="view" button-tab>Categoría 3</a>
@@ -39,7 +40,6 @@ $this->dependencies->getDependencies([
         <div class="box-buttons">
             <a data-button-modal="deleteCategories"><i class="material-icons">delete</i><span>Eliminar</span></a>
             <a data-button-modal="categories" data-number="tree"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <a href="/products"><i class="material-icons">arrow_back</i><span>Regresar</span></a>
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">

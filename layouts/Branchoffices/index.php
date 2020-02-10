@@ -30,9 +30,9 @@ $this->dependencies->getDependencies([
     <div class="content">
         <div class="box-buttons">
             <a data-button-modal="deleteBranchOffices"><i class="material-icons">delete</i><span>Eliminar</span></a>
-            <a data-button-modal="branchOffices"><i class="material-icons">add</i><span>Nuevo</span></a>
             <!-- <a data-button-modal="deactivateBranchOffices"><i class="material-icons">block</i><span>Desactivar</span></a>
             <a data-button-modal="activateBranchOffices"><i class="material-icons">check</i><span>Activar</span></a> -->
+            <a data-button-modal="branchOffices"><i class="material-icons">add</i><span>Nuevo</span></a>
             <div class="clear"></div>
         </div>
         <div class="table-responsive-vertical padding">

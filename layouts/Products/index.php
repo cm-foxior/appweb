@@ -48,20 +48,105 @@ $this->dependencies->getDependencies([
 ?>
 
 %{header}%
-
 <main class="body">
     <div class="content">
-        {$buttons}
+        <div class="box-buttons">
+            <a data-button-modal="deleteProducts"><i class="material-icons">delete</i><span>Eliminar</span></a>
+            <!-- <a data-button-modal="deactivateProducts"><i class="material-icons">block</i><span>Desactivar</span></a>
+            <a data-button-modal="activateProducts"><i class="material-icons">check</i><span>Activar</span></a>
+            <a data-button-modal="importFromExcel"><i class="material-icons">cloud_upload</i><span>Importar desde excel</span></a> -->
+            <a data-button-modal="products"><i class="material-icons">add</i><span>Nuevo</span></a>
+            <a href="/products/flirts"><i class="material-icons">link</i><span>Productos ligados</span></a>
+            <a href="/products/categories_one"><i class="material-icons">turned_in</i><span>Categorías</span></a>
+            <a href="/products/tags/all"><i class="material-icons">local_offer</i><span>Etiquetas</span></a>
+        </div>
         <div class="table-responsive-vertical padding">
-            {$tblProducts}
+            <table id="tblProducts" class="display" data-page-length="100">
+                <thead>
+                    <tr>
+                        <th width="20px"></th>
+                        <th width="40px"></th>
+                        <th width="100px">Folio</th>
+                        <th>Nombre</th>
+                        <th>Categorías</th>
+                        <th width="50px">Unidad</th>
+                        <th width="180px">Precio</th>
+                        <th width="50px">Tipo</th>
+                        <th width="100px">Estado</th>
+                        <th width="35px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {$tblProducts}
+                </tbody>
+            </table>
         </div>
     </div>
 </main>
-
 {$mdlProducts}
-{$mdlImportFromExcel}
-{$mdlActivateProducts}
-{$mdlDectivateProducts}
-{$mdlDeleteProducts}
-{$mdlPostProductsToEcommerce}
-{$mdlUnpostProductsToEcommerce}
+<section class="modal" data-modal="importFromExcel">
+    <div class="content">
+        <header>
+            <h6>Importar prospectos desde Excel</h6>
+        </header>
+        <main>
+            <form name="importFromExcel">
+                <fieldset class="input-group">
+                    <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
+                </fieldset>
+                <fieldset class="input-group">
+                    <label data-important>
+                        <span><span class="required-field">*</span>Excel</span>
+                        <input name="xlsx" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                    </label>
+                </fieldset>
+            </form>
+        </main>
+        <footer>
+            <a button-cancel>Cancelar</a>
+            <a button-success>Aceptar</a>
+        </footer>
+    </div>
+</section>
+<section class="modal alert" data-modal="activateProducts">
+    <div class="content">
+        <header>
+            <h6>Alerta</h6>
+        </header>
+        <main>
+            <p>¿Está seguro de que desea activar está selección de productos?</p>
+        </main>
+        <footer>
+            <a button-close>Cancelar</a>
+            <a data-action="activateProducts">Aceptar</a>
+        </footer>
+    </div>
+</section>
+<section class="modal alert" data-modal="deactivateProducts">
+    <div class="content">
+        <header>
+            <h6>Alerta</h6>
+        </header>
+        <main>
+            <p>¿Está seguro de que desea desactivar está selección de productos?</p>
+        </main>
+        <footer>
+            <a button-close>Cancelar</a>
+            <a data-action="deactivateProducts">Aceptar</a>
+        </footer>
+    </div>
+</section>
+<section class="modal alert" data-modal="deleteProducts">
+    <div class="content">
+        <header>
+            <h6>Alerta</h6>
+        </header>
+        <main>
+            <p>¿Está seguro de que desea eliminar está selección de productos?</p>
+        </main>
+        <footer>
+            <a button-close>Cancelar</a>
+            <a data-action="deleteProducts">Aceptar</a>
+        </footer>
+    </div>
+</section>

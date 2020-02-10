@@ -35,6 +35,11 @@
 </header>
 <aside class="leftbar <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 8) : echo 'droped'; endif; ?>">
     <ul>
+        <?php if (Session::getValue('level') == 10) : ?>
+        <li data-target="reports">
+            <a href="/reports/inventories/existence"><i class="material-icons">menu</i>Reportes</a>
+        </li>
+        <?php endif; ?>
         <?php if (Session::getValue('level') == 8 OR Session::getValue('level') == 10) : ?>
         <li data-target="inventories">
             <a href="/inventories"><i class="material-icons">assignment_turned_in</i>Inventarios</a>
@@ -42,12 +47,7 @@
         <?php endif; ?>
         <?php if (Session::getValue('level') == 7 OR Session::getValue('level') == 10) : ?>
         <li data-target="sales">
-            <a href="/pointsale"><i class="material-icons">shopping_cart</i>Punto de venta</a>
-        </li>
-        <?php endif; ?>
-        <?php if (Session::getValue('level') == 10) : ?>
-        <li data-target="reports">
-            <a href="/reports/inventories/existence"><i class="material-icons">crop_portrait</i>Reportes</a>
+            <a href="/pointsale"><i class="material-icons">shopping_cart</i>Ventas</a>
         </li>
         <?php endif; ?>
         <?php if (Session::getValue('level') == 10) : ?>

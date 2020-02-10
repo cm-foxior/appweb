@@ -146,7 +146,7 @@ class Products_model extends Model
 		return !empty($query) ? $query[0] : '';
 	}
 
-	public function newProduct($name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations)
+	public function newProduct($name, $folio, $type, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations)
 	{
 		if (isset($avatar))
 		{
@@ -180,7 +180,7 @@ class Products_model extends Model
 				'coin' => $coin,
 				'unity' => $unity,
 				'type' => $type,
-				'components' => $components,
+				'components' => null,
 				'avatar' => $avatar,
 				'id_product_category_one' => $category_one,
 				'id_product_category_two' => $category_two,
@@ -378,7 +378,7 @@ class Products_model extends Model
 			return ['status' => 'error', 'errors' => [['xlsx', 'No se pudo subir el XLSX adecuadamente']]];
 	}
 
-	public function editProduct($id, $name, $folio, $type, $components, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations)
+	public function editProduct($id, $name, $folio, $type, $price, $discount, $coin, $unity, $avatar, $category_one, $category_two, $category_tree, $category_four, $observations)
 	{
 		if (isset($avatar))
 		{
@@ -417,7 +417,7 @@ class Products_model extends Model
 				'coin' => $coin,
 				'unity' => $unity,
 				'type' => $type,
-				'components' => $components,
+				'components' => null,
 				'avatar' => $avatar,
 				'id_product_category_one' => $category_one,
 				'id_product_category_two' => $category_two,
@@ -446,28 +446,6 @@ class Products_model extends Model
 		$query = $this->database->delete('products', [
             'id_product' => $selection
         ]);
-
-        return $query;
-    }
-
-	public function postProductsToEcommerce($selection)
-    {
-		$query = $this->database->update('products', [
-            'to_ecommerce' => true
-        ], [
-			'id_product' => $selection
-		]);
-
-        return $query;
-    }
-
-	public function unpostProductsToEcommerce($selection)
-    {
-		$query = $this->database->update('products', [
-            'to_ecommerce' => false
-        ], [
-			'id_product' => $selection
-		]);
 
         return $query;
     }
@@ -529,66 +507,6 @@ class Products_model extends Model
 		else
 			return ['status' => false];
 	}
-
-	/* Components
-	--------------------------------------------------------------------------- */
-	public function getAllComponents()
-	{
-		$query = $this->database->select('products', [
-			'[>]products_categories_one' => ['id_product_category_one' => 'id_product_category_one'],
-			'[>]products_categories_two' => ['id_product_category_two' => 'id_product_category_two'],
-			'[>]products_categories_tree' => ['id_product_category_tree' => 'id_product_category_tree'],
-			'[>]products_categories_four' => ['id_product_category_four' => 'id_product_category_four'],
-		], [
-			'products.id_product',
-			'products.folio',
-			'products.name',
-			'products_categories_one.name(category_one)',
-			'products_categories_two.name(category_two)',
-			'products_categories_tree.name(category_tree)',
-			'products_categories_four.name(category_four)',
-		], [
-			'AND' => [
-				'products.type' => '3',
-				'products.id_subscription' => Session::getValue('id_subscription')
-			],
-			'ORDER' => 'products.name ASC'
-		]);
-
-		return $query;
-	}
-
-	public function newComponent($id, $components)
-	{
-		$query = $this->database->update('products', [
-			'components' => $components
-		], ['id_product' => $id]);
-
-		return $query;
-	}
-
-	public function deleteComponent($idProduct, $idComponent)
-    {
-		$components = $this->getProductById($idProduct)['components'];
-		$components = json_decode($components, true);
-
-		foreach ($components as $component)
-		{
-			if ($component['product'] == $idComponent)
-			{
-				$index = array_search($component, $components);
-				unset($components[$index]);
-			}
-		}
-
-		$components = json_encode($components);
-
-		$query = $this->database->update('products', [
-			'components' => $components
-		], ['id_product' => $idProduct]);
-
-        return $query;
-    }
 
 	/* Categorías
 	--------------------------------------------------------------------------- */
