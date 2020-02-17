@@ -57,7 +57,13 @@ $this->dependencies->getDependencies([
                 <fieldset class="input-group">
                     <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
                 </fieldset>
-                <fieldset class="input-group span6">
+                <fieldset class="input-group span12">
+                    <label data-important>
+                        <span>Escaner</span>
+                        <input type="text" name="">
+                    </label>
+                </fieldset>
+                <fieldset class="input-group span12">
                     <label data-important>
                         <span><span class="required-field">*</span>Producto</span>
                         <select name="product" class="chosen-select">
@@ -65,13 +71,13 @@ $this->dependencies->getDependencies([
                         </select>
                     </label>
                 </fieldset>
-                <fieldset class="input-group span3 pl">
+                <fieldset class="input-group span6 pr">
                     <label data-important>
                         <span><span class="required-field">*</span>Cantidad</span>
                         <input type="number" name="quantify">
                     </label>
                 </fieldset>
-                <fieldset class="input-group span3 pl">
+                <fieldset class="input-group span6">
                     <label data-important>
                         <span><span class="required-field">*</span>Tipo</span>
                         <select name="type">
