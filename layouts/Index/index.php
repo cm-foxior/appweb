@@ -2,15 +2,6 @@
 
 defined('_EXEC') or die;
 
-$this->dependencies->getDependencies([
-    'css' => [
+$this->dependencies->add(['js', '{$path.js}Index/index.min.js']);
 
-    ],
-    'js' => [
-        '{$path.js}pages/index.js'
-    ],
-    'other' => [
-
-    ]
-]);
 ?>

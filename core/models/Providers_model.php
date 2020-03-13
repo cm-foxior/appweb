@@ -9,98 +9,147 @@ class Providers_model extends Model
 		parent::__construct();
 	}
 
-	/* Proveedores
-	--------------------------------------------------------------------------- */
-	public function getAllProviders()
+	public function read_providers()
 	{
-		$query = $this->database->select('providers', '*', ['id_subscription' => Session::getValue('id_subscription'), 'ORDER' => 'name ASC']);
+		$query = Functions::get_array_json_decoded($this->database->select('providers', [
+			'id',
+			'avatar',
+			'name',
+			'fiscal',
+			'blocked'
+		], [
+            'account' => Session::get_value('vkye_account')['id'],
+            'ORDER' => [
+    			'name' => 'ASC'
+    		]
+        ]));
+
 		return $query;
 	}
 
-	public function getProviderById($id)
+	public function read_provider($id)
 	{
-		$query = $this->database->select('providers', '*', ['id_provider' => $id]);
-		return !empty($query) ? $query[0] : '';
+		$query = Functions::get_array_json_decoded($this->database->select('providers', [
+            'avatar',
+			'name',
+			'email',
+			'phone',
+            'country',
+            'address',
+			'fiscal'
+		], [
+			'id' => $id
+		]));
+
+		return !empty($query) ? $query[0] : null;
 	}
 
-	public function newProvider($name, $email, $phoneNumber, $address, $fiscalCountry, $fiscalName, $fiscalCode, $fiscalAddress)
+	public function create_provider($data)
 	{
-		$today = date('Y-m-d');
-
 		$query = $this->database->insert('providers', [
-			'name' => $name,
-			'email' => $email,
-			'phone_number' => $phoneNumber,
-			'address' => $address,
-			'fiscal_country' => $fiscalCountry,
-			'fiscal_name' => $fiscalName,
-			'fiscal_code' => $fiscalCode,
-			'fiscal_address' => $fiscalAddress,
-			'registration_date' => $today,
-			'id_subscription' => Session::getValue('id_subscription')
+			'account' => Session::get_value('vkye_account')['id'],
+			'avatar' => !empty($data['avatar']['name']) ? Functions::uploader($data['avatar']) : null,
+			'name' => $data['name'],
+			'email' => !empty($data['email']) ? $data['email'] : null,
+			'phone' => json_encode([
+                'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
+                'number' => !empty($data['phone_number']) ? $data['phone_number'] : ''
+            ]),
+			'country' => !empty($data['country']) ? $data['country']: null,
+			'address' => !empty($data['address']) ? $data['address']: null,
+			'fiscal' => json_encode([
+                'id' => !empty($data['fiscal_id']) ? strtoupper($data['fiscal_id']) : '',
+                'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : '',
+                'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : '',
+                'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : ''
+            ]),
+			'blocked' => false
 		]);
 
 		return $query;
 	}
 
-    public function editProvider($id, $name, $email, $phoneNumber, $address, $fiscalCountry, $fiscalName, $fiscalCode, $fiscalAddress)
+	public function update_provider($data)
 	{
-		$query = $this->database->update('providers', [
-			'name' => $name,
-			'email' => $email,
-			'phone_number' => $phoneNumber,
-			'address' => $address,
-			'fiscal_country' => $fiscalCountry,
-			'fiscal_name' => $fiscalName,
-			'fiscal_code' => $fiscalCode,
-			'fiscal_address' => $fiscalAddress
-		], ['id_provider' => $id]);
+		$query = null;
 
-		return $query;
-	}
-
-	public function changeStatusProviders($selection, $status)
-    {
-		$query = $this->database->update('providers', [
-            'status' => $status
-        ], ['id_provider' => $selection]);
-
-        return $query;
-    }
-
-	public function deleteProviders($selection)
-    {
-		$query = $this->database->delete('providers', [
-            'id_provider' => $selection
+        $edited = $this->database->select('providers', [
+            'avatar'
+        ], [
+            'id' => $data['id']
         ]);
 
-        return $query;
-    }
+        if (!empty($edited))
+        {
+            $query = $this->database->update('providers', [
+    			'avatar' => !empty($data['avatar']['name']) ? Functions::uploader($data['avatar']) : null,
+    			'name' => $data['name'],
+    			'email' => !empty($data['email']) ? $data['email'] : null,
+    			'phone' => json_encode([
+                    'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
+                    'number' => !empty($data['phone_number']) ? $data['phone_number'] : ''
+                ]),
+    			'country' => !empty($data['country']) ? $data['country'] : null,
+    			'address' => !empty($data['address']) ? $data['address'] : null,
+    			'fiscal' => json_encode([
+                    'id' => !empty($data['fiscal_id']) ? strtoupper($data['fiscal_id']) : '',
+                    'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : '',
+                    'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : '',
+                    'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : ''
+                ])
+            ], [
+                'id' => $data['id']
+            ]);
 
-	public function checkExistProvider($id, $name, $fiscalName, $fiscalCode, $action)
+            if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
+                Functions::undoloader($edited[0]['avatar']);
+        }
+
+        return $query;
+	}
+
+	public function block_provider($id)
 	{
-		$query	= $this->database->select('providers', '*', [
-			'name' => $name
+		$query = $this->database->update('providers', [
+			'blocked' => true
+		], [
+			'id' => $id
 		]);
 
-		if (!empty($query))
-		{
-			$errorName = false;
-
-			foreach ($query as $data)
-			{
-				if ($action == 'new' AND $name == $data['name'])
-					$errorName = true;
-				else if ($action == 'edit' AND $name == $data['name'] AND $id != $data['id_provider'])
-					$errorName = true;
-			}
-
-			if ($errorName == true)
-				return ['status' => true, 'errors' => ['errorName' => $errorName]];
-			else
-				return ['status' => false];
-		}
-		else
-			return ['status' => false];
+        return $query;
 	}
+
+	public function unblock_provider($id)
+	{
+		$query = $this->database->update('providers', [
+			'blocked' => false
+		], [
+			'id' => $id
+		]);
+
+        return $query;
+	}
+
+	public function delete_provider($id)
+    {
+        $query = null;
+
+        $deleted = $this->database->select('providers', [
+            'avatar'
+        ], [
+            'id' => $id
+        ]);
+
+        if (!empty($deleted))
+        {
+            $query = $this->database->delete('providers', [
+                'id' => $id
+            ]);
+
+            if (!empty($query) AND !empty($deleted[0]['avatar']))
+                Functions::undoloader($deleted[0]['avatar']);
+        }
+
+        return $query;
+    }
 }

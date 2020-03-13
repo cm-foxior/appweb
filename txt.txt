@@ -1,0 +1,28 @@
+<main class="workteam">
+    <div class="table">
+        <?php foreach ($data['workteam'] as $value) : ?>
+        <div>
+            <figure>
+                <?php if (!empty($value['avatar'])) : ?>
+                <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
+                <?php else : ?>
+                <img src="{$path.images}user.png">
+                <?php endif; ?>
+            </figure>
+            <div>
+                <span><?php echo $value['firstname'] . ' ' . $value['lastname']; ?></span>
+                <span><?php echo $value['email']; ?></span>
+                <div>
+                    <?php if (Permissions::user(['{remove_workteam}']) == true) : ?>
+                    <a data-id="<?php echo $value['id']; ?>"><i class="fas fa-user-times"></i></a>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['{update_workteam}']) == true) : ?>
+                    <a data-id="<?php echo $value['id']; ?>"><i class="fas fa-user-lock"></i></a>
+                    <?php endif; ?>
+                    <a href="/profile/<?php echo $value['email']; ?>"><i class="fas fa-user-circle"></i></a>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</main>

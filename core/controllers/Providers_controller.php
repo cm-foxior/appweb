@@ -9,216 +9,123 @@ class Providers_controller extends Controller
 		parent::__construct();
 	}
 
-	/* Lista de proveedores, crear y editar proveedor
-	--------------------------------------------------------------------------- */
 	public function index()
 	{
-		if (Session::getValue('level') == 10)
+		if (Format::exist_ajax_request() == true)
 		{
-			if (Format::existAjaxRequest() == true)
+			if ($_POST['action'] == 'create_provider' OR $_POST['action'] == 'update_provider')
 			{
-				$action				= $_POST['action'];
-				$id					= ($action == 'edit') ? $_POST['id'] : null;
-				$name               = (isset($_POST['name']) AND !empty($_POST['name'])) ? $_POST['name'] : null;
-				$email              = (isset($_POST['email']) AND !empty($_POST['email'])) ? $_POST['email'] : null;
-				$phoneCountryCode	= (isset($_POST['phoneCountryCode']) AND !empty($_POST['phoneCountryCode'])) ? $_POST['phoneCountryCode'] : null;
-	            $phoneNumber        = (isset($_POST['phoneNumber']) AND !empty($_POST['phoneNumber'])) ? $_POST['phoneNumber'] : null;
-	            $phoneType          = (isset($_POST['phoneType']) AND !empty($_POST['phoneType'])) ? $_POST['phoneType'] : null;
-				$address	        = (isset($_POST['address']) AND !empty($_POST['address'])) ? $_POST['address'] : null;
-				$fiscalCountry 		= 'México';
-				$fiscalName 		= (isset($_POST['fiscalName']) AND !empty($_POST['fiscalName'])) ? $_POST['fiscalName'] : null;
-	            $fiscalCode 		= (isset($_POST['fiscalCode']) AND !empty($_POST['fiscalCode'])) ? $_POST['fiscalCode'] : null;
-				$fiscalAddress 		= (isset($_POST['fiscalAddress']) AND !empty($_POST['fiscalAddress'])) ? $_POST['fiscalAddress'] : null;
-
 				$errors = [];
 
-	            if (!isset($name))
-	                array_push($errors, ['name', 'No deje este campo vacío']);
+				if (Functions::check_empty_value($_POST['name']) == false)
+					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
+
+				if (Functions::check_email($_POST['email'], true) == false)
+					array_push($errors, ['email','{$lang.invalid_field}']);
+
+				if (Functions::check_empty_value([$_POST['phone_country'],$_POST['phone_number']], true) == false)
+					array_push($errors, ['phone_number','{$lang.dont_leave_this_field_empty}']);
+				if (Functions::check_int_number($_POST['phone_number'], true) == false)
+					array_push($errors, ['phone_number','{$lang.invalid_field}']);
+
+				if (Functions::check_empty_value([$_POST['country'],$_POST['address']], true) == false)
+					array_push($errors, ['address','{$lang.dont_leave_this_field_empty}']);
+
+				if (Functions::check_special_characters($_POST['fiscal_id'], true) == false)
+					array_push($errors, ['fiscal_id','{$lang.invalid_field}']);
+
+				if (Functions::check_empty_value([$_POST['fiscal_country'],$_POST['fiscal_address']], true) == false)
+					array_push($errors, ['fiscal_address','{$lang.dont_leave_this_field_empty}']);
 
 				if (empty($errors))
 				{
-					if (isset($phoneCountryCode) AND isset($phoneNumber) AND isset($phoneType))
+					$_POST['avatar'] = $_FILES['avatar'];
+
+					if ($_POST['action'] == 'create_provider')
+						$query = $this->model->create_provider($_POST);
+					else if ($_POST['action'] == 'update_provider')
+						$query = $this->model->update_provider($_POST);
+
+					if (!empty($query))
 					{
-						$phoneNumber = json_encode([
-							'country_code' => $phoneCountryCode,
-							'number' => $phoneNumber,
-							'type' => $phoneType
+						echo json_encode([
+							'status' => 'success',
+							'message' => '{$lang.operation_success}'
 						]);
 					}
 					else
-						$phoneNumber = null;
-
-					$exist = $this->model->checkExistProvider($id, $name, $action);
-
-					if ($exist['status'] == true)
 					{
-						if ($exist['errors']['errorName'] == true)
-							array_push($errors, ['name', 'Este registro ya existe']);
-
 						echo json_encode([
 							'status' => 'error',
-							'labels' => $errors
+							'message' => '{$lang.operation_error}'
 						]);
-					}
-					else
-					{
-						if ($action == 'new')
-							$query = $this->model->newProvider($name, $email, $phoneNumber, $address, $fiscalCountry, $fiscalName, $fiscalCode, $fiscalAddress);
-						else if ($action == 'edit')
-							$query = $this->model->editProvider($id, $name, $email, $phoneNumber, $address, $fiscalCountry, $fiscalName, $fiscalCode, $fiscalAddress);
-
-						if (!empty($query))
-						{
-							echo json_encode([
-								'status' => 'success'
-							]);
-						}
-						else
-						{
-							echo json_encode([
-								'status' => 'error',
-								'message' => 'Error en la operación a la base de datos'
-							]);
-						}
 					}
 				}
 				else
 				{
 					echo json_encode([
 						'status' => 'error',
-						'labels' => $errors
+						'errors' => $errors
 					]);
 				}
 			}
-			else
+
+			if ($_POST['action'] == 'read_provider')
 			{
-				define('_title', '{$lang.title} | Dashboard');
+				$query = $this->model->read_provider($_POST['id']);
 
-				$template = $this->view->render($this, 'index');
-				$template = $this->format->replaceFile($template, 'header');
-				$providers = $this->model->getAllProviders();
-				$lstProviders = '';
-
-				foreach ($providers as $provider)
+				if (!empty($query))
 				{
-					if (!empty($provider['phone_number']))
-					{
-						$phoneNumber = json_decode($provider['phone_number'], true);
-						$phoneNumber = $phoneNumber['type'] . '. (+' . $phoneNumber['country_code'] . ') ' . $phoneNumber['number'];
-					}
-					else
-						$phoneNumber = '';
-
-					$lstProviders .=
-					'<tr>
-						<td><input type="checkbox" data-check value="' . $provider['id_provider'] . '" /></td>
-						<td>' . $provider['name'] . '</td>
-						<td>' . (!empty($provider['fiscal_code']) ? $provider['fiscal_code'] : '') . '</td>
-						<td>' . (!empty($provider['email']) ? $provider['email'] : '') . '</td>
-						<td>' . $phoneNumber . '</td>
-						<!-- <td>' . (($provider['status'] == true) ? '<span class="active">Activado</span>' : '<span class="deactive">Desactivado</span>') . '</td> -->
-						<td>
-							<a ' . (($provider['status'] == true) ? 'data-action="getProviderToEdit" data-id="' . $provider['id_provider'] . '"' : 'disabled') . '><i class="material-icons">edit</i><span>Detalles / Editar</span></a>
-						</td>
-					</tr>';
-				}
-
-				$replace = [
-					'{$lstProviders}' => $lstProviders
-				];
-
-				$template = $this->format->replace($replace, $template);
-
-				echo $template;
-			}
-		}
-		else
-			header('Location: /dashboard');
-	}
-
-	/* Obtener proveedor para editar
-	--------------------------------------------------------------------------- */
-	public function getProviderToEdit($id)
-	{
-		if (Session::getValue('level') == 10)
-		{
-			if (Format::existAjaxRequest() == true)
-			{
-				$provider = $this->model->getProviderById($id);
-
-	            if (!empty($provider))
-	            {
-	                echo json_encode([
+					echo json_encode([
 						'status' => 'success',
-						'data' => $provider
+						'data' => $query
 					]);
-	            }
-			}
-			else
-				Errors::http('404');
-		}
-		else
-			header('Location: /dashboard');
-	}
-
-	/* Activar y desactivar selección de proveedores
-	--------------------------------------------------------------------------- */
-	public function changeStatusProviders($action)
-	{
-		if (Session::getValue('level') == 10)
-		{
-			if (Format::existAjaxRequest() == true)
-			{
-				if(isset($_POST['data']) && !empty($_POST['data']))
+				}
+				else
 				{
-					$selection = json_decode($_POST['data']);
+					echo json_encode([
+						'status' => 'error',
+						'message' => '{$lang.operation_error}'
+					]);
+				}
+			}
 
-					if ($action == 'activate')
-						$status = true;
-					else if ($action == 'deactivate')
-						$status = false;
+			if ($_POST['action'] == 'block_provider' OR $_POST['action'] == 'unblock_provider' OR $_POST['action'] == 'delete_provider')
+			{
+				if ($_POST['action'] == 'block_provider')
+					$query = $this->model->block_provider($_POST['id']);
+				else if ($_POST['action'] == 'unblock_provider')
+					$query = $this->model->unblock_provider($_POST['id']);
+				else if ($_POST['action'] == 'delete_provider')
+					$query = $this->model->delete_provider($_POST['id']);
 
-					$query = $this->model->changeStatusProviders($selection, $status);
-
-					if (!empty($query))
-					{
-						echo json_encode([
-							'status' => 'success'
-						]);
-					}
+				if (!empty($query))
+				{
+					echo json_encode([
+						'status' => 'success',
+						'message' => '{$lang.operation_success}'
+					]);
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'message' => '{$lang.operation_error}'
+					]);
 				}
 			}
 		}
 		else
-			header('Location: /dashboard');
-	}
-
-	/* Eliminar selección de proveedores
-	--------------------------------------------------------------------------- */
-	public function deleteProviders()
-	{
-		if (Session::getValue('level') == 10)
 		{
-			if (Format::existAjaxRequest() == true)
-			{
-				if(isset($_POST['data']) && !empty($_POST['data']))
-				{
-					$selection = json_decode($_POST['data']);
+			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '}');
 
-					$query = $this->model->deleteProviders($selection);
+			global $data;
 
-					if (!empty($query))
-					{
-						echo json_encode([
-							'status' => 'success'
-						]);
-					}
-				}
-			}
-			else
-				Errors::http('404');
+			$data['providers'] = $this->model->read_providers();
+
+			$template = $this->view->render($this, 'index');
+
+			echo $template;
 		}
-		else
-			header('Location: /dashboard');
 	}
 }

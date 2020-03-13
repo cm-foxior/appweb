@@ -1,14 +1,30 @@
 <?php defined('_EXEC') or die; ?>
 
-        <!-- Load scripts -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-        <script src="{$path.js}jquery-3.2.1.min.js"></script>
-        <script src="{$path.js}valkyrie-material-design.js"></script>
-        <script src="{$path.js}custom.js"></script>
-        <script src="{$path.plugins}chosen-select/chosen.jquery.js"></script>
+        <section class="modal success" data-modal="success">
+            <div class="content">
+                <main>
+                    <i class="fas fa-check-circle"></i>
+                    <p></p>
+                </main>
+            </div>
+        </section>
+        <section class="modal alert" data-modal="alert">
+            <div class="content">
+                <main>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p></p>
+                    <div class="button">
+                        <a button-close><i class="fas fa-check"></i></a>
+                    </div>
+                </main>
+            </div>
+        </section>
+        <script src="{$path.js}jquery-2.1.4.min.js"></script>
+        <script src="{$path.js}valkyrie.min.js"></script>
+        <script src="{$path.js}cm-scripts.min.js"></script>
+        <script src="{$path.js}cm-scripts-dashboard.min.js"></script>
+        <script src="{$path.js}scripts.min.js"></script>
+        <script defer src="https://kit.fontawesome.com/743152b0c5.js"></script> <!-- Font awenson icons -->
         {$dependencies.js}
         {$dependencies.other}
     </body>

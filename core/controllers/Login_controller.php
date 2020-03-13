@@ -11,60 +11,54 @@ class Login_controller extends Controller
 
 	public function index()
 	{
-		if ( Format::existAjaxRequest() == true )
+		if (Format::exist_ajax_request() == true)
 		{
-			$username = ( isset($_POST['username']) && !empty($_POST['username']) ) ? $_POST['username'] : null;
-			$password = ( isset($_POST['password']) && !empty($_POST['password']) ) ? $_POST['password'] : null;
+			$errors = [];
 
-			$user = $this->model->findUser($username);
+			if (!isset($_POST['email']) OR empty($_POST['email']))
+				array_push($errors, ['email','{$lang.dont_leave_this_field_empty}']);
 
-			if ( !empty($user) )
+			if (!isset($_POST['password']) OR empty($_POST['password']))
+				array_push($errors, ['password','{$lang.dont_leave_this_field_empty}']);
+
+			if (empty($errors))
 			{
-				$crypto = explode(':', $user['password']);
-				$checkPassword = ( $this->security->createHash('sha1', $password . $crypto[1]) === $crypto[0] ) ? true : false;
+				$query = $this->model->get_login($_POST['email']);
 
-				if ( $checkPassword == true )
+				if (!empty($query))
 				{
-					Session::init(['cookie_lifetime' => 86400]);
+					$query['user']['password'] = explode(':', $query['user']['password']);
+					$query['user']['password'] = ($this->security->create_hash('sha1', $_POST['password'] . $query['user']['password'][1]) == $query['user']['password'][0]) ? true : false;
 
-					if (!empty($user['phone_number']))
+					if ($query['user']['password'] == true)
 					{
-						$phone = json_decode($user['phone_number'], true);
-						$phone = $phone['type'] . '. + ' . $phone['country_code'] . $phone['number'];
+						Session::init();
+						Session::set_value('session', true);
+						Session::set_value('vkye_account', $query['account']);
+						Session::set_value('vkye_user', $query['user']);
+						Session::set_value('vkye_lang', $query['user']['language']);
+
+						echo json_encode([
+							'status' => 'success',
+							'path' => Permissions::redirection()
+						]);
 					}
 					else
-						$phone = '';
-
-					if ($user['level'] == 10)
-						$branchOffice = '';
-					else
-						$branchOffice = $user['id_branch_office'];
-
-					Session::setValue('session', true);
-					Session::setValue('id_user', $user['id']);
-					Session::setValue('name', $user['name']);
-					Session::setValue('email', $user['email']);
-					Session::setValue('phone_number', $phone);
-					Session::setValue('username', $user['username']);
-					Session::setValue('level', $user['level']);
-					Session::setValue('registration_date', $user['registration_date']);
-					Session::setValue('avatar', $user['avatar']);
-					Session::setValue('id_branch_office', $branchOffice);
-					Session::setValue('id_subscription', $user['id_subscription']);
-
-					echo json_encode([
-						'status' => 'success'
-					]);
+					{
+						echo json_encode([
+							'status' => 'error',
+							'errors' => [
+								['email','{$lang.invalid_password}']
+							]
+						]);
+					}
 				}
 				else
 				{
 					echo json_encode([
 						'status' => 'error',
-						'labels' => [
-							[
-								'password',
-								'La contraseña no coincide'
-							]
+						'errors' => [
+							['email','{$lang.this_user_not_exist}']
 						]
 					]);
 				}
@@ -73,22 +67,17 @@ class Login_controller extends Controller
 			{
 				echo json_encode([
 					'status' => 'error',
-					'labels' => [
-						[
-							'username',
-							'el usuario no existe'
-						]
-					]
+					'errors' => $errors
 				]);
 			}
 		}
 		else
 		{
-			define('_title', '{$lang.title} | Inicio de sesión');
+			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '}');
+
 			$template = $this->view->render($this, 'index');
 
 			echo $template;
 		}
 	}
-
 }

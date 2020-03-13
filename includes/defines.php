@@ -4,7 +4,7 @@ defined('_EXEC') or die;
 /**
 * Definimos las extenciones de los ficheros.
 */
-define('ADMINISTRATOR',             'administrator');
+define('ADMINISTRATOR',             'panel');
 define('CLASS_PHP',                 '.class.php');
 define('CONTROLLER_PHP',            '_controller');
 define('MODEL_PHP',                 '_model');
@@ -21,6 +21,7 @@ define('PATH_LAYOUTS',              PATH_ROOT . '/layouts/');
 define('PATH_MY_LIBRARIES',         PATH_ROOT . '/libraries/');
 define('PATH_LIBRARIES',            PATH_MY_LIBRARIES . 'valkyrie/');
 define('PATH_MODULES',              PATH_ROOT . '/modules/');
+define('PATH_UPLOADS',              PATH_ROOT . '/uploads/');
 
 /**
 * Definimos los directorios comunes para vistas html
@@ -30,7 +31,6 @@ define('PATH_FONTS',                PATH_ROOT . '/fonts/');
 define('PATH_IMAGES',               PATH_ROOT . '/images/');
 define('PATH_JS',                   PATH_ROOT . '/js/');
 define('PATH_PLUGINS',              PATH_ROOT . '/plugins/');
-define('PATH_UPLOADS',              PATH_ROOT . '/uploads/');
 
 /**
 * Definimos los subdirectorios

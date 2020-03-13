@@ -2,78 +2,271 @@
 
 defined('_EXEC') or die;
 
+/**
+ * @author David Miguel Gómez Macías < davidgomezmacias@gmail.com >
+ * @package Valkyrie.Libraries
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+
 class Configuration
 {
 	/**
-	*
-	* @static string 		$domain 			"localhost"
-	* @static string 		$webPage			"Valkyrie"
-	* @static string(2)		$langDefault		"es|en|fr|ru.."
-	* @static int|string	$error_reporting	default|-1, none|0, simple, maximum, development
-	* @static boolean 		$debug 				true|false
-	* @static boolean 		$debugLang 			true|false
-	* @static boolean 		$urlFriendly 		true|false
-	* @static boolean 		$compressHtml 		true|false
-	* @static string 		$timeZone 			GMT ZONE
-	* @static string 		$secret 			key secure
-	* @static string 		$helpurl 			Help from master
-	*/
-
-	public static $domain 			= 'foxior.com';
-	public static $webPage 			= 'Foxior';
-	public static $langDefault 		= 'es';
-	public static $error_reporting 	= 'none';
-	public static $debug 			= false;
-	public static $debugLang 		= false;
-	public static $urlFriendly 		= true;
-	public static $compressHtml 	= false;
-	public static $timeZone 		= 'America/Mexico_City';
-	public static $secret 			= '6aGh=a>O:NnDmAvR';
-	public static $helpurl 			= 'https://help.codemonkey.com.mx/index.php';
+     * Dominio o IP.
+	 *
+	 * @static
+	 *
+     * @var string $domain
+     */
+	public static $domain = 'dev.foxior.com';
 
 	/**
-	*
-	* @tutorial http://medoo.in/doc
-	* @static string 	$db_state 		state use database
-	* @static string 	$db_type 		type database MySQL, MariaDB, MSSQL, PostgreSQL, Oracle, Sybase
-	* @static string 	$db_host 		server host database
-	* @static string 	$db_name 		name of your database
-	* @static string 	$db_user 		username use of your database
-	* @static string 	$db_pass 		password use of your database
-	* @static string 	$db_charset 	OPTIONAL charset of database utf8...
-	* @static string 	$db_prefix 		prefix use of tables
-	* @static int 		$db_port 		port stablish on connect
-	* @static string 	$db_file 		Only for SQLite 'my/database/path/database.db'
-	* @static array 	$db_option 		OPTIONAL, for connection, read more from
-	* 									http://www.php.net/manual/en/pdo.setattribute.php
-	*/
-
-	public static $db_state			= true;
-	public static $db_type 			= 'mysql';
-	public static $db_host 			= 'foxior.com';
-	public static $db_name 			= 'fx-website';
-	public static $db_user 			= 'foxior';
-	public static $db_pass 			= 'npSr&231';
-	public static $db_charset		= 'utf8';
-	public static $db_prefix 		= '';
-	public static $db_port 			= 3306;
-	public static $db_file 			= '';
-	public static $db_option 		= [];
+     * Nombre del sitio web.
+	 *
+	 * @static
+	 *
+     * @var string $web_page
+     */
+	public static $web_page = 'Foxior';
 
 	/**
-	*
-	* @static bolean 	$smtp_auth 		true|false
-	* @static string 	$smtp_host 		host of your smtp
-	* @static string 	$smtp_user 		user use of your smtp
-	* @static string 	$smtp_pass 		password use of your smtp
-	* @static string 	$smtp_secure 	tls|ssl
-	* @static int 		$smtp_port 		use port of your smtp
-	*/
+     * Idioma por default
+	 * @example es, en, fr, ru..
+	 *
+	 * @static
+	 *
+     * @var string $lang_default
+     */
+	public static $lang_default = 'es';
 
-	public static $smtp_auth 		= true;
-	public static $smtp_host 		= 'mail.codemonkey.com.mx';
-	public static $smtp_user 		= 'noreply@codemonkey.com.mx';
-	public static $smtp_pass 		= 'Xxk71#g7';
-	public static $smtp_secure 		= 'ssl';
-	public static $smtp_port 		= 465;
+	/**
+     * Reporte de errores.
+	 * @example default, none, simple, maximum, development
+	 *
+	 * @static
+	 *
+     * @var string $error_reporting
+     */
+	public static $error_reporting = 'development';
+
+	/**
+     * Modo para debuggear errores.
+	 *
+	 * @static
+	 *
+     * @var boolean $debug
+     */
+	public static $debug = false;
+
+	/**
+     * Modo para debuggear errores en el lenguaje.
+	 *
+	 * @static
+	 *
+     * @var boolean $debug_lang
+     */
+	public static $debug_lang = false;
+
+	/**
+     * Activar URLs amigables.
+	 *
+	 * @static
+	 *
+     * @var boolean $url_friendly
+     */
+	public static $url_friendly = true;
+
+	/**
+     * Comprimir el HTML
+	 *
+	 * @static
+	 *
+     * @var boolean $compress_html
+     */
+	public static $compress_html = false;
+
+	/**
+     * Zona horaria
+	 *
+	 * @static
+	 *
+     * @var string $time_zone
+     */
+	public static $time_zone = 'America/Mexico_City';
+
+	/**
+     * Clave secreta
+	 *
+	 * @static
+	 *
+     * @var string $secret
+     */
+	public static $secret = '#)*=c8QV,6nk8b:]';
+
+	/**
+     * Tiempo de vida para una session en bytes.
+	 *
+	 * @static
+	 *
+     * @var integer $cookie_lifetime
+     */
+	public static $cookie_lifetime	= 86400;
+
+	/**
+     * Estado de uso de la base de datos.
+	 *
+	 * @static
+	 *
+     * @var boolean $db_state
+     */
+	public static $db_state = true;
+
+	/**
+     * Tipo de base de datos.
+	 * @example MySQL, MariaDB, MSSQL, PostgreSQL, Oracle, Sybase
+	 *
+	 * @static
+	 *
+     * @var string $db_type
+     */
+	public static $db_type = 'mysql';
+
+	/**
+     * Dominio o IP para el servidor de base de datos.
+	 *
+	 * @static
+	 *
+     * @var string $db_host
+     */
+	public static $db_host = 'codemonkey.com.mx';
+
+	/**
+     * Nombre de la base de datos
+	 *
+	 * @static
+	 *
+     * @var string $db_name
+     */
+	public static $db_name = 'fx-website-dev';
+
+	/**
+     * Usuario de la base de datos
+	 *
+	 * @static
+	 *
+     * @var string $db_user
+     */
+	public static $db_user = 'foxior';
+
+	/**
+     * Contraseña de la base de datos.
+	 *
+	 * @static
+	 *
+     * @var string $db_pass
+     */
+	public static $db_pass = 'npSr&231';
+
+	/**
+     * Tipo de caracteres para la base de datos. Opcional.
+	 *
+	 * @static
+	 *
+     * @var string $db_charset
+     */
+	public static $db_charset = 'utf8';
+
+	/**
+     * Prefijo para las tablas de base de datos. Opcional.
+	 *
+	 * @static
+	 *
+     * @var string $db_prefix
+     */
+	public static $db_prefix = '';
+
+	/**
+     * Puerto de la base de datos.
+	 *
+	 * @static
+	 *
+     * @var integer $db_port
+     */
+	public static $db_port = 3306;
+
+	/**
+     * Archivo de base de datos, unicamente para SQL Lite.
+	 * @example my/database/path/database.db
+	 *
+	 * @static
+	 *
+     * @var string $db_prefix
+     */
+	public static $db_file = '';
+
+	/**
+     * Opciones de conexion extras. Opcional.
+	 * @link http://www.php.net/manual/en/pdo.setattribute.php [Aprender más]
+	 *
+	 * @static
+	 *
+     * @var array $db_option
+     */
+	public static $db_option = [];
+
+	/**
+     * Estado de autentificacion para el uso en envio de correos SMTP.
+	 *
+	 * @static
+	 *
+     * @var boolean $smtp_auth
+     */
+	public static $smtp_auth = true;
+
+	/**
+     * Dominio o IP del servidor SMTP.
+	 *
+	 * @static
+	 *
+     * @var string $smtp_host
+     */
+	public static $smtp_host = 'mail.codemonkey.com.mx';
+
+	/**
+     * Usuario de la cuenta smtp.
+	 * @example nombre@dominio.com
+	 *
+	 * @static
+	 *
+     * @var string $smtp_user
+     */
+	public static $smtp_user = 'noreply@codemonkey.com.mx';
+
+	/**
+     * Contraseña de la cuenta smtp.
+	 *
+	 * @static
+	 *
+     * @var string $smtp_pass
+     */
+	public static $smtp_pass = 'Xxk71#g7';
+
+	/**
+     * Seguridad de la encriptacion para el envio de SMTP.
+	 * @example tls, ssl
+	 *
+	 * @static
+	 *
+     * @var string $smtp_secure
+     */
+	public static $smtp_secure = 'ssl';
+
+	/**
+     * Puerto de conexion al servidor SMTP.
+	 *
+	 * @static
+	 *
+     * @var integer $smtp_port
+     */
+	public static $smtp_port = 465;
 }

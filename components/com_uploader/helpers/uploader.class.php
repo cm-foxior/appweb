@@ -1,23 +1,18 @@
 <?php
+
 defined('_EXEC') or die;
 
-/**
- * @author David Miguel Gomez Macias <dgomez@codemonkey.com.mx>
- * @version 1.0
- * @copyright Copyright (c) 2014, David Miguel Gomez Macias
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- */
-class Upload
+class Uploader
 {
     private $security;
     private $show_404;
-    private $fileName;
-    private $tempName;
-    private $fileType;
-    private $fileSize;
-    private $uploadDirectory;
-    private $validExtensions;
-    private $maximumFileSize;
+    private $file_name;
+    private $file_temporal_name;
+    private $file_type;
+    private $file_size;
+    private $upload_directory;
+    private $valid_extensions;
+    private $maximum_file_size;
 
     public function __construct($show_404 = false)
     {
@@ -25,63 +20,62 @@ class Upload
         $this->show_404 = $show_404;
     }
 
-    public function SetFileName( $argv )
+    public function set_file_name($argv)
     {
-        $this->fileName = $this->security->randomString(16);
-        // $this->fileName = $this->security->randomString(16) . '_' . $this->security->cleanUrl( preg_replace('([^A-Za-z _0-9])', '', $argv) );
+        $this->file_name = $this->security->random_string(16);
     }
 
-    public function SetTempName( $argv )
+    public function set_file_temporal_name($argv)
     {
-        $this->tempName = $argv;
+        $this->file_temporal_name = $argv;
     }
 
-    public function SetFileType( $argv )
+    public function set_file_type($argv)
     {
-        $this->fileType = explode( '/', $argv );
+        $this->file_type = explode( '/', $argv );
     }
 
-    public function SetFileSize( $argv )
+    public function set_file_size($argv)
     {
-        $this->fileSize = $argv;
+        $this->file_size = $argv;
     }
 
-    public function SetUploadDirectory( $argv )
+    public function set_upload_directory($argv)
     {
-        $this->uploadDirectory = $argv;
+        $this->upload_directory = $argv;
     }
 
-    public function SetValidExtensions( $argv )
+    public function set_valid_extensions($argv)
     {
-        $this->validExtensions = $argv;
+        $this->valid_extensions = $argv;
     }
 
-    public function SetMaximumFileSize( $argv )
+    public function set_maximum_file_size($argv)
     {
-        $this->maximumFileSize = $argv;
+        $this->maximum_file_size = $argv;
     }
 
-    public function UploadFile()
+    public function upload_file()
     {
-        if ( !empty( $this->validExtensions ) )
+        if (!empty($this->valid_extensions))
         {
-            if ( isset($this->fileType[1]) )
+            if (isset($this->file_type[1]))
             {
-                if ( in_array( $this->fileType[1], $this->validExtensions ) )
+                if (in_array($this->file_type[1], $this->valid_extensions))
                 {
-                    if ( $this->fileSize < $this->maximumFileSize || $this->maximumFileSize == 'unlimited' )
+                    if ($this->file_size < $this->maximum_file_size || $this->maximum_file_size == 'unlimited')
                     {
-                        if ( @copy( $this->tempName, $this->uploadDirectory . '/' . $this->fileName . '.' . $this->fileType[1] ) )
+                        if (@copy($this->file_temporal_name, $this->upload_directory . '/' . $this->file_name . '.' . $this->file_type[1]))
                         {
                             return [
                                 'status'    => 'success',
-                                'file'      => $this->fileName . '.' . $this->fileType[1],
-                                'route'     => $this->security->directorySeparator($this->uploadDirectory . '/' . $this->fileName . '.' . $this->fileType[1])
+                                'file'      => $this->file_name . '.' . $this->file_type[1],
+                                'route'     => $this->security->DS($this->upload_directory . '/' . $this->file_name . '.' . $this->file_type[1])
                             ];
                         }
                         else
                         {
-                            if ( $this->show_404 == true )
+                            if ($this->show_404 == true)
                                 header("HTTP/1.0 404 Not Found");
 
                             return [
@@ -92,7 +86,7 @@ class Upload
                     }
                     else
                     {
-                        if ( $this->show_404 == true )
+                        if ($this->show_404 == true)
                             header("HTTP/1.0 404 Not Found");
 
                         return [
@@ -103,7 +97,7 @@ class Upload
                 }
                 else
                 {
-                    if ( $this->show_404 == true )
+                    if ($this->show_404 == true)
                         header("HTTP/1.0 404 Not Found");
 
                     return [
@@ -114,7 +108,7 @@ class Upload
             }
             else
             {
-                if ( $this->show_404 == true )
+                if ($this->show_404 == true)
                     header("HTTP/1.0 404 Not Found");
 
                 return [
@@ -125,7 +119,7 @@ class Upload
         }
         else
         {
-            if ( $this->show_404 == true )
+            if ($this->show_404 == true)
                 header("HTTP/1.0 404 Not Found");
 
             return [

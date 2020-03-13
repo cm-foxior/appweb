@@ -1,12 +1,43 @@
 <?php
 defined('_EXEC') or die;
 
+/**
+ *
+ * @package Valkyrie.Libraries
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ * @license You can see LICENSE.txt
+ *
+ * @author David Miguel Gómez Macías < davidgomezmacias@gmail.com >
+ * @copyright Copyright (C) CodeMonkey - Platform. All Rights Reserved.
+ */
+
 class View
 {
+	/**
+     *
+     * @var object
+     */
 	private $dependencies;
+
+	/**
+     *
+     * @var object
+     */
 	private $security;
+
+	/**
+     *
+     * @var object
+     */
 	private $format;
 
+	/**
+	 * Constructor.
+     *
+     * @return  void
+     */
 	public function __construct()
 	{
 		$this->dependencies = new Dependencies();
@@ -14,72 +45,94 @@ class View
 		$this->format = new Format();
 	}
 
-	public function render($controller, $layouts)
+	/**
+	 * Renderiza el html
+     *
+	 * @param	object    $controller    Controlador principal.
+	 * @param	mixed     $layouts		 Informacion de los layouts a mostrar.
+	 *
+     * @return  string
+     */
+	public function render( $controller, $layouts )
 	{
-		$pathLayouts = $this->security->directorySeparator($this->format->checkAdmin(PATH_ADMINISTRATOR_LAYOUTS, PATH_LAYOUTS));
+		foreach ( $GLOBALS as $key => $value )
+		{
+			if ( $key != 'GLOBALS' ||
+				 $key != '_SERVER' ||
+				 $key != '_GET' ||
+				 $key != '_POST' ||
+			 	 $key != '_FILES' ||
+				 $key != '_COOKIE' ||
+				 $key != '_SESSION' ||
+				 $key != '_REQUEST' ||
+				 $key != '_ENV' ||
+			 	 $key != 'layout' )
+			{
+				global ${$key};
+			}
+		}
+
+		$path_layouts = ( Format::check_path_admin() ) ? PATH_ADMINISTRATOR_LAYOUTS : PATH_LAYOUTS;
 
 		ob_start();
 
-		if(is_array($layouts))
+		if ( is_array($layouts) )
 		{
 			// Load Header
-			if(isset($layouts['head']['path']) && !empty($layouts['head']['path']))
+			if ( isset($layouts['head']['path']) && !empty($layouts['head']['path']) )
 			{
-				$pathHead = $this->security->directorySeparator($layouts['head']['path']);
-				$file = $pathHead . $layouts['head']['file'] . '.php';
+				$file = Security::DS("{$layouts['head']['path']}/{$layouts['head']['file']}.php");
 
-				if(file_exists($file))
+				if ( file_exists($file) )
 					require_once $file;
 				else
-					require_once $pathLayouts . 'head.php';
+					require_once Security::DS("{$path_layouts}/head.php");
 			}
 			else
-				require_once $pathLayouts . 'head.php';
+				require_once Security::DS("{$path_layouts}/head.php");
 
 			// Load Main
-			if(isset($layouts['main']['path']) && !empty($layouts['main']['path']))
+			if ( isset($layouts['main']['path']) && !empty($layouts['main']['path']) )
 			{
-				$pathMain = $this->security->directorySeparator($layouts['main']['path']);
-				$file = $pathMain . $layouts['main']['file'] . '.php';
+				$file = Security::DS("{$layouts['main']['path']}/{$layouts['main']['file']}.php");
 
-				if(file_exists($file))
+				if ( file_exists($file) )
 					require_once $file;
 			}
 			else
 			{
 				$controller = str_replace(CONTROLLER_PHP, '', get_class($controller));
-				require_once $pathLayouts . $controller . '/' . $layouts['main']['file'] . '.php';
+				require_once Security::DS("{$path_layouts}/{$controller}/{$layouts['main']['file']}.php");
 			}
 
 			// Load Footer
-			if(isset($layouts['footer']['path']) && !empty($layouts['footer']['path']))
+			if ( isset($layouts['footer']['path']) && !empty($layouts['footer']['path']) )
 			{
-				$pathFooter = $this->security->directorySeparator($layouts['footer']['path']);
-				$file = $pathFooter . $layouts['footer']['file'] . '.php';
+				$file = Security::DS("{$layouts['footer']['path']}/{$layouts['footer']['file']}.php");
 
-				if(file_exists($file))
+				if ( file_exists($file) )
 					require_once $file;
 				else
-					require_once $pathLayouts . 'footer.php';
+					require_once Security::DS("{$path_layouts}/footer.php");
 			}
 			else
-				require_once $pathLayouts . 'footer.php';
+				require_once Security::DS("{$path_layouts}/footer.php");
 		}
 		else
 		{
-			require_once $pathLayouts . 'head.php';
+			require_once Security::DS("{$path_layouts}/head.php");
 
-			if(is_object($controller))
+			if ( is_object($controller) )
 				$controller = str_replace(CONTROLLER_PHP, '', get_class($controller));
 
-			require_once $pathLayouts . $controller . '/' . $layouts . '.php';
-			require_once $pathLayouts . 'footer.php';
+			require_once Security::DS("{$path_layouts}/{$controller}/{$layouts}.php");
+			require_once Security::DS("{$path_layouts}/footer.php");
 		}
 
         $buffer = ob_get_contents();
 
 		// Code render
-		$buffer = $this->dependencies->loadDependencies($buffer);
+		$buffer = $this->dependencies->run($buffer);
 
         ob_end_clean();
 

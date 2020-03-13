@@ -1,33 +1,33 @@
 <?php
 /**
- * @package    Valkyrie.Platform
  *
- * @copyright  Copyright (C) CodeMonkey - Platform. All Rights Reserved.
+ * @package Valkyrie.Platform
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  * @license    You can see LICENSE.txt
- * @version    1.0
- * Build date  27 Jul 15
  *
- * @author     CodeMonkey <info@codemonkey.com.mx>
- * Website     https://www.codemonkey.com.mx/
+ * @author     David Miguel Gómez Macías < davidgomezmacias@gmail.com >
+ * @copyright  Copyright (C) CodeMonkey - Platform. All Rights Reserved.
  */
 
 define('_EXEC', 1);
 
-if(version_compare(PHP_VERSION, '5.4', '<'))
+if ( version_compare(PHP_VERSION, '5.4', '<') )
     die('Your host needs to use PHP 5.4 or higher to run this version of Valkyrie Platform.');
 
-if (!defined('_DEFINES'))
+if ( !defined('_DEFINES') )
 {
     define('PATH_ROOT', __DIR__);
-    require_once PATH_ROOT . '/includes/defines.php';
+    require_once PATH_ROOT . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'defines.php';
 }
 
 spl_autoload_register(function($class)
 {
-    if (file_exists(PATH_LIBRARIES . $class . CLASS_PHP))
+    if ( file_exists(PATH_LIBRARIES . $class . CLASS_PHP) )
 	    require PATH_LIBRARIES . $class . CLASS_PHP;
 
-    if (file_exists(PATH_MY_LIBRARIES . $class . CLASS_PHP))
+    if ( file_exists(PATH_MY_LIBRARIES . $class . CLASS_PHP) )
 	    require PATH_MY_LIBRARIES . $class . CLASS_PHP;
 });
 

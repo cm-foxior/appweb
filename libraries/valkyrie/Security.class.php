@@ -1,67 +1,140 @@
 <?php
 defined('_EXEC') or die;
 
+/**
+ *
+ * @package Valkyrie.Libraries
+ *
+ * @since 1.0.0
+ * @version 1.0.1
+ * @license You can see LICENSE.txt
+ *
+ * @author David Miguel Gómez Macías < davidgomezmacias@gmail.com >
+ * @copyright Copyright (C) CodeMonkey - Platform. All Rights Reserved.
+ */
+
 class Security
 {
-    public function __construct()
-	{
-	}
-
-    public function cleanUrl($url = false)
+    /**
+     * Obtiene la url dividida en array.
+     *
+     * @static
+     *
+     * @return  string
+     */
+    public static function url()
     {
-        if($url !== false)
+        if ( isset($_SERVER['PATH_INFO']) )
+            $PATH_INFO = $_SERVER['PATH_INFO'];
+        else if ( isset($_SERVER['ORIG_PATH_INFO']) )
+            $PATH_INFO = $_SERVER['ORIG_PATH_INFO'];
+        else
+            $PATH_INFO = null;
+
+        if ( isset($PATH_INFO) && !is_null($PATH_INFO) )
         {
-            $url = strtolower($url);
+            $url = explode('/', $PATH_INFO);
+
+            $params = [];
+
+            foreach ( $url as $key => $value )
+            {
+                if ( empty($value) )
+                    unset($url[$key]);
+                else
+                    $params[] = strtolower(self::clean_string($value));
+            }
+
+            unset($url);
+
+            $params[0] = "{$params[0]}";
+
+            return $params;
+        }
+        else
+            return ["/"];
+    }
+
+    /**
+     * Quita caracteres especiales de un string.
+     *
+     * @static
+     *
+     * @param   string    $str    Cadena de texto
+     *
+     * @return  string
+     */
+    public static function clean_string( $str )
+    {
+        if ( $str !== false )
+        {
+            $str    = trim($str);
 
             $find   = array('á', 'é', 'í', 'ó', 'ú', 'ñ');
             $repl   = array('a', 'e', 'i', 'o', 'u', 'n');
-            $url    = str_replace($find, $repl, $url);
+            $str    = str_replace($find, $repl, $str);
 
             $find   = array(' ', '&', '\r\n', '\n', '+');
-            $url    = str_replace ($find, '-', $url);
+            $str    = str_replace ($find, '-', $str);
 
-            $find   = array('/[^a-z0-9\/-_<>]/', '/[\-]+/', '/<[^>]*>/');
-            $repl   = array('', '-', '');
-            $url    = preg_replace($find, $repl, $url);
-
-            return $url;
+            $str = strtolower($str);
         }
+
+        return $str;
     }
 
-    public static function directorySeparator($path)
+    /**
+     * Remplaza los slashes de un uri por los default del sistema.
+     *
+     * @static
+     *
+     * @param   string    $path    URI
+     * @return  string
+     */
+    public static function DS( $path )
     {
-        return str_replace('/', DIRECTORY_SEPARATOR, $path);
+        $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+        $first_character = substr($path, 0, 1);
+
+        $parts = explode(DIRECTORY_SEPARATOR, $path);
+
+        $return = "";
+
+        foreach ( $parts as $value )
+        {
+            if ( !empty($value) )
+                $return .= $value . DIRECTORY_SEPARATOR;
+        }
+
+        $return = substr($return, 0, -1);
+
+        if ( $first_character == DIRECTORY_SEPARATOR )
+            return DIRECTORY_SEPARATOR . $return;
+        else
+            return $return;
     }
 
+    /**
+     * Obtiene el protocolo Web en uso.
+     *
+     * @static
+     *
+     * @return  string
+     */
     public static function protocol()
     {
-        if(isset($_SERVER['HTTPS']))
-            return 'https://';
-        else
-            return 'http://';
+        return ( isset($_SERVER['HTTPS']) ) ? "https://" : "http://";
     }
 
-    public static function checkEncoder($encoder, $string = false)
-	{
-		switch ($encoder)
-		{
-			case 'base64':
-				if (base64_encode(base64_decode($string, true)) === $string)
-					return true;
-				else
-					return false;
-				break;
-
-			case 'json':
-				if (json_encode(json_decode($string, true)) === $string)
-					return true;
-				else
-					return false;
-				break;
-		}
-	}
-
-    public function createHash($algorithm, $data)
+    /**
+     * Crea un hash encriptado con la clave secreta de la configuración.
+     *
+     * @param   string    $algorithm    Tipo de algoritmo para usar.
+     * @param   string    $data
+     *
+     * @return  string
+     */
+    public function create_hash( $algorithm, $data )
 	{
 		$context = hash_init($algorithm, HASH_HMAC, Configuration::$secret);
 		hash_update($context, $data);
@@ -69,86 +142,29 @@ class Security
 		return hash_final($context);
 	}
 
-	public function createPassword($string)
+    /**
+     * Crea una password encriptada.
+     *
+     * @param   string    $string    Password para encriptar.
+     *
+     * @return  string
+     */
+	public function create_password( $string )
 	{
-		$salt = $this->randomString(64);
-		$password = $this->createHash('sha1', $string . $salt);
+		$salt = $this->random_string(64);
+		$password = $this->create_hash('sha1', $string . $salt);
+
 		return $password . ':' . $salt;
 	}
 
-    public function getIp()
-	{
-		if (isset($_SERVER["HTTP_CLIENT_IP"]))
-            return $_SERVER["HTTP_CLIENT_IP"];
-		elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"]))
-            return $_SERVER["HTTP_X_FORWARDED_FOR"];
-		elseif (isset($_SERVER["HTTP_X_FORWARDED"]))
-            return $_SERVER["HTTP_X_FORWARDED"];
-		elseif (isset($_SERVER["HTTP_FORWARDED_FOR"]))
-            return $_SERVER["HTTP_FORWARDED_FOR"];
-		elseif (isset($_SERVER["HTTP_FORWARDED"]))
-            return $_SERVER["HTTP_FORWARDED"];
-		else
-            return $_SERVER["REMOTE_ADDR"];
-	}
-
-	public function browser()
-	{
-		$browser = array("IE", "OPERA", "MOZILLA", "NETSCAPE", "FIREFOX", "SAFARI", "CHROME");
-		$os = array("WIN", "MAC", "LINUX");
-
-		$info['browser'] = "OTHER";
-		$info['os'] = "OTHER";
-
-		foreach ($browser as $parent)
-		{
-			$s = strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $parent);
-			$f = $s + strlen($parent);
-			$version = substr($_SERVER['HTTP_USER_AGENT'], $f, 15);
-			$version = preg_replace('/[^0-9,.]/', '', $version);
-
-			if ($s)
-			{
-				$info['browser'] = $parent;
-				$info['version'] = $version;
-			}
-		}
-
-		foreach ($os as $val)
-        {
-			if (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']), $val) !== false)
-			$info['os'] = $val;
-		}
-
-		return $info;
-	}
-
-	public static function checkMail($email)
-	{
-		return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? 1 : 0;
-	}
-
-    public static function checkIsFloat($number)
-    {
-        $explode = explode('.', $number);
-
-        if (count($explode) > 1)
-            return true;
-        else
-            return false;
-    }
-
-    public static function checkIfExistSpaces($string)
-    {
-        $explode = explode(' ', $string);
-
-        if (count($explode) > 1)
-            return true;
-        else
-            return false;
-    }
-
-    public function randomBytes($length = 16)
+    /**
+     * Genera un numero dado de bytes.
+     *
+     * @param   integer    $length    Numero de bytes.
+     *
+     * @return  mixed
+     */
+    public function random_bytes( $length = 16 )
 	{
 		$sslStr = '';
 
@@ -241,16 +257,23 @@ class Security
 		return substr($randomStr, 0, $length);
 	}
 
-	public function randomString($length = 8)
+    /**
+     * Genera un string de caracteres random.
+     *
+     * @param   integer    $length    Tamaño del string.
+     *
+     * @return  string
+     */
+	public function random_string( $length = 8 )
 	{
 		$salt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$base = strlen($salt);
 		$stringRandom = '';
 
-		$random = $this->randomBytes($length + 1);
+		$random = $this->random_bytes($length + 1);
 		$shift = ord($random[0]);
 
-		for ($i = 1; $i <= $length; ++$i)
+		for ( $i = 1; $i <= $length; ++$i )
 		{
 			$stringRandom .= $salt[($shift + ord($random[$i])) % $base];
 			$shift += ord($random[$i]);
@@ -258,4 +281,5 @@ class Security
 
 		return $stringRandom;
 	}
+
 }

@@ -2,181 +2,158 @@
 
 defined('_EXEC') or die;
 
-$this->dependencies->getDependencies([
-    'css' => [
-        '{$path.plugins}DataTables/css/jquery.dataTables.min.css',
-        '{$path.plugins}DataTables/css/dataTables.material.min.css',
-        '{$path.plugins}DataTables/css/responsive.dataTables.min.css',
-        '{$path.plugins}DataTables/css/buttons.dataTables.min.css'
-    ],
-    'js' => [
-        '{$path.js}pages/providers.js',
-        '{$path.plugins}DataTables/js/jquery.dataTables.min.js',
-        '{$path.plugins}DataTables/js/dataTables.material.min.js',
-        '{$path.plugins}DataTables/js/dataTables.responsive.min.js',
-        '{$path.plugins}DataTables/js/dataTables.buttons.min.js',
-        '{$path.plugins}DataTables/js/pdfmake.min.js',
-        '{$path.plugins}DataTables/js/vfs_fonts.js',
-        '{$path.plugins}DataTables/js/buttons.html5.min.js'
-    ],
-    'other' => [
+$this->dependencies->add(['js', '{$path.js}Providers/index.min.js']);
 
-    ]
-]);
 ?>
 
 %{header}%
-<main class="body">
-    <div class="content">
-        <div class="box-buttons">
-            <a data-button-modal="deleteProviders"><i class="material-icons">delete</i><span>Eliminar</span></a>
-            <!-- <a data-button-modal="deactivateProviders"><i class="material-icons">block</i><span>Desactivar</span></a>
-            <a data-button-modal="activateProviders"><i class="material-icons">check</i><span>Activar</span></a> -->
-            <a data-button-modal="providers"><i class="material-icons">add</i><span>Nuevo</span></a>
-            <div class="clear"></div>
+<header class="modbar">
+    <a href="/providers"><i class="fas fa-people-carry"></i><span>{$lang.providers}</span></a>
+    <span></span>
+    <?php if (Permissions::user(['create_providers']) == true) : ?>
+    <a data-action="create_provider" class="success"><i class="fas fa-plus"></i><span>{$lang.create}</span></a>
+    <?php endif; ?>
+    <fieldset>
+        <span><i class="fas fa-search"></i></span>
+        <input type="text" data-search="providers">
+    </fieldset>
+</header>
+<main>
+    <div class="tbl-st-3" data-table="providers">
+        <?php foreach ($data['providers'] as $value) : ?>
+        <div>
+            <figure>
+                <?php if (!empty($value['avatar'])) : ?>
+                <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
+                <?php else : ?>
+                <img src="{$path.images}provider.png">
+                <?php endif; ?>
+            </figure>
+            <h4><?php echo $value['name']; ?></h4>
+            <?php if (!empty($value['fiscal']['id'])) : ?>
+            <span><?php echo $value['fiscal']['id']; ?></span>
+            <?php else : ?>
+            <span>{$lang.not_fiscal_id}</span>
+            <?php endif; ?>
+            <div class="button">
+                <?php if (Permissions::user(['block_providers','unblock_providers']) == true) : ?>
+                <?php if ($value['blocked'] == true) : ?>
+                <a data-action="unblock_provider" data-id="<?php echo $value['id']; ?>"><i class="fas fa-lock-open"></i><span>{$lang.unblock}</span></a>
+                <?php elseif ($value['blocked'] == false) : ?>
+                <a data-action="block_provider" data-id="<?php echo $value['id']; ?>"><i class="fas fa-lock"></i><span>{$lang.block}</span></a>
+                <?php endif; ?>
+                <?php endif; ?>
+                <?php if (Permissions::user(['delete_providers']) == true) : ?>
+                <?php if ($value['blocked'] == false) : ?>
+                <a data-action="delete_provider" data-id="<?php echo $value['id']; ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.delete}</span></a>
+                <?php endif; ?>
+                <?php endif; ?>
+                <?php if (Permissions::user(['update_providers']) == true) : ?>
+                <?php if ($value['blocked'] == false) : ?>
+                <a data-action="update_provider" data-id="<?php echo $value['id']; ?>" class="warning"><i class="fas fa-pen"></i><span>{$lang.update}</span></a>
+                <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </div>
-        <div class="table-responsive-vertical padding">
-            <table class="display" data-page-length="100">
-                <thead>
-                    <tr>
-                        <th width="20px"></th>
-                        <th>Nombre</th>
-                        <th width="130px">RFC</th>
-                        <th>Correo electrónico</th>
-                        <th width="130px">Teléfono</th>
-                        <!-- <th width="100px">Estado</th> -->
-                        <th width="35px"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {$lstProviders}
-                </tbody>
-            </table>
-        </div>
+        <?php endforeach; ?>
     </div>
 </main>
-<section class="modal" data-modal="providers">
+<?php if (Permissions::user(['create_providers','update_providers']) == true) : ?>
+<section class="modal" data-modal="create_provider">
     <div class="content">
-        <header>
-            <h6>Nuevo proveedor</h6>
-        </header>
         <main>
-            <form name="providers" data-submit-action="new">
-                <fieldset class="input-group">
-                    <p class="required-fields"><span class="required-field">*</span> Campos obligatorios</p>
+            <form>
+                <fieldset class="fields-group">
+                    <div class="uploader" data-low-uploader>
+                        <figure data-preview>
+                            <img src="{$path.images}provider.png">
+                            <a data-select><i class="fas fa-pen"></i></a>
+                        </figure>
+                        <input type="file" name="avatar" accept="image/*" data-select>
+                    </div>
                 </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span><span class="required-field">*</span>Nombre</span>
-                        <input type="text" name="name" autofocus>
-                    </label>
+                <fieldset class="fields-group">
+                    <div class="text">
+                        <input type="text" name="name" placeholder="{$lang.name}">
+                    </div>
                 </fieldset>
-                <h4 class="title margin-top-30">Información de contacto</h4>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Email</span>
-                        <input type="email" name="email">
-                    </label>
+                <fieldset class="fields-group">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="text">
+                                <input type="text" name="email" placeholder="{$lang.email}">
+                            </div>
+                        </div>
+                        <div class="span6">
+                            <div class="compound select">
+                                <input type="text" name="phone_number" placeholder="{$lang.phone}">
+                                <select name="phone_country">
+                                    <option value="" selected hidden>{$lang.country}</option>
+                                    <?php foreach (System::countries() as $value) : ?>
+                                    <option value="<?php echo $value['lada']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Número telefónico</span>
-                        <select name="phoneCountryCode" class="span2">
-                            <option value="52">[+52] México</option>
+                <fieldset class="fields-group">
+                    <div class="compound select">
+                        <input type="text" name="address" placeholder="{$lang.address}">
+                        <select name="country">
+                            <option value="" selected hidden>{$lang.country}</option>
+                            <?php foreach (System::countries() as $value) : ?>
+                            <option value="<?php echo $value['lada']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
+                            <?php endforeach; ?>
                         </select>
-                        <input type="number" name="phoneNumber" class="span8 margin-left-right">
-                        <select name="phoneType" class="span2">
-                            <option value="Móvil">Móvil</option>
-                            <option value="Local">Local</option>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <div class="row">
+                        <div class="span4">
+                            <div class="text">
+                                <input type="text" name="fiscal_id" placeholder="{$lang.fiscal_id}">
+                            </div>
+                        </div>
+                        <div class="span8">
+                            <div class="text">
+                                <input type="text" name="fiscal_name" placeholder="{$lang.fiscal_name}">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <div class="compound select">
+                        <input type="text" name="fiscal_address" placeholder="{$lang.fiscal_address}">
+                        <select name="fiscal_country">
+                            <option value="" selected hidden>{$lang.country}</option>
+                            <?php foreach (System::countries() as $value) : ?>
+                            <option value="<?php echo $value['code']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
+                            <?php endforeach; ?>
                         </select>
-                        <div class="clear"></div>
-                    </label>
+                    </div>
                 </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Dirección</span>
-                        <input type="text" name="address">
-                    </label>
-                </fieldset>
-                <h4 class="title margin-top-30">Información fiscal</h4>
-                <!-- <fieldset class="input-group">
-                    <label data-important>
-                        <span>País</span>
-                        <select name="fiscalCountry">
-                            <option value="México">México</option>
-                        </select>
-                    </label>
-                </fieldset> -->
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span id="fiscalName">Razón social</span>
-                        <input type="text" name="fiscalName">
-                    </label>
-                </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span id="fiscalCode">RFC</span>
-                        <input type="text" name="fiscalCode" class="uppercase">
-                    </label>
-                </fieldset>
-                <fieldset class="input-group">
-                    <label data-important>
-                        <span>Dirección fiscal</span>
-                        <input type="text" name="fiscalAddress">
-                    </label>
-                    <label class="checkbox" data-important>
-                        <input type="checkbox" data-action="assignSameAddress">
-                        <span>Usar dirección principal</span>
-                        <div class="clear"></div>
-                    </label>
+                <fieldset class="fields-group">
+                    <div class="button">
+                        <button type="submit" class="success"><i class="fas fa-plus"></i></button>
+                        <a class="alert" button-close><i class="fas fa-times"></i></a>
+                    </div>
                 </fieldset>
             </form>
         </main>
-        <footer>
-            <a button-cancel>Cancelar</a>
-            <a button-success>Aceptar</a>
-        </footer>
     </div>
 </section>
-<section class="modal alert" data-modal="activateProviders">
+<?php endif; ?>
+<?php if (Permissions::user(['delete_providers']) == true) : ?>
+<section class="modal alert" data-modal="delete_provider">
     <div class="content">
-        <header>
-            <h6>Alerta</h6>
-        </header>
         <main>
-            <p>¿Está seguro de que desea activar está selección de proveedores?</p>
+            <i class="fas fa-trash"></i>
+            <div class="button">
+                <a button-success><i class="fas fa-check"></i></a>
+                <a button-close><i class="fas fa-times"></i></a>
+            </div>
         </main>
-        <footer>
-            <a button-close>Cancelar</a>
-            <a data-action="activateProviders">Aceptar</a>
-        </footer>
     </div>
 </section>
-<section class="modal alert" data-modal="deactivateProviders">
-    <div class="content">
-        <header>
-            <h6>Alerta</h6>
-        </header>
-        <main>
-            <p>¿Está seguro de que desea desactivar está selección de proveedores?</p>
-        </main>
-        <footer>
-            <a button-close>Cancelar</a>
-            <a data-action="deactivateProviders">Aceptar</a>
-        </footer>
-    </div>
-</section>
-<section class="modal alert" data-modal="deleteProviders">
-    <div class="content">
-        <header>
-            <h6>Alerta</h6>
-        </header>
-        <main>
-            <p>¿Está seguro de que desea eliminar está selección de proveedores?</p>
-        </main>
-        <footer>
-            <a button-close>Cancelar</a>
-            <a data-action="deleteProviders">Aceptar</a>
-        </footer>
-    </div>
-</section>
+<?php endif; ?>
