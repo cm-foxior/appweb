@@ -198,7 +198,7 @@ function open_notification_modal(type, message, path, timeout)
 {
     message = (message == undefined) ? '' : message;
     path = (path == undefined) ? ((type == 'success') ? 'reload' : false) : path;
-    timeout = (timeout == undefined) ? '1500' : timeout;
+    timeout = (timeout == undefined) ? '1000' : timeout;
 
     if (type == 'success')
     {

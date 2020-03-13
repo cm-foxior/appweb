@@ -8,7 +8,7 @@ $this->dependencies->add(['js', '{$path.js}Providers/index.min.js']);
 
 %{header}%
 <header class="modbar">
-    <a href="/providers"><i class="fas fa-people-carry"></i><span>{$lang.providers}</span></a>
+    <a href="/providers"><i class="fas fa-truck"></i><span>{$lang.providers}</span></a>
     <span></span>
     <?php if (Permissions::user(['create_providers']) == true) : ?>
     <a data-action="create_provider" class="success"><i class="fas fa-plus"></i><span>{$lang.create}</span></a>
@@ -51,6 +51,7 @@ $this->dependencies->add(['js', '{$path.js}Providers/index.min.js']);
                 <?php if (Permissions::user(['update_providers']) == true) : ?>
                 <?php if ($value['blocked'] == false) : ?>
                 <a data-action="update_provider" data-id="<?php echo $value['id']; ?>" class="warning"><i class="fas fa-pen"></i><span>{$lang.update}</span></a>
+                <a data-action="update_provider" data-id="<?php echo $value['id']; ?>"><i class="fas fa-info-circle"></i><span>{$lang.details}</span></a>
                 <?php endif; ?>
                 <?php endif; ?>
             </div>

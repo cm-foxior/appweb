@@ -11,7 +11,7 @@ class Providers_model extends Model
 
 	public function read_providers()
 	{
-		$query = Functions::get_array_json_decoded($this->database->select('providers', [
+		$query = System::decoded_query_array($this->database->select('providers', [
 			'id',
 			'avatar',
 			'name',
@@ -29,7 +29,7 @@ class Providers_model extends Model
 
 	public function read_provider($id)
 	{
-		$query = Functions::get_array_json_decoded($this->database->select('providers', [
+		$query = System::decoded_query_array($this->database->select('providers', [
             'avatar',
 			'name',
 			'email',
@@ -48,7 +48,7 @@ class Providers_model extends Model
 	{
 		$query = $this->database->insert('providers', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Functions::uploader($data['avatar']) : null,
+			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
 			'name' => $data['name'],
 			'email' => !empty($data['email']) ? $data['email'] : null,
 			'phone' => json_encode([
@@ -82,7 +82,7 @@ class Providers_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('providers', [
-    			'avatar' => !empty($data['avatar']['name']) ? Functions::uploader($data['avatar']) : null,
+    			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
     			'name' => $data['name'],
     			'email' => !empty($data['email']) ? $data['email'] : null,
     			'phone' => json_encode([
@@ -102,7 +102,7 @@ class Providers_model extends Model
             ]);
 
             if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Functions::undoloader($edited[0]['avatar']);
+                Uploader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -147,7 +147,7 @@ class Providers_model extends Model
             ]);
 
             if (!empty($query) AND !empty($deleted[0]['avatar']))
-                Functions::undoloader($deleted[0]['avatar']);
+                Uploader::down($deleted[0]['avatar']);
         }
 
         return $query;

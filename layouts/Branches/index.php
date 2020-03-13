@@ -35,6 +35,7 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
             <?php else : ?>
             <span>{$lang.not_fiscal_id}</span>
             <?php endif; ?>
+            <span><?php echo $value['token']; ?></span>
             <div class="button">
                 <?php if (Permissions::user(['block_branches','unblock_branches']) == true) : ?>
                 <?php if ($value['blocked'] == true) : ?>
@@ -51,6 +52,7 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                 <?php if (Permissions::user(['update_branches']) == true) : ?>
                 <?php if ($value['blocked'] == false) : ?>
                 <a data-action="update_branch" data-id="<?php echo $value['id']; ?>" class="warning"><i class="fas fa-pen"></i><span>{$lang.update}</span></a>
+                <a data-action="update_branch" data-id="<?php echo $value['id']; ?>"><i class="fas fa-info-circle"></i><span>{$lang.details}</span></a>
                 <?php endif; ?>
                 <?php endif; ?>
             </div>
@@ -75,6 +77,11 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                 <fieldset class="fields-group">
                     <div class="text">
                         <input type="text" name="name" placeholder="{$lang.name}">
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <div class="text">
+                        <input type="text" name="token" placeholder="{$lang.token_generate_auto}" disabled>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">

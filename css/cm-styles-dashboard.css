@@ -66,6 +66,14 @@ fieldset.fields-group div.checkbox > h6 {
     font-size: 14px;
 }
 
+fieldset.fields-group div.checkbox > fieldset > span {
+    border-radius: 50%;
+}
+
+fieldset.fields-group div.checkbox > fieldset > input {
+    border-radius: 40px;
+}
+
 fieldset.fields-group div.checkbox > label {
     border-radius: 20px;
 }
@@ -84,6 +92,11 @@ fieldset.fields-group div.checkbox > label > input[type="checkbox"]::after {
 
 fieldset.fields-group div.checkbox > label > span {
     font-size: 14px;
+}
+
+fieldset.fields-group div.message > p {
+    margin-top: 20px;
+    color: #bdbdbd;
 }
 
 fieldset.fields-group div.button {

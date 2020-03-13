@@ -11,10 +11,11 @@ class Branches_model extends Model
 
 	public function read_branches()
 	{
-		$query = Functions::get_array_json_decoded($this->database->select('branches', [
+		$query = System::decoded_query_array($this->database->select('branches', [
 			'id',
 			'avatar',
 			'name',
+			'token',
 			'fiscal',
 			'blocked'
 		], [
@@ -29,9 +30,10 @@ class Branches_model extends Model
 
 	public function read_branch($id)
 	{
-		$query = Functions::get_array_json_decoded($this->database->select('branches', [
+		$query = System::decoded_query_array($this->database->select('branches', [
             'avatar',
 			'name',
+			'token',
 			'email',
 			'phone',
             'country',
@@ -48,8 +50,9 @@ class Branches_model extends Model
 	{
 		$query = $this->database->insert('branches', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Functions::uploader($data['avatar']) : null,
+			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
 			'name' => $data['name'],
+			'token' => System::random(8, 'uppercase'),
 			'email' => !empty($data['email']) ? $data['email'] : null,
 			'phone' => json_encode([
                 'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
@@ -82,7 +85,7 @@ class Branches_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('branches', [
-    			'avatar' => !empty($data['avatar']['name']) ? Functions::uploader($data['avatar']) : null,
+    			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
     			'name' => $data['name'],
     			'email' => !empty($data['email']) ? $data['email'] : null,
     			'phone' => json_encode([
@@ -102,7 +105,7 @@ class Branches_model extends Model
             ]);
 
             if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Functions::undoloader($edited[0]['avatar']);
+                Uploader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -147,7 +150,7 @@ class Branches_model extends Model
             ]);
 
             if (!empty($query) AND !empty($deleted[0]['avatar']))
-                Functions::undoloader($deleted[0]['avatar']);
+                Uploader::down($deleted[0]['avatar']);
         }
 
         return $query;

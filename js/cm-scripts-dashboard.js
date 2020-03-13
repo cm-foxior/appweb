@@ -86,6 +86,8 @@ function search_in_table(data, table, type)
         var values = table.find(' > tbody > tr');
     else if (type == 'tbl-st-3')
         var values = table.find(' > div');
+    else if (type == 'cbx')
+        var values = table.find(' > label');
 
     $.each(values, function(key, value)
     {

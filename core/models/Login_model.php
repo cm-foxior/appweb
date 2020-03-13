@@ -11,7 +11,7 @@ class Login_model extends Model
 
 	public function get_login($email)
 	{
-		$login['user'] = Functions::get_array_json_decoded($this->database->select('users', [
+		$login['user'] = System::decoded_query_array($this->database->select('users', [
 			'id',
 			'avatar',
 			'firstname',
@@ -28,7 +28,7 @@ class Login_model extends Model
 		{
 			foreach ($login['user'][0]['accounts'] as $key => $value)
 			{
-				$value['account'] = Functions::get_array_json_decoded($this->database->select('accounts', [
+				$value['account'] = System::decoded_query_array($this->database->select('accounts', [
 					'id',
 					'avatar',
 					'name',

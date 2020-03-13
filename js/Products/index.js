@@ -32,6 +32,11 @@ $(document).ready(function()
         check_type_input('decimal', $(this).val(), $(this));
     });
 
+    $('[data-search="supplies"]').on('keyup', function()
+    {
+        search_in_table($(this).val(), $('[data-cbx="supplies"]'), 'cbx');
+    });
+
     var create_action = 'create_product';
     var read_action = 'read_product';
     var update_action = 'update_product';
@@ -62,12 +67,14 @@ $(document).ready(function()
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((data.avatar != null) ? '../uploads/' + data.avatar : '../images/empty.png'));
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="token"]').val(data.token);
+
+            if (data.type == 'sale' || data.type == 'supply' || data.type == 'work_material')
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="token"]').val(data.token);
 
             if (data.type == 'sale')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="price"]').val(data.price);
 
-            if (data.type == 'sale' || data.type == 'supply' || data.type == 'workmaterial')
+            if (data.type == 'sale' || data.type == 'supply' || data.type == 'work_material')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="unity"]').val(data.unity);
 
             if (data.type == 'sale' || data.type == 'supply')

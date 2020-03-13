@@ -17,24 +17,24 @@ class Providers_controller extends Controller
 			{
 				$errors = [];
 
-				if (Functions::check_empty_value($_POST['name']) == false)
+				if (Validations::empty($_POST['name']) == false)
 					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
 
-				if (Functions::check_email($_POST['email'], true) == false)
+				if (Validations::email($_POST['email'], true) == false)
 					array_push($errors, ['email','{$lang.invalid_field}']);
 
-				if (Functions::check_empty_value([$_POST['phone_country'],$_POST['phone_number']], true) == false)
+				if (Validations::empty([$_POST['phone_country'],$_POST['phone_number']], true) == false)
 					array_push($errors, ['phone_number','{$lang.dont_leave_this_field_empty}']);
-				if (Functions::check_int_number($_POST['phone_number'], true) == false)
+				if (Validations::number('int', $_POST['phone_number'], true) == false)
 					array_push($errors, ['phone_number','{$lang.invalid_field}']);
 
-				if (Functions::check_empty_value([$_POST['country'],$_POST['address']], true) == false)
+				if (Validations::empty([$_POST['country'],$_POST['address']], true) == false)
 					array_push($errors, ['address','{$lang.dont_leave_this_field_empty}']);
 
-				if (Functions::check_special_characters($_POST['fiscal_id'], true) == false)
+				if (Validations::special_characters($_POST['fiscal_id'], true) == false)
 					array_push($errors, ['fiscal_id','{$lang.invalid_field}']);
 
-				if (Functions::check_empty_value([$_POST['fiscal_country'],$_POST['fiscal_address']], true) == false)
+				if (Validations::empty([$_POST['fiscal_country'],$_POST['fiscal_address']], true) == false)
 					array_push($errors, ['fiscal_address','{$lang.dont_leave_this_field_empty}']);
 
 				if (empty($errors))

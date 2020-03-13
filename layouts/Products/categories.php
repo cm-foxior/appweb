@@ -9,7 +9,11 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
 %{header}%
 <header class="modbar">
     <?php if (Permissions::user(['products'], true) == true) : ?>
-    <a href="/products/menu" class="unfocus"><i class="fas fa-box-open"></i><span>{$lang.products}</span></a>
+    <a href="/products/menu" class="unfocus"><i class="fas fa-dollar-sign"></i><span>{$lang.menu}</span></a>
+    <a href="/products/supplies" class="unfocus"><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
+    <a href="/products/recipes" class="unfocus"><i class="fas fa-receipt"></i><span>{$lang.recipes}</span></a>
+    <a href="/products/workmaterials" class="unfocus"><i class="fas fa-mail-bulk"></i><span>{$lang.work_materials}</span></a>
+    <span></span>
     <?php endif; ?>
     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
     <a href="/products/categories"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>

@@ -83,14 +83,14 @@
     <?php if (Permissions::account(['inventories']) == true) : ?>
     <nav>
         <ul>
-            <li><a><i class="fas fa-boxes"></i><span>{$lang.inventories}</span></a></li>
+            <li><a href="/inventories"><i class="fas fa-box-open"></i><span>{$lang.inventories}</span></a></li>
         </ul>
     </nav>
     <?php endif; ?>
     <?php if (Permissions::account(['sales']) == true) : ?>
     <nav>
         <ul>
-            <li><a><i class="fas fa-shopping-cart"></i><span>{$lang.selling_point}</span></a></li>
+            <li><a><i class="fas fa-cash-register"></i><span>{$lang.selling_point}</span></a></li>
         </ul>
     </nav>
     <?php endif; ?>
@@ -141,22 +141,22 @@
         <?php if (!empty(Session::get_value('vkye_account'))) : ?>
         <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['products','products_categories','products_barcodes','providers'], true) == true) : ?>
         <nav>
-            <span>{$lang.catalogs}</span>
+            <span>{$lang.products}</span>
             <ul>
                 <?php if (Permissions::user(['products'], true) == true) : ?>
-                <li><a href="/products/menu"><i class="fas fa-box-open"></i>{$lang.products}</a></li>
+                <li><a href="/products/menu"><i class="fas fa-dollar-sign"></i>{$lang.menu}</a></li>
+                <li><a href="/products/supplies"><i class="fas fa-layer-group"></i>{$lang.supplies}</a></li>
+                <li><a href="/products/recipes"><i class="fas fa-receipt"></i>{$lang.recipes}</a></li>
+                <li><a href="/products/workmaterials"><i class="fas fa-mail-bulk"></i>{$lang.work_materials}</a></li>
                 <?php endif; ?>
                 <?php if (Permissions::user(['products_categories'], true) == true) : ?>
-                <li><a href="/products/categories" class="indented"><i class="fas fa-tags"></i>{$lang.categories}</a></li>
+                <li><a href="/products/categories"><i class="fas fa-tags"></i>{$lang.categories}</a></li>
                 <?php endif; ?>
                 <?php if (Permissions::user(['products_unities'], true) == true) : ?>
-                <li><a href="/products/unities" class="indented"><i class="fas fa-balance-scale-left"></i>{$lang.unities}</a></li>
+                <li><a href="/products/unities"><i class="fas fa-balance-scale-left"></i>{$lang.unities}</a></li>
                 <?php endif; ?>
                 <?php if (Permissions::user(['products_barcodes'], true) == true) : ?>
-                <li><a href="/products/barcodes" class="indented"><i class="fas fa-barcode"></i>{$lang.barcodes}</a></li>
-                <?php endif; ?>
-                <?php if (Permissions::user(['providers'], true) == true) : ?>
-                <li><a href="/providers"><i class="fas fa-people-carry"></i>{$lang.providers}</a></li>
+                <li><a href="/products/barcodes"><i class="fas fa-barcode"></i>{$lang.barcodes}</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
@@ -165,6 +165,9 @@
         <nav>
             <span>{$lang.administration}</span>
             <ul>
+                <?php if (Permissions::user(['providers'], true) == true) : ?>
+                <li><a href="/providers"><i class="fas fa-truck"></i>{$lang.providers}</a></li>
+                <?php endif; ?>
                 <?php if (Permissions::user(['branches'], true) == true) : ?>
                 <li><a href="/branches"><i class="fas fa-store"></i>{$lang.branches}</a></li>
                 <?php endif; ?>
@@ -173,7 +176,7 @@
         <?php endif; ?>
         <?php if (Permissions::user(['account'], true) == true) : ?>
         <nav>
-            <span>{$lang.online_account}</span>
+            <span>{$lang.account}</span>
             <ul>
                 <?php if (Permissions::user(['update_account'])) : ?>
                 <li><a><i class="fas fa-user-circle"></i>{$lang.profile}</a></li>
@@ -203,6 +206,13 @@
                 <li><a>{$lang.copyright}</a></li>
                 <li><a>{$lang.terms_and_conditions}</a></li>
                 <li><a data-action="logout">{$lang.logout}</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <ul>
+                <li><a>Foxior 2.0</a></li>
+                <li><a>{$lang.development_by} Code Monkey</a></li>
+                <li><a>Power by Valkyrie</a></li>
             </ul>
         </nav>
     </div>

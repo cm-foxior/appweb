@@ -26,34 +26,37 @@ class Products_controller extends Controller
 			{
 				$errors = [];
 
-				if (Functions::check_empty_value($_POST['name']) == false)
+				if (Validations::empty($_POST['name']) == false)
 					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
 
-				if (Functions::check_empty_value($_POST['token']) == false)
-					array_push($errors, ['token','{$lang.dont_leave_this_field_empty}']);
-				else if (Functions::check_empty_spaces($_POST['token']) == false OR Functions::check_special_characters($_POST['token']) == false)
-					array_push($errors, ['token','{$lang.invalid_field}']);
+				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				{
+					if (Validations::empty($_POST['token']) == false)
+						array_push($errors, ['token','{$lang.dont_leave_this_field_empty}']);
+					else if (Validations::spaces($_POST['token']) == false OR Validations::special_characters($_POST['token']) == false)
+						array_push($errors, ['token','{$lang.invalid_field}']);
+				}
 
 				if ($params[1] == 'sale')
 				{
-					if (Functions::check_empty_value($_POST['price']) == false)
+					if (Validations::empty($_POST['price']) == false)
 						array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
-					else if (Functions::check_float_number($_POST['price']) == false)
+					else if (Validations::number('float', $_POST['price']) == false)
 						array_push($errors, ['price','{$lang.invalid_field}']);
 				}
 
 				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
 				{
-					if (Functions::check_empty_value($_POST['unity']) == false)
+					if (Validations::empty($_POST['unity']) == false)
 						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
 				}
 
 				if ($params[1] == 'sale' OR $params[1] == 'supply')
 				{
-					if (Functions::check_float_number($_POST['weight_empty'], true) == false)
+					if (Validations::number('float', $_POST['weight_empty'], true) == false)
 						array_push($errors, ['weight_empty','{$lang.invalid_field}']);
 
-					if (Functions::check_float_number($_POST['weight_full'], true) == false)
+					if (Validations::number('float', $_POST['weight_full'], true) == false)
 						array_push($errors, ['weight_full','{$lang.invalid_field}']);
 				}
 
@@ -165,12 +168,12 @@ class Products_controller extends Controller
 			{
 				$errors = [];
 
-				if (Functions::check_empty_value($_POST['name']) == false)
+				if (Validations::empty($_POST['name']) == false)
 					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
 
-				if (Functions::check_empty_value($_POST['level']) == false)
+				if (Validations::empty($_POST['level']) == false)
 					array_push($errors, ['level','{$lang.dont_leave_this_field_empty}']);
-				else if (Functions::check_int_number($_POST['level']) == false)
+				else if (Validations::number('int', $_POST['level']) == false)
 					array_push($errors, ['level','{$lang.invalid_field}']);
 
 				if (empty($errors))
@@ -274,7 +277,7 @@ class Products_controller extends Controller
 			{
 				$errors = [];
 
-				if (Functions::check_empty_value($_POST['name']) == false)
+				if (Validations::empty($_POST['name']) == false)
 					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
 
 				if (empty($errors))

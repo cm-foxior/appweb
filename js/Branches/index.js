@@ -45,6 +45,7 @@ $(document).ready(function()
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((data.avatar != null) ? '../uploads/' + data.avatar : '../images/branch.png'));
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
+            $('[data-modal="' + create_action + '"]').find('form').find('[name="token"]').val(data.token);
             $('[data-modal="' + create_action + '"]').find('form').find('[name="email"]').val(data.email);
             $('[data-modal="' + create_action + '"]').find('form').find('[name="phone_country"]').val(data.phone.country);
             $('[data-modal="' + create_action + '"]').find('form').find('[name="phone_number"]').val(data.phone.number);
