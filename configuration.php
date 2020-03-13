@@ -18,7 +18,7 @@ class Configuration
 	 *
      * @var string $domain
      */
-	public static $domain = 'dev.foxior.com';
+	public static $domain = 'foxior.com';
 
 	/**
      * Nombre del sitio web.
@@ -47,7 +47,7 @@ class Configuration
 	 *
      * @var string $error_reporting
      */
-	public static $error_reporting = 'development';
+	public static $error_reporting = 'none';
 
 	/**
      * Modo para debuggear errores.
@@ -147,7 +147,7 @@ class Configuration
 	 *
      * @var string $db_name
      */
-	public static $db_name = 'fx-website-dev';
+	public static $db_name = 'fx-website';
 
 	/**
      * Usuario de la base de datos
