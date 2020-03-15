@@ -11,7 +11,7 @@ class Products_controller extends Controller
 
 	public function index($params)
 	{
-		if ($params[0] == 'menu')
+		if ($params[0] == 'salemenu')
 			$params[1] = 'sale';
 		else if ($params[0] == 'supplies')
 			$params[1] = 'supply';
@@ -33,7 +33,7 @@ class Products_controller extends Controller
 				{
 					if (Validations::empty($_POST['token']) == false)
 						array_push($errors, ['token','{$lang.dont_leave_this_field_empty}']);
-					else if (Validations::spaces($_POST['token']) == false OR Validations::special_characters($_POST['token']) == false)
+					else if (Validations::string(['uppercase','lowercase','int'], $_POST['token']) == false)
 						array_push($errors, ['token','{$lang.invalid_field}']);
 				}
 
@@ -53,11 +53,11 @@ class Products_controller extends Controller
 
 				if ($params[1] == 'sale' OR $params[1] == 'supply')
 				{
-					if (Validations::number('float', $_POST['weight_empty'], true) == false)
-						array_push($errors, ['weight_empty','{$lang.invalid_field}']);
-
 					if (Validations::number('float', $_POST['weight_full'], true) == false)
 						array_push($errors, ['weight_full','{$lang.invalid_field}']);
+
+					if (Validations::number('float', $_POST['weight_empty'], true) == false)
+						array_push($errors, ['weight_empty','{$lang.invalid_field}']);
 				}
 
 				if (empty($errors))
@@ -178,8 +178,6 @@ class Products_controller extends Controller
 
 				if (empty($errors))
 				{
-					$_POST['avatar'] = $_FILES['avatar'];
-
 					if ($_POST['action'] == 'create_product_category')
 						$query = $this->model->create_product_category($_POST);
 					else if ($_POST['action'] == 'update_product_category')

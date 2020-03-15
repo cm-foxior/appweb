@@ -5,7 +5,7 @@ defined('_EXEC') or die;
 /**
 * @package valkyrie.libraries
 *
-* @summary Stock de funciones opcionales para validaciones.
+* @summary Stock de funciones para validaciones.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 01 de enero, 2019.
@@ -18,9 +18,10 @@ defined('_EXEC') or die;
 class Validations
 {
     /**
-    * @summary: Valida que la variable este establecida y no vacía.
+    * @summary: Valida que un valor este establecido y no vacío.
     *
     * @param string $data: Variable a validar.
+    * @param boolean $group: Identificador para saber si validará un grupo de variables al mismo tiempo.
     *
     * @return boolean
     */
@@ -49,41 +50,53 @@ class Validations
     }
 
     /**
-    * @summary: Valida que la variable no contenga espacios vacíos.
+    * @summary: Valida que una cadena de texto no contenga caracteres no permitidos.
     *
-    * @param string $data: Variable a validar.
-    * @param string $empty: Identificador si la variable puede regresar positivo si está vacía.
-    *
-    * @return boolean
-    */
-    public static function spaces($data, $empty = false)
-    {
-        $break = ($empty == true AND !isset($data) OR $empty == true AND empty($data)) ? true : false;
-        $check = ($break == true) ? true : ((count(explode(' ', $data)) <= 1) ? true : false);
-
-        return $check;
-    }
-
-    /**
-    * @summary: Valida que la variable no contenga caracteres especiales.
-    *
-    * @param string $data: Variable a validar.
-    * @param string $empty: Identificador si la variable puede regresar positivo si está vacía.
+    * @param string-array $option: (uppercase, lowercase, int, float) Tipo de opcion(es) permitidas.
+    * @param string $data: Cadena de texto a validar.
+    * @param string $empty: Identificador para saber si la cadena de texto está vacia, pueda regresar en positivo.
     *
     * @return boolean
     */
-    public static function special_characters($data, $empty = false)
+    public static function string($option, $data, $empty = false)
     {
         $break = ($empty == true AND !isset($data) OR $empty == true AND empty($data)) ? true : false;
         $check = true;
 
         if ($break == false)
         {
-            $string = ' ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789';
+            $filter = ' ';
+            $uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+            $lowercase = 'abcdefghijklmnñopqrstuvwxyz';
+            $int = '0123456789';
+            $float = '.';
+
+            if (is_array($option))
+            {
+                foreach ($option as $value)
+                {
+                    if ($value == 'uppercase')
+                        $filter .= $uppercase;
+                    else if ($value == 'lowercase')
+                        $filter .= $lowercase;
+                    else if ($value == 'int')
+                        $filter .= $int;
+                    else if ($value == 'float')
+                        $filter .= $float . $int;
+                }
+            }
+            else if ($option == 'uppercase')
+                $filter = $uppercase;
+            else if ($option == 'lowercase')
+                $filter = $lowercase;
+            else if ($option == 'int')
+                $filter = $int;
+            else if ($option == 'float')
+                $filter = $float . $int;
 
             for ($i = 0; $i < strlen($data); $i++)
             {
-                if (strpos($string, substr($data, $i, 1)) == false)
+                if (strpos($filter, substr($data, $i, 1)) == false)
                     $check = false;
             }
         }
@@ -92,10 +105,11 @@ class Validations
     }
 
     /**
-    * @summary: Valida que la variable sea un número entero o un número flotante.
+    * @summary: Valida que un número entero o flotante.
     *
-    * @param string $data: Variable a validar.
-    * @param string $empty: Identificador si la variable puede regresar positivo si está vacía.
+    * @param string $option: (int, float) Tipo de número.
+    * @param string $data: Número a validar.
+    * @param string $empty: Identificador para saber si la cadena de texto está vacia, pueda regresar en positivo.
     *
     * @return boolean
     */
@@ -125,10 +139,10 @@ class Validations
     }
 
     /**
-    * @summary: Valida que un correo electrónico este escrito correctamente.
+    * @summary: Valida que un correo electrónico sea correcto.
     *
-    * @param string $email: Correo electrónico a validar.
-    * @param string $empty: Identificador si la variable puede regresar positivo si está vacía.
+    * @param string $data: Correo electrónico a validar.
+    * @param string $empty: Identificador para saber si la cadena de texto está vacia, pueda regresar en positivo.
     *
     * @return boolean
     */

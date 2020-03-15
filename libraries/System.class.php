@@ -5,7 +5,7 @@ defined('_EXEC') or die;
 /**
 * @package valkyrie.libraries
 *
-* @summary Stock de funciones opcionales para acceder a la información de sistema en el dashboard general.
+* @summary Stock de funciones de sistema.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 01 de enero, 2019.
@@ -21,31 +21,31 @@ class System
     /**
     * @summary: Entrega una cadena de texto aleatoria.
     *
-    * @param string $length: (<numbers>) Número de caracteres en el retornará la cadena.
-    * @param string $letter: (uppercase, lowercase, allcase) Formato en el que retornará la cadena.
+    * @param string $option: (allcase, uppercase, lowercase) Formato en el que retornará la cadena de texto.
+    * @param int $length: Número de caracteres en que retornará la cadena de texto.
     *
     * @return string
     */
-    public static function random($length = 8, $lettercase = 'allcase')
+    public static function random_string($option = 'allcase', $length = 8)
     {
         $security = new Security;
 
-        if ($lettercase == 'uppercase')
-            return strtoupper($security->random_string($length));
-        else if ($lettercase == 'lowercase')
-            return strtolower($security->random_string($length));
-        else if ($lettercase == 'allcase')
+        if ($option == 'allcase')
             return $security->random_string($length);
+        else if ($option == 'uppercase')
+            return strtoupper($security->random_string($length));
+        else if ($option == 'lowercase')
+            return strtolower($security->random_string($length));
     }
 
     /**
-    * @summary: Entrega una cadena de texto encriptada bajo el estandar Vkye Password.
+    * @summary: Entrega una cadena de texto encriptada bajo el estandar Password de Valkyrie.
     *
-    * @param string $string: Cadena a encriptar.
+    * @param string $string: Cadena de texto a encriptar.
     *
     * @return string
     */
-    public static function encrypted($string)
+    public static function encrypted_string($string)
     {
         $security = new Security;
 
@@ -55,58 +55,58 @@ class System
     /**
     * @summary: Entrega una cadena de texto recortada.
     *
-    * @param string $string: Cadena a recortar.
-    * @param string $length: (<numbers>) Número de caracteres en el retornará la cadena.
+    * @param string $string: Cadena de texto a recortar.
+    * @param int $length: Número de caracteres en el retornará la cadena de texto.
     *
     * @return string
     */
-    public static function shortened($string, $length = '400')
+    public static function shortened_string($string, $length = 400)
 	{
 		return (strlen(strip_tags($string)) > $length) ? substr(strip_tags($string), 0, $length) . '...' : substr(strip_tags($string), 0, $length);
     }
 
     /**
-    * @summary: Entrega una cadena de limpia para colocar en una URL.
+    * @summary: Entrega una cadena de texto limpia para una URL.
     *
-    * @param string $string: Cadena a limpiar.
+    * @param string $string: Cadena de texto a limpiar.
     *
     * @return string
     */
     public static function cleaned_url($string)
 	{
-		return strtolower(str_replace(' ', '', $string));
+		return strtolower(str_replace(' ', '-', $string));
     }
 
     /**
-    * @summary: Entrega un array unidimensional/multimensional json decodificado hasta 2 niveles.
+    * @summary: Entrega un array json decodificados.
     *
-    * @param string-array $json: Array a decodificar.
+    * @param string-array $array: Array a decodificar.
     *
     * @return array
     */
-    public static function decoded_query_array($json)
+    public static function decoded_json_array($array)
     {
-        if (is_array($json))
+        if (is_array($array))
         {
-            foreach ($json as $key => $value)
+            foreach ($array as $key => $value)
             {
-                if (is_array($json[$key]))
+                if (is_array($array[$key]))
                 {
-                    foreach ($json[$key] as $subkey => $subvalue)
-                        $json[$key][$subkey] = (is_array(json_decode($json[$key][$subkey], true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($json[$key][$subkey], true) : $json[$key][$subkey];
+                    foreach ($array[$key] as $subkey => $subvalue)
+                        $array[$key][$subkey] = (is_array(json_decode($array[$key][$subkey], true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array[$key][$subkey], true) : $array[$key][$subkey];
                 }
                 else
-                    $json[$key] = (is_array(json_decode($json[$key], true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($json[$key], true) : $json[$key];
+                    $array[$key] = (is_array(json_decode($array[$key], true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array[$key], true) : $array[$key];
             }
 
-            return $json;
+            return $array;
         }
         else
-            return (is_array(json_decode($json, true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($json, true) : $json;
+            return (is_array(json_decode($array, true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array, true) : $array;
     }
 
     /**
-    * @summary Entrega los países traidos desde la base de datos.
+    * @summary Entrega los países desde la base de datos.
     *
     * @return array
     */
@@ -114,7 +114,7 @@ class System
     {
         $database = new Medoo();
 
-        return System::decoded_query_array($database->select('sys_countries', [
+        return System::decoded_json_array($database->select('system_countries', [
             'name',
             'code',
             'lada'
@@ -122,52 +122,34 @@ class System
     }
 
     /**
-    * @summary Entrega los emails.
+    * @summary Entrega la información de contacto.
     *
-    * @param string $key: Información a entregar.
+    * @param string $key: Opción a regresar en el primer nivel del array.
+    * @param string $subkey: Opción a regresar en el segundo nivel del array.
     *
     * @return string
     */
-    static public function emails($key)
+    static public function contact($key, $subkey, $lang = false)
     {
         $data = [
-            'contact' => [
-                'es' => 'contacto@codemonkey.com.mx',
-                'en' => 'contact@codemonkey.com.mx'
+            'emails' => [
+
             ],
-            'support' => [
-                'es' => 'soporte@codemonkey.com.mx',
-                'en' => 'support@codemonkey.com.mx'
+            'phones' => [
+
             ],
-            'billing' => [
-                'es' => 'facturación@codemonkey.com.mx',
-                'en' => 'billing@codemonkey.com.mx'
+            'social_media' => [
+
             ]
         ];
 
-        return $data[$key][Session::get_value('vkye_lang')];
-    }
-
-    /**
-    * @summary Entrega las redes sociales.
-    *
-    * @param string $key: Información a entregar.
-    *
-    * @return string
-    */
-    static public function social_media($key)
-    {
-        $data = [
-
-        ];
-
-        return $data[$key];
+        return ($lang == true) ? $data[$key][$subkey][Session::get_value('vkye_lang')] : $data[$key][$subkey];
     }
 
     /**
     * @summary Entrega la configuración SEO.
     *
-    * @param string $key: Información a entregar.
+    * @param string $key: Opción a regresar en el primer nivel del array.
     *
     * @return string
     */

@@ -3,7 +3,7 @@
 /**
 * @package valkyrie.js
 *
-* @summary Dashboard general.
+* @summary Funciones del dashboard.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 08 de marzo, 2020.
@@ -74,91 +74,23 @@ $(document).ready(function()
 });
 
 /**
-* @summary Busca una cadena de texto en una tabla.
-*
-* @var string data: Cadena de texto que se desea buscar.
-* @var HTML Object table: Tabla en la que se va a realizar la búsqueda.
-* @var string type: Estilo de la tabla
-*/
-function search_in_table(data, table, type)
-{
-    if (type == 'tbl-st-1')
-        var values = table.find(' > tbody > tr');
-    else if (type == 'tbl-st-3')
-        var values = table.find(' > div');
-    else if (type == 'cbx')
-        var values = table.find(' > label');
-
-    $.each(values, function(key, value)
-    {
-        var string_1 = data.toLowerCase();
-        var string_2 = value.innerHTML.toLowerCase();
-        var indexof = string_2.indexOf(string_1);
-
-        if (indexof >= 0)
-            value.className = '';
-        else
-            value.className = 'hidden';
-    });
-}
-
-/**
-* @summary Filtra una tabla de acuerdo a los paramentros enviados.
-*
-* @var HTML Object form: Formulario con los paramentros a filtrar.
-* @var HTML Object table: Tabla en la que se va a realizar el filtrado.
-* @var string type: Estilo de la tabla
-*/
-function filter_in_table(form, table, type)
-{
-    var data = new FormData(form[0]);
-
-    data.append('action', action)
-
-    $.ajax({
-        type: 'POST',
-        data: data,
-        contentType: false,
-        processData: false,
-        cache: false,
-        dataType: 'json',
-        success: function(response)
-        {
-            if (response.status == 'success')
-            {
-                if (type == 'tbl-st-1')
-                {
-                    table.find('tbody').html('');
-                    table.find('tbody').html(response.html);
-                }
-            }
-        }
-    });
-}
-
-/**
 * @summary Transforma el modal para trabaja en el CRUD.
 *
-* @var string type: Tipo de modal que se abrirá.
-* @var HTML Object modal:
-* @var function callback:
+* @var string option: (create, update) Tipo de modal que se abrirá.
+* @var HTML Object target: Modal donde se aplicará la transformación.
 */
-function transform_form_modal(type, modal)
+function transform_form_modal(option, target)
 {
-    if (type == 'create')
+    if (option == 'create')
     {
-        modal.find('form').find('button[type="submit"]').html('<i class="fas fa-plus"></i>');
-        modal.find('form').find('button[type="submit"]').removeClass('warning');
-        modal.find('form').find('button[type="submit"]').addClass('success');
+        target.find('form').find('button[type="submit"]').html('<i class="fas fa-plus"></i>');
+        target.find('form').find('button[type="submit"]').removeClass('warning');
+        target.find('form').find('button[type="submit"]').addClass('success');
     }
-    else if (type == 'update')
+    else if (option == 'update')
     {
-        modal.find('form').find('button[type="submit"]').html('<i class="fas fa-pen"></i>');
-        modal.find('form').find('button[type="submit"]').removeClass('success');
-        modal.find('form').find('button[type="submit"]').addClass('warning');
-    }
-    else if (type == 'delete')
-    {
-
+        target.find('form').find('button[type="submit"]').html('<i class="fas fa-pen"></i>');
+        target.find('form').find('button[type="submit"]').removeClass('success');
+        target.find('form').find('button[type="submit"]').addClass('warning');
     }
 }

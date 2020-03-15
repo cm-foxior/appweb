@@ -31,7 +31,7 @@ class Branches_controller extends Controller
 				if (Validations::empty([$_POST['country'],$_POST['address']], true) == false)
 					array_push($errors, ['address','{$lang.dont_leave_this_field_empty}']);
 
-				if (Validations::special_characters($_POST['fiscal_id'], true) == false)
+				if (Validations::string(['uppercase','int'], $_POST['fiscal_id'], true) == false)
 					array_push($errors, ['fiscal_id','{$lang.invalid_field}']);
 
 				if (Validations::empty([$_POST['fiscal_country'],$_POST['fiscal_address']], true) == false)

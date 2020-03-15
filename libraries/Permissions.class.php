@@ -5,7 +5,7 @@ defined('_EXEC') or die;
 /**
 * @package valkyrie.libraries
 *
-* @summary Stock de funciones para revisar los permisos de acceso a los módulos y funcionalidades del dashboard general.
+* @summary Stock de funciones para revisar los permisos de acceso a los módulos y funcionalidades de sistema.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 08 de marzo, 2020.
@@ -18,20 +18,21 @@ defined('_EXEC') or die;
 class Permissions
 {
     /**
-    * @summary Revisa los permisos de acceso de la url deseada deacuerdo a los permisos del usuario logueado ó de la cuenta en linea.
+    * @summary Valida los permisos de acceso de la url deseada deacuerdo a los permisos del usuario logueado ó de la cuenta en linea.
     *
-    * @param string $path: Url deseada.
+    * @param string $option: Tipo de permiso a validar.
+    * @param string $path: Url a validar.
     *
     * @return boolean
     */
-    static public function urls($path, $type)
+    static public function urls($option, $path)
     {
         $access = false;
         $paths = [];
 
         array_push($paths, '/Dashboard/index');
 
-        if ($type == 'account')
+        if ($option == 'account')
         {
             if (!empty(Session::get_value('vkye_account')))
             {
@@ -73,7 +74,7 @@ class Permissions
             $paths = array_values($paths);
             $access = in_array($path, $paths) ? true : false;
         }
-        else if ($type == 'user')
+        else if ($option == 'user')
         {
             if (Session::get_value('vkye_account')['type'] == 'business')
             {
@@ -209,17 +210,17 @@ class Permissions
     /**
     * @summary Revisa los permisos de acceso de la cuenta en linea.
     *
-    * @param array $permissions: Códigos de los permisos permitidos.
+    * @param array $data: Códigos de los permisos permitidos.
     *
     * @return boolean
     */
-    static public function account($permissions)
+    static public function account($data)
     {
         $access = false;
 
         if (!empty(Session::get_value('vkye_account')))
         {
-            foreach ($permissions as $value)
+            foreach ($data as $value)
             {
                 if (in_array($value, Session::get_value('vkye_account')['permissions']))
                     $access = true;
@@ -232,11 +233,12 @@ class Permissions
     /**
     * @summary Revisa los permisos de acceso del usuario logueado.
     *
-    * @param array $permissions: Códigos de los permisos permitidos.
+    * @param array $data: Códigos de los permisos permitidos.
+    * @param boolean $group: Identificador para saber si se van a validar un permiso único o un grupo de permisos.
     *
     * @return boolean
     */
-    static public function user($permissions, $module = false)
+    static public function user($data, $group = false)
     {
         $access = false;
 
@@ -244,9 +246,9 @@ class Permissions
         {
             if (Session::get_value('vkye_user')['permissions'] != 'all')
             {
-                foreach ($permissions as $value)
+                foreach ($data as $value)
                 {
-                    if ($module == true)
+                    if ($group == true)
                     {
                         foreach (Session::get_value('vkye_user')['permissions'] as $subvalue)
                         {

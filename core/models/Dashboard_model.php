@@ -11,7 +11,7 @@ class Dashboard_model extends Model
 
 	public function get_session($account)
 	{
-		$session['user'] = System::decoded_query_array($this->database->select('users', [
+		$session['user'] = System::decoded_json_array($this->database->select('users', [
 			'id',
 			'avatar',
 			'firstname',
@@ -26,7 +26,7 @@ class Dashboard_model extends Model
 
 		foreach ($session['user'][0]['accounts'] as $key => $value)
 		{
-			$value['account'] = System::decoded_query_array($this->database->select('accounts', [
+			$value['account'] = System::decoded_json_array($this->database->select('accounts', [
 				'id',
 				'avatar',
 				'name',
@@ -146,7 +146,7 @@ class Dashboard_model extends Model
 	// 				'avatar' => null,
 	// 				'name' => $value[0],
 	// 				'type' => $opt,
-	// 				'token' => strtoupper(System::random(8)),
+	// 				'token' => strtoupper(System::random_string('allcase', 8)),
 	// 				'price' => $value[1],
 	// 				'unity' => 1,
 	// 				'weight' => json_encode([
@@ -166,7 +166,7 @@ class Dashboard_model extends Model
 	// 				'avatar' => null,
 	// 				'name' => $value[0],
 	// 				'type' => $opt,
-	// 				'token' => strtoupper(System::random(8)),
+	// 				'token' => strtoupper(System::random_string('allcase', 8)),
 	// 				'price' => null,
 	// 				'unity' => 1,
 	// 				'weight' => json_encode([
@@ -186,7 +186,7 @@ class Dashboard_model extends Model
 	// 				'avatar' => null,
 	// 				'name' => $value[0],
 	// 				'type' => $opt,
-	// 				'token' => strtoupper(System::random(8)),
+	// 				'token' => strtoupper(System::random_string('allcase', 8)),
 	// 				'price' => null,
 	// 				'unity' => 1,
 	// 				'weight' => null,

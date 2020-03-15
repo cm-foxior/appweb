@@ -15,10 +15,10 @@ class Login_controller extends Controller
 		{
 			$errors = [];
 
-			if (!isset($_POST['email']) OR empty($_POST['email']))
+			if (Validations::empty($_POST['email']) == false)
 				array_push($errors, ['email','{$lang.dont_leave_this_field_empty}']);
 
-			if (!isset($_POST['password']) OR empty($_POST['password']))
+			if (Validations::empty($_POST['password']) == false)
 				array_push($errors, ['password','{$lang.dont_leave_this_field_empty}']);
 
 			if (empty($errors))

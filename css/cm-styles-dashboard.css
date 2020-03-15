@@ -2,7 +2,7 @@
 /**
 * @package valkyrie.css
 *
-* @summary Dashboard general.
+* @summary Estilos del dashboard.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 08 de febrero, 2020.
@@ -185,13 +185,17 @@ table.tbl-st-1 > tbody > tr:last-child {
 table.tbl-st-1 > tbody > tr > td {
     vertical-align: middle;
     margin-bottom: 20px;
-    padding: 10px 20px 10px 20px;
+    padding: 20px;
     box-sizing: border-box;
     font-size: 14px;
     font-weight: 400;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #212121;
+}
+
+table.tbl-st-1 > tbody > tr > td:first-child {
+    padding-left: 0px !important;
 }
 
 /* --- */
@@ -232,6 +236,7 @@ table.tbl-st-1 > tbody > tr > td.bigtag {
 
 table.tbl-st-1 > tbody > tr > td.smalltag > span,
 table.tbl-st-1 > tbody > tr > td.bigtag > span {
+    width: 100%;
     height: 30px;
     display: flex;
     align-items: center;
@@ -241,6 +246,11 @@ table.tbl-st-1 > tbody > tr > td.bigtag > span {
     background-color: #eee;
     font-size: 14px;
     color: #757575;
+}
+
+table.tbl-st-1 > tbody > tr > td.smalltag:first-child > span,
+table.tbl-st-1 > tbody > tr > td.bigtag:first-child > span {
+    margin-left: 0px !important;
 }
 
 table.tbl-st-1 > tbody > tr > td.smalltag > span {

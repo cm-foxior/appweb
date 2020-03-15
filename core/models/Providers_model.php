@@ -11,7 +11,7 @@ class Providers_model extends Model
 
 	public function read_providers()
 	{
-		$query = System::decoded_query_array($this->database->select('providers', [
+		$query = System::decoded_json_array($this->database->select('providers', [
 			'id',
 			'avatar',
 			'name',
@@ -29,7 +29,7 @@ class Providers_model extends Model
 
 	public function read_provider($id)
 	{
-		$query = System::decoded_query_array($this->database->select('providers', [
+		$query = System::decoded_json_array($this->database->select('providers', [
             'avatar',
 			'name',
 			'email',
