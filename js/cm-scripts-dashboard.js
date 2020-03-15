@@ -16,12 +16,6 @@
 $(document).ready(function()
 {
     /**
-    * @summary Ejecuta el Nav scroll down a la barra superior y a la barra del módulo.
-    */
-    nav_scroll_down('header.topbar', 'down', 0);
-    nav_scroll_down('header.modbar', 'down', 0);
-
-    /**
     * @summary Abre y cierra el menú derecho del dashboard.
     */
     $('[data-action="open_rightbar"]').on('click', function(e)
