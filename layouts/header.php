@@ -139,7 +139,7 @@
                     <li><a href="/products/workmaterials"><i class="fas fa-mail-bulk"></i>{$lang.work_materials}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
-                    <li><a href="/products/categories"><i class="fas fa-tags"></i>{$lang.categories}</a></li>
+                    <li><a href="/products/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['products_unities'], true) == true) : ?>
                     <li><a href="/products/unities"><i class="fas fa-balance-scale-left"></i>{$lang.unities}</a></li>
