@@ -1177,6 +1177,7 @@ fieldset.fields-group div.button {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10px;
 }
 
 fieldset.fields-group div.button > a,

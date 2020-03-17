@@ -134,7 +134,7 @@
                     <li><a href="/inventories/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['inventories_locations'], true) == true) : ?>
-                    <li><a href="/inventories/locations"><i class="fas fa-map-marker-alt"></i>{$lang.loactions}</a></li>
+                    <li><a href="/inventories/locations"><i class="fas fa-map-marker-alt"></i>{$lang.locations}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
                     <li><a href="/inventories/types"><i class="fas fa-bookmark"></i>{$lang.types}</a></li>
@@ -188,8 +188,8 @@
             <ul>
                 <li><h4>{$lang.my_user}</h4></li>
                 <li><a><i class="fas fa-user-circle"></i>{$lang.my_profile}</a></li>
-                <li><a><i class="fas fa-bell"></i>{$lang.my_notifications}</a></li>
                 <li><a><i class="fas fa-award"></i>{$lang.my_accounts}</a></li>
+                <li><a><i class="fas fa-bell"></i>{$lang.notifications}</a></li>
             </ul>
             <ul>
                 <li><a>{$lang.technical_support}</a></li>

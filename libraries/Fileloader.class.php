@@ -15,7 +15,7 @@ defined('_EXEC') or die;
 * @copyright Code Monkey <contacto@codemonkey.com.mx>
 */
 
-class Uploader
+class Fileloader
 {
     /**
     * @summary: Sube archivos al servidor.

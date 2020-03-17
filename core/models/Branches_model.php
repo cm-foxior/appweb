@@ -50,7 +50,7 @@ class Branches_model extends Model
 	{
 		$query = $this->database->insert('branches', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
+			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
 			'name' => $data['name'],
 			'token' => System::random_string('uppercase', 8),
 			'email' => !empty($data['email']) ? $data['email'] : null,
@@ -85,7 +85,7 @@ class Branches_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('branches', [
-    			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
+    			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
     			'name' => $data['name'],
     			'email' => !empty($data['email']) ? $data['email'] : null,
     			'phone' => json_encode([
@@ -105,7 +105,7 @@ class Branches_model extends Model
             ]);
 
             if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Uploader::down($edited[0]['avatar']);
+                Fileloader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -150,7 +150,7 @@ class Branches_model extends Model
             ]);
 
             if (!empty($query) AND !empty($deleted[0]['avatar']))
-                Uploader::down($deleted[0]['avatar']);
+                Fileloader::down($deleted[0]['avatar']);
         }
 
         return $query;

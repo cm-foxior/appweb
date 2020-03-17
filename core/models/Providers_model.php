@@ -48,7 +48,7 @@ class Providers_model extends Model
 	{
 		$query = $this->database->insert('providers', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
+			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
 			'name' => $data['name'],
 			'email' => !empty($data['email']) ? $data['email'] : null,
 			'phone' => json_encode([
@@ -82,7 +82,7 @@ class Providers_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('providers', [
-    			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
+    			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
     			'name' => $data['name'],
     			'email' => !empty($data['email']) ? $data['email'] : null,
     			'phone' => json_encode([
@@ -102,7 +102,7 @@ class Providers_model extends Model
             ]);
 
             if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Uploader::down($edited[0]['avatar']);
+                Fileloader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -147,7 +147,7 @@ class Providers_model extends Model
             ]);
 
             if (!empty($query) AND !empty($deleted[0]['avatar']))
-                Uploader::down($deleted[0]['avatar']);
+                Fileloader::down($deleted[0]['avatar']);
         }
 
         return $query;

@@ -64,9 +64,6 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
 <?php if (Permissions::user(['create_branches','update_branches']) == true) : ?>
 <section class="modal" data-modal="create_branch">
     <div class="content">
-        <header>
-            <a button-close><i class="fas fa-times"></i></a>
-        </header>
         <main>
             <form>
                 <fieldset class="fields-group">
@@ -79,13 +76,17 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <div class="text">
-                        <input type="text" name="name" placeholder="{$lang.name}">
-                    </div>
-                </fieldset>
-                <fieldset class="fields-group">
-                    <div class="text">
-                        <input type="text" name="token" placeholder="{$lang.token_generate_auto}" disabled>
+                    <div class="row">
+                        <div class="span8">
+                            <div class="text">
+                                <input type="text" name="name" placeholder="{$lang.name}">
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="text">
+                                <input type="text" name="token" placeholder="{$lang.token_auto}" disabled>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
@@ -144,12 +145,14 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                         <input type="text" name="fiscal_address" placeholder="{$lang.fiscal_address}">
                     </div>
                 </fieldset>
+                <fieldset class="fields-group">
+                    <div class="button">
+                        <button type="submit" class="success"<i class="fas fa-plus"></i></button>
+                        <a class="alert" button-close><i class="fas fa-times"></i></a>
+                    </div>
+                </fieldset>
             </form>
         </main>
-        <footer>
-            <a class="success" button-success><i class="fas fa-plus"></i></a>
-            <a class="alert" button-close><i class="fas fa-times"></i></a>
-        </footer>
     </div>
 </section>
 <?php endif; ?>
