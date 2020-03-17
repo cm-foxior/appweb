@@ -59,11 +59,9 @@
             <li><a href="/dashboard"><i class="fas fa-home"></i><span>{$lang.dashboard}</span></a></li>
         </ul>
         <?php if (!empty(Session::get_value('vkye_account'))) : ?>
-            <?php if (Permissions::account(['inventories','sales']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-search"></i><span>{$lang.search}</span></a></li>
             </ul>
-            <?php endif; ?>
             <?php if (Permissions::account(['accounting']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-calculator"></i><span>{$lang.accounting}</span></a></li>
@@ -129,6 +127,20 @@
         </div>
         <nav>
             <?php if (!empty(Session::get_value('vkye_account'))) : ?>
+                <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['inventories_categories','inventories_locations','inventories_types'], true) == true) : ?>
+                <ul>
+                    <li><h4>{$lang.inventories}</h4></li>
+                    <?php if (Permissions::user(['inventories_categories'], true) == true) : ?>
+                    <li><a href="/inventories/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['inventories_locations'], true) == true) : ?>
+                    <li><a href="/inventories/locations"><i class="fas fa-map-marker-alt"></i>{$lang.loactions}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
+                    <li><a href="/inventories/types"><i class="fas fa-bookmark"></i>{$lang.types}</a></li>
+                    <?php endif; ?>
+                </ul>
+                <?php endif; ?>
                 <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['products','products_categories','products_unities','products_barcodes'], true) == true) : ?>
                 <ul>
                     <li><h4>{$lang.products}</h4></li>

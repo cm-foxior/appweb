@@ -49,6 +49,10 @@ class Permissions
                                 break;
 
                             case 'inventories' :
+                                array_push($paths, '/Inventories/index');
+                                array_push($paths, '/Inventories/categories');
+                                array_push($paths, '/Inventories/locations');
+                                array_push($paths, '/Inventories/types');
                                 array_push($paths, '/Branches/index');
                                 array_push($paths, '/Providers/index');
                                 array_push($paths, '/Products/index');
@@ -84,6 +88,78 @@ class Permissions
                     {
                         switch ($value)
                         {
+                            case 'input_inventories' :
+                                array_push($paths, '/Inventories/index');
+                                break;
+
+                            case 'output_inventories' :
+                                array_push($paths, '/Inventories/index');
+                                break;
+
+                            case 'transfer_inventories' :
+                                array_push($paths, '/Inventories/index');
+                                break;
+
+                            case 'create_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'update_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'block_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'unblock_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'delete_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'create_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'update_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'block_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'unblock_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'delete_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'create_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'update_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'block_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'unblock_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'delete_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
                             case 'create_branches' :
                                 array_push($paths, '/Branches/index');
                                 break;
@@ -281,6 +357,11 @@ class Permissions
     */
     static public function redirection()
     {
-        return '/dashboard';
+        if (empty(Session::get_value('vkye_user')['accounts']))
+            return '/accounts';
+        else if (Session::get_value('vkye_account')['status'] == false)
+            return '/account/payment';
+        else
+            return '/dashboard';
     }
 }
