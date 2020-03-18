@@ -82,6 +82,8 @@ function search_in_table(data, target, style, type)
             else if (result <= 0)
                 value.className = 'hidden';
         }
+        else if (data.length <= 0 && type == 'normal')
+            value.className = '';
         else if (data.length <= 0 && type == 'hidden')
             value.className = 'hidden';
     });

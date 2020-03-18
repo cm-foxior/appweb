@@ -2,22 +2,17 @@
 
 $(document).ready(function()
 {
-    $('[data-search="inventories_types"]').on('keyup', function()
+    $('[data-search="inventories_locations"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="inventories_types"]').find(' > tbody > tr'));
+        search_in_table($(this).val(), $('[data-table="inventories_locations"]').find(' > tbody > tr'));
     });
 
-    $('[data-search="inventories_types"]').on('change', function()
-    {
-        search_in_table($(this).val(), $('[data-table="inventories_types"]').find(' > tbody > tr'));
-    });
-
-    var create_action = 'create_inventory_type';
-    var read_action = 'read_inventory_type';
-    var update_action = 'update_inventory_type';
-    var block_action = 'block_inventory_type';
-    var unblock_action = 'unblock_inventory_type';
-    var delete_action = 'delete_inventory_type';
+    var create_action = 'create_inventory_location';
+    var read_action = 'read_inventory_location';
+    var update_action = 'update_inventory_location';
+    var block_action = 'block_inventory_location';
+    var unblock_action = 'unblock_inventory_location';
+    var delete_action = 'delete_inventory_location';
 
     $(document).on('click', '[data-action="' + create_action + '"]', function()
     {
@@ -39,7 +34,6 @@ $(document).ready(function()
             action = update_action;
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="movement"]').val(data.movement);
         });
     });
 

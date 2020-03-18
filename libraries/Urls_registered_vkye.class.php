@@ -25,25 +25,17 @@ class Urls_registered_vkye
                 'controller' => 'Inventories',
                 'method' => 'index'
             ],
-            '/inventories/categories' => [
+            '/inventories/types' => [
                 'controller' => 'Inventories',
-                'method' => 'categories'
+                'method' => 'types'
             ],
             '/inventories/locations' => [
                 'controller' => 'Inventories',
                 'method' => 'locations'
             ],
-            '/inventories/types' => [
+            '/inventories/categories' => [
                 'controller' => 'Inventories',
-                'method' => 'types'
-            ],
-            '/branches' => [
-                'controller' => 'Branches',
-                'method' => 'index'
-            ],
-            '/providers' => [
-                'controller' => 'Providers',
-                'method' => 'index'
+                'method' => 'categories'
             ],
             '/products/%param%' => [
                 'controller' => 'Products',
@@ -60,6 +52,14 @@ class Urls_registered_vkye
             '/products/barcodes' => [
                 'controller' => 'Products',
                 'method' => 'barcodes'
+            ],
+            '/providers' => [
+                'controller' => 'Providers',
+                'method' => 'index'
+            ],
+            '/branches' => [
+                'controller' => 'Branches',
+                'method' => 'index'
             ]
         ];
     }
