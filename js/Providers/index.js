@@ -4,17 +4,17 @@ $(document).ready(function()
 {
     $('[data-search="providers"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="providers"]'), 'tbl-st-3');
+        search_in_table($(this).val(), $('[data-table="providers"]').find(' > div'));
     });
 
     $('[name="phone_number"]').on('keyup', function()
     {
-        check_type_input('number', $(this).val(), $(this));
+        validate_string('int', $(this).val(), $(this));
     });
 
     $('[name="fiscal_id"]').on('keyup', function()
     {
-        check_type_input('uppercase_number', $(this).val().toUpperCase(), $(this));
+        validate_string(['uppercase','int'], $(this).val().toUpperCase(), $(this));
     });
 
     var create_action = 'create_provider';

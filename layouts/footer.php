@@ -13,7 +13,7 @@
                 <main>
                     <i class="fas fa-exclamation-triangle"></i>
                     <p></p>
-                    <div class="button">
+                    <div>
                         <a button-close><i class="fas fa-check"></i></a>
                     </div>
                 </main>

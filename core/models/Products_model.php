@@ -17,7 +17,7 @@ class Products_model extends Model
 		if ($cbx == true)
 			$and['blocked'] = false;
 
-		$query = System::decoded_query_array($this->database->select('products', [
+		$query = System::decoded_json_array($this->database->select('products', [
 			'id',
 			'avatar',
 			'name',
@@ -36,7 +36,7 @@ class Products_model extends Model
 
 	public function read_product($id)
 	{
-		$query = System::decoded_query_array($this->database->select('products', [
+		$query = System::decoded_json_array($this->database->select('products', [
 			'avatar',
 			'name',
 			'type',
@@ -59,7 +59,7 @@ class Products_model extends Model
 	{
 		$query = $this->database->insert('products', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Uploader::up($data['avatar']) : null,
+			'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : null,
 			'name' => $data['name'],
 			'type' => $data['type'],
 			'token' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
@@ -69,8 +69,8 @@ class Products_model extends Model
 				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
 				'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
 			]) : null,
+			'supplies' => ($data['type'] == 'sale' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 			'recipes' => ($data['type'] == 'sale') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
-			'supplies' => ($data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 			'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
 			'blocked' => false
 		]);
@@ -91,9 +91,8 @@ class Products_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('products', [
-				'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Uploader::up($data['avatar']) : $edited[0]['avatar'],
+				'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : $edited[0]['avatar'],
 				'name' => $data['name'],
-				'type' => $data['type'],
 				'token' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
 				'price' => ($data['type'] == 'sale') ? $data['price'] : null,
 				'unity' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
@@ -101,15 +100,15 @@ class Products_model extends Model
 					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
 					'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
 				]) : null,
+				'supplies' => ($data['type'] == 'sale' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 				'recipes' => ($data['type'] == 'sale') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
-				'supplies' => ($data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 				'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : []))
             ], [
                 'id' => $data['id']
             ]);
 
             if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Uploader::down($edited[0]['avatar']);
+                Fileloader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -154,7 +153,7 @@ class Products_model extends Model
             ]);
 
             if (!empty($query) AND !empty($deleted[0]['avatar']))
-                Uploader::down($deleted[0]['avatar']);
+                Fileloader::down($deleted[0]['avatar']);
         }
 
         return $query;
@@ -179,7 +178,6 @@ class Products_model extends Model
 
 		$query = $this->database->select('products_categories', [
 			'id',
-			'avatar',
 			'name',
 			'level',
 			'blocked'
@@ -206,7 +204,6 @@ class Products_model extends Model
 	public function read_product_category($id)
 	{
 		$query = $this->database->select('products_categories', [
-			'avatar',
 			'name',
 			'level'
 		], [
@@ -238,7 +235,6 @@ class Products_model extends Model
 	{
 		$query = $this->database->insert('products_categories', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : null,
 			'name' => $data['name'],
 			'level' => $data['level'],
 			'blocked' => false
@@ -249,27 +245,12 @@ class Products_model extends Model
 
 	public function update_product_category($data)
 	{
-		$query = null;
-
-        $edited = $this->database->select('products_categories', [
-            'avatar'
-        ], [
-            'id' => $data['id']
-        ]);
-
-        if (!empty($edited))
-        {
-            $query = $this->database->update('products_categories', [
-				'avatar' => !empty($data['avatar']['name']) ? Uploader::up($data['avatar']) : $edited[0]['avatar'],
-				'name' => $data['name'],
-				'level' => $data['level']
-            ], [
-                'id' => $data['id']
-            ]);
-
-            if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Uploader::down($edited[0]['avatar']);
-        }
+		$query = $this->database->update('products_categories', [
+			'name' => $data['name'],
+			'level' => $data['level']
+		], [
+			'id' => $data['id']
+		]);
 
         return $query;
 	}
@@ -298,30 +279,16 @@ class Products_model extends Model
 
 	public function delete_product_category($id)
     {
-        $query = null;
-
-        $deleted = $this->database->select('products_categories', [
-            'avatar'
-        ], [
-            'id' => $id
-        ]);
-
-        if (!empty($deleted))
-        {
-            $query = $this->database->delete('products_categories', [
-                'id' => $id
-            ]);
-
-            if (!empty($query) AND !empty($deleted[0]['avatar']))
-                Uploader::down($deleted[0]['avatar']);
-        }
+		$query = $this->database->delete('products_categories', [
+			'id' => $id
+		]);
 
         return $query;
     }
 
-	public function read_products_unities($slct = false)
+	public function read_products_unities($slt = false)
 	{
-		if ($slct == true)
+		if ($slt == true)
 		{
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],

@@ -5,7 +5,7 @@ defined('_EXEC') or die;
 /**
 * @package valkyrie.libraries
 *
-* @summary Stock de funciones opcionales para fechas y horas.
+* @summary Stock de funciones para fechas y horas.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 01 de enero, 2019.

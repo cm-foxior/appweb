@@ -26,9 +26,9 @@ class Route_vkye
 
         if (Session::exists_var('session') == true AND in_array($this->path, $paths))
             header('Location: ' . Permissions::redirection());
-        else if (Session::exists_var('session') == true AND Permissions::urls($this->path, 'account') == false)
+        else if (Session::exists_var('session') == true AND Permissions::urls('account', $this->path) == false)
             header('Location: ' . Permissions::redirection());
-        else if (Session::exists_var('session') == true AND Permissions::urls($this->path, 'user') == false)
+        else if (Session::exists_var('session') == true AND Permissions::urls('user', $this->path) == false)
             header('Location: ' . Permissions::redirection());
         else if (Session::exists_var('session') == false AND !in_array($this->path, $paths))
             header('Location: /login');

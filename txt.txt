@@ -26,3 +26,71 @@
         <?php endforeach; ?>
     </div>
 </main>
+
+// public function xlsx($opt)
+// {
+// 	$components = new Components;
+// 	$components->load_component('simplexlsx');
+//     $xlsx = new SimpleXLSX(PATH_UPLOADS . 'imports.xlsx');
+//
+//     foreach ($xlsx->rows() as $value)
+//     {
+// 		if ($opt == 'sale')
+// 		{
+// 			$this->database->insert('products', [
+// 				'account' => Session::get_value('vkye_account')['id'],
+// 				'avatar' => null,
+// 				'name' => $value[0],
+// 				'type' => $opt,
+// 				'token' => strtoupper(System::random_string('allcase', 8)),
+// 				'price' => $value[1],
+// 				'unity' => 1,
+// 				'weight' => json_encode([
+// 					'empty' => '',
+// 					'full' => ''
+// 				]),
+// 				'recipes' => json_encode([]),
+// 				'supplies' => null,
+// 				'categories' => json_encode([$value[2],$value[3]]),
+// 				'blocked' => false
+// 			]);
+// 		}
+// 		else if ($opt == 'supply')
+// 		{
+// 			$this->database->insert('products', [
+// 				'account' => Session::get_value('vkye_account')['id'],
+// 				'avatar' => null,
+// 				'name' => $value[0],
+// 				'type' => $opt,
+// 				'token' => strtoupper(System::random_string('allcase', 8)),
+// 				'price' => null,
+// 				'unity' => 1,
+// 				'weight' => json_encode([
+// 					'empty' => '',
+// 					'full' => ''
+// 				]),
+// 				'recipes' => null,
+// 				'supplies' => null,
+// 				'categories' => json_encode([$value[1],$value[2]]),
+// 				'blocked' => false
+// 			]);
+// 		}
+// 		else if ($opt == 'work_material')
+// 		{
+// 			$this->database->insert('products', [
+// 				'account' => Session::get_value('vkye_account')['id'],
+// 				'avatar' => null,
+// 				'name' => $value[0],
+// 				'type' => $opt,
+// 				'token' => strtoupper(System::random_string('allcase', 8)),
+// 				'price' => null,
+// 				'unity' => 1,
+// 				'weight' => null,
+// 				'recipes' => null,
+// 				'supplies' => null,
+// 				'categories' => json_encode([$value[1]]),
+// 				'blocked' => false
+// 			]);
+// 		}
+//     }
+// }

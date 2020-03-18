@@ -4,17 +4,17 @@ $(document).ready(function()
 {
     $('[data-search="products_categories"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="products_categories"]'), 'tbl-st-1');
+        search_in_table($(this).val(), $('[data-table="products_categories"]').find(' > tbody > tr'));
     });
 
     $('[data-search="products_categories"]').on('change', function()
     {
-        search_in_table($(this).val(), $('[data-table="products_categories"]'), 'tbl-st-1');
+        search_in_table($(this).val(), $('[data-table="products_categories"]').find(' > tbody > tr'));
     });
 
     $('[name="level"]').on('keyup', function()
     {
-        check_type_input('number', $(this).val(), $(this));
+        validate_string('int', $(this).val(), $(this));
     });
 
     var create_action = 'create_product_category';
@@ -43,7 +43,6 @@ $(document).ready(function()
         {
             action = update_action;
 
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((data.avatar != null) ? '../uploads/' + data.avatar : '../images/empty.png'));
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
             $('[data-modal="' + create_action + '"]').find('form').find('[name="level"]').val(data.level);
         });

@@ -21,6 +21,22 @@ class Urls_registered_vkye
                 'controller' => 'Dashboard',
                 'method' => 'index'
             ],
+            '/inventories' => [
+                'controller' => 'Inventories',
+                'method' => 'index'
+            ],
+            '/inventories/categories' => [
+                'controller' => 'Inventories',
+                'method' => 'categories'
+            ],
+            '/inventories/locations' => [
+                'controller' => 'Inventories',
+                'method' => 'locations'
+            ],
+            '/inventories/types' => [
+                'controller' => 'Inventories',
+                'method' => 'types'
+            ],
             '/branches' => [
                 'controller' => 'Branches',
                 'method' => 'index'

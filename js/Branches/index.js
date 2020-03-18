@@ -4,17 +4,17 @@ $(document).ready(function()
 {
     $('[data-search="branches"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="branches"]'), 'tbl-st-3');
+        search_in_table($(this).val(), $('[data-table="branches"]').find(' > div'));
     });
 
     $('[name="phone_number"]').on('keyup', function()
     {
-        check_type_input('number', $(this).val(), $(this));
+        validate_string('int', $(this).val(), $(this));
     });
 
     $('[name="fiscal_id"]').on('keyup', function()
     {
-        check_type_input('uppercase_number', $(this).val().toUpperCase(), $(this));
+        validate_string(['uppercase','int'], $(this).val().toUpperCase(), $(this));
     });
 
     var create_action = 'create_branch';

@@ -12,15 +12,16 @@
         </figure>
         <div>
             <?php if (Session::get_value('vkye_account')['status'] == true) : ?>
-            <span class="online"><i class="fas fa-circle"></i><?php echo Session::get_value('vkye_account')['name']; ?></span>
+            <h4 class="online">
+            <?php else : ?>
+            <h4 class="offline">
+            <?php endif; ?>
+                <i class="fas fa-circle"></i><?php echo Session::get_value('vkye_account')['name']; ?>
+            </h4>
             <?php if (Session::get_value('vkye_account')['type'] == 'business') : ?>
             <span>{$lang.business}</span>
             <?php elseif (Session::get_value('vkye_account')['type'] == 'personal') : ?>
             <span>{$lang.personal}</span>
-            <?php endif; ?>
-            <?php else : ?>
-            <span class="offline"><i class="fas fa-circle"></i><?php echo Session::get_value('vkye_account')['name']; ?></span>
-            <span>{$lang.suspended}</span>
             <?php endif; ?>
         </div>
     </div>
@@ -32,7 +33,7 @@
     </nav>
     <div class="user">
         <div>
-            <span><?php echo Session::get_value('vkye_user')['firstname'] . ' ' . Session::get_value('vkye_user')['lastname']; ?><i class="fas fa-circle"></i></span>
+            <h4><?php echo Session::get_value('vkye_user')['firstname'] . ' ' . Session::get_value('vkye_user')['lastname']; ?><i class="fas fa-circle"></i></h4>
             <span><?php echo Session::get_value('vkye_user')['email']; ?></span>
         </div>
         <figure>
@@ -45,159 +46,151 @@
     </div>
     <nav>
         <ul>
-            <li><a><i class="fas fa-star"></i><span>{$lang.last_updates}</span></a></li>
-            <li><a><i class="fas fa-bell"></i><span>{$lang.last_notifications}</span></a></li>
-            <li><a><i class="fas fa-user-circle"></i><span>{$lang.my_profile}</span></a></li>
+            <li><a><i class="fas fa-rocket"></i></a></li>
+            <li><a><i class="fas fa-meteor"></i></a></li>
+            <li><a><i class="fas fa-user-astronaut"></i></a></li>
+            <li><a><i class="fas fa-bell"></i></a></li>
         </ul>
     </nav>
 </header>
 <header class="leftbar">
     <nav>
         <ul>
-            <li><a><i class="fas fa-user-astronaut"></i></a></li>
-            <li><a href="/dashboard"><i class="fas fa-igloo"></i><span>{$lang.dashboard}</span></a></li>
+            <li><a href="/dashboard"><i class="fas fa-home"></i><span>{$lang.dashboard}</span></a></li>
         </ul>
+        <?php if (!empty(Session::get_value('vkye_account'))) : ?>
+            <ul>
+                <li><a><i class="fas fa-search"></i><span>{$lang.search}</span></a></li>
+            </ul>
+            <?php if (Permissions::account(['accounting']) == true) : ?>
+            <ul>
+                <li><a><i class="fas fa-calculator"></i><span>{$lang.accounting}</span></a></li>
+            </ul>
+            <?php endif; ?>
+            <?php if (Permissions::account(['billing']) == true) : ?>
+            <ul>
+                <li><a><i class="fas fa-file-invoice"></i><span>{$lang.electronic_billing}</span></a></li>
+            </ul>
+            <?php endif; ?>
+            <?php if (Permissions::account(['inventories']) == true) : ?>
+            <ul>
+                <li><a href="/inventories"><i class="fas fa-box-open"></i><span>{$lang.inventories}</span></a></li>
+            </ul>
+            <?php endif; ?>
+            <?php if (Permissions::account(['sales']) == true) : ?>
+            <ul>
+                <li><a><i class="fas fa-cash-register"></i><span>{$lang.selling_point}</span></a></li>
+            </ul>
+            <?php endif; ?>
+            <?php if (Permissions::account(['ecommerce']) == true) : ?>
+            <ul>
+                <li><a><i class="fas fa-laptop"></i><span>{$lang.online_shop}</span></a></li>
+            </ul>
+            <?php endif; ?>
+        <?php endif; ?>
     </nav>
-    <?php if (!empty(Session::get_value('vkye_account'))) : ?>
-    <?php if (Permissions::account(['inventories','sales']) == true) : ?>
-    <nav>
-        <ul>
-            <li><a><i class="fas fa-search"></i><span>{$lang.search}</span></a></li>
-        </ul>
-    </nav>
-    <?php endif; ?>
-    <?php if (Permissions::account(['accounting']) == true) : ?>
-    <nav>
-        <ul>
-            <li><a><i class="fas fa-calculator"></i><span>{$lang.accounting}</span></a></li>
-        </ul>
-    </nav>
-    <?php endif; ?>
-    <?php if (Permissions::account(['billing']) == true) : ?>
-    <nav>
-        <ul>
-            <li><a><i class="fas fa-file-invoice"></i><span>{$lang.electronic_billing}</span></a></li>
-        </ul>
-    </nav>
-    <?php endif; ?>
-    <?php if (Permissions::account(['inventories']) == true) : ?>
-    <nav>
-        <ul>
-            <li><a href="/inventories"><i class="fas fa-box-open"></i><span>{$lang.inventories}</span></a></li>
-        </ul>
-    </nav>
-    <?php endif; ?>
-    <?php if (Permissions::account(['sales']) == true) : ?>
-    <nav>
-        <ul>
-            <li><a><i class="fas fa-cash-register"></i><span>{$lang.selling_point}</span></a></li>
-        </ul>
-    </nav>
-    <?php endif; ?>
-    <?php if (Permissions::account(['ecommerce']) == true) : ?>
-    <nav>
-        <ul>
-            <li><a><i class="fas fa-laptop"></i><span>{$lang.online_shop}</span></a></li>
-        </ul>
-    </nav>
-    <?php endif; ?>
-    <?php endif; ?>
 </header>
 <header class="rightbar">
     <div>
         <div class="accounts">
             <?php if (!empty(Session::get_value('vkye_user')['accounts'])) : ?>
-            <?php foreach (Session::get_value('vkye_user')['accounts'] as $key => $value) : ?>
-            <div class="item">
-                <figure>
-                    <?php if (!empty($value['avatar'])) : ?>
-                    <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
-                    <?php else : ?>
-                    <img src="{$path.images}account.png">
-                    <?php endif; ?>
-                </figure>
-                <div>
-                    <span><?php echo $value['name']; ?></span>
-                    <?php if ($value['status'] == true) : ?>
-                    <?php if (Session::get_value('vkye_account')['id'] == $value['id']) : ?>
-                    <span class="online"><i class="fas fa-circle"></i>{$lang.online}</span>
-                    <?php else : ?>
-                    <span class="offline"><i class="fas fa-circle"></i>{$lang.offline}</span>
-                    <?php endif; ?>
-                    <?php else : ?>
-                    <span class="suspended"><i class="fas fa-circle"></i>{$lang.suspended}</span>
-                    <?php endif; ?>
+                <?php foreach (Session::get_value('vkye_user')['accounts'] as $key => $value) : ?>
+                <div class="item">
+                    <figure>
+                        <?php if (!empty($value['avatar'])) : ?>
+                        <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
+                        <?php else : ?>
+                        <img src="{$path.images}account.png">
+                        <?php endif; ?>
+                    </figure>
+                    <div>
+                        <h4><?php echo $value['name']; ?></h4>
+                        <?php if ($value['status'] == true) : ?>
+                            <?php if (Session::get_value('vkye_account')['id'] == $value['id']) : ?>
+                            <span class="online"><i class="fas fa-circle"></i>{$lang.online}</span>
+                            <?php else : ?>
+                            <span class="onhold"><i class="fas fa-circle"></i>{$lang.onhold}</span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                        <span class="offline"><i class="fas fa-circle"></i>{$lang.offline}</span>
+                        <?php endif; ?>
+                    </div>
+                    <a data-action="switch_account" data-id="<?php echo $value['id']; ?>"></a>
                 </div>
-                <a data-action="switch_account" data-id="<?php echo $value['id']; ?>"></a>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
             <?php else : ?>
             <div class="empty">
                 <i class="far fa-sad-tear"></i>
-                <p>{$lang.sorry_not_been_invited_account}</p>
+                <p>{$lang.not_accounts}</p>
             </div>
             <?php endif; ?>
         </div>
-        <?php if (!empty(Session::get_value('vkye_account'))) : ?>
-        <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['products','products_categories','products_barcodes','providers'], true) == true) : ?>
         <nav>
-            <span>{$lang.products}</span>
+            <?php if (!empty(Session::get_value('vkye_account'))) : ?>
+                <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['inventories_categories','inventories_locations','inventories_types'], true) == true) : ?>
+                <ul>
+                    <li><h4>{$lang.inventories}</h4></li>
+                    <?php if (Permissions::user(['inventories_categories'], true) == true) : ?>
+                    <li><a href="/inventories/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['inventories_locations'], true) == true) : ?>
+                    <li><a href="/inventories/locations"><i class="fas fa-map-marker-alt"></i>{$lang.locations}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
+                    <li><a href="/inventories/types"><i class="fas fa-bookmark"></i>{$lang.types}</a></li>
+                    <?php endif; ?>
+                </ul>
+                <?php endif; ?>
+                <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['products','products_categories','products_unities','products_barcodes'], true) == true) : ?>
+                <ul>
+                    <li><h4>{$lang.products}</h4></li>
+                    <?php if (Permissions::user(['products'], true) == true) : ?>
+                    <li><a href="/products/salemenu"><i class="fas fa-dollar-sign"></i>{$lang.sale_menu}</a></li>
+                    <li><a href="/products/supplies"><i class="fas fa-layer-group"></i>{$lang.supplies}</a></li>
+                    <li><a href="/products/recipes"><i class="fas fa-receipt"></i>{$lang.recipes}</a></li>
+                    <li><a href="/products/workmaterials"><i class="fas fa-mail-bulk"></i>{$lang.work_materials}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['products_categories'], true) == true) : ?>
+                    <li><a href="/products/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['products_unities'], true) == true) : ?>
+                    <li><a href="/products/unities"><i class="fas fa-balance-scale-left"></i>{$lang.unities}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['products_barcodes'], true) == true) : ?>
+                    <li><a href="/products/barcodes"><i class="fas fa-barcode"></i>{$lang.barcodes}</a></li>
+                    <?php endif; ?>
+                </ul>
+                <?php endif; ?>
+                <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['providers','branches'], true) == true) : ?>
+                <ul>
+                    <li><h4>{$lang.administration}</h4></li>
+                    <?php if (Permissions::user(['providers'], true) == true) : ?>
+                    <li><a href="/providers"><i class="fas fa-truck"></i>{$lang.providers}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['branches'], true) == true) : ?>
+                    <li><a href="/branches"><i class="fas fa-store"></i>{$lang.branches}</a></li>
+                    <?php endif; ?>
+                </ul>
+                <?php endif; ?>
+                <?php if (Permissions::user(['account'], true) == true) : ?>
+                <ul>
+                    <li><h4>{$lang.online_account}</h4></li>
+                    <?php if (Permissions::user(['update_account'])) : ?>
+                    <li><a><i class="fas fa-user-circle"></i>{$lang.profile}</a></li>
+                    <li><a><i class="fas fa-cog"></i>{$lang.settings}</a></li>
+                    <?php endif; ?>
+                    <?php if (Permissions::user(['payment_account'])) : ?>
+                    <li><a><i class="fas fa-parachute-box"></i>{$lang.payment_center}</a></li>
+                    <?php endif; ?>
+                </ul>
+                <?php endif; ?>
+            <?php endif; ?>
             <ul>
-                <?php if (Permissions::user(['products'], true) == true) : ?>
-                <li><a href="/products/menu"><i class="fas fa-dollar-sign"></i>{$lang.menu}</a></li>
-                <li><a href="/products/supplies"><i class="fas fa-layer-group"></i>{$lang.supplies}</a></li>
-                <li><a href="/products/recipes"><i class="fas fa-receipt"></i>{$lang.recipes}</a></li>
-                <li><a href="/products/workmaterials"><i class="fas fa-mail-bulk"></i>{$lang.work_materials}</a></li>
-                <?php endif; ?>
-                <?php if (Permissions::user(['products_categories'], true) == true) : ?>
-                <li><a href="/products/categories"><i class="fas fa-tags"></i>{$lang.categories}</a></li>
-                <?php endif; ?>
-                <?php if (Permissions::user(['products_unities'], true) == true) : ?>
-                <li><a href="/products/unities"><i class="fas fa-balance-scale-left"></i>{$lang.unities}</a></li>
-                <?php endif; ?>
-                <?php if (Permissions::user(['products_barcodes'], true) == true) : ?>
-                <li><a href="/products/barcodes"><i class="fas fa-barcode"></i>{$lang.barcodes}</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-        <?php endif; ?>
-        <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['branches'], true) == true) : ?>
-        <nav>
-            <span>{$lang.administration}</span>
-            <ul>
-                <?php if (Permissions::user(['providers'], true) == true) : ?>
-                <li><a href="/providers"><i class="fas fa-truck"></i>{$lang.providers}</a></li>
-                <?php endif; ?>
-                <?php if (Permissions::user(['branches'], true) == true) : ?>
-                <li><a href="/branches"><i class="fas fa-store"></i>{$lang.branches}</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-        <?php endif; ?>
-        <?php if (Permissions::user(['account'], true) == true) : ?>
-        <nav>
-            <span>{$lang.account}</span>
-            <ul>
-                <?php if (Permissions::user(['update_account'])) : ?>
-                <li><a><i class="fas fa-user-circle"></i>{$lang.profile}</a></li>
-                <li><a><i class="fas fa-cog"></i>{$lang.settings}</a></li>
-                <?php endif; ?>
-                <?php if (Permissions::user(['payment_account'])) : ?>
-                <li><a><i class="fas fa-parachute-box"></i>{$lang.payment_center}</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-        <?php endif; ?>
-        <?php endif; ?>
-        <nav>
-            <span>{$lang.my_user}</span>
-            <ul>
+                <li><h4>{$lang.my_user}</h4></li>
                 <li><a><i class="fas fa-user-circle"></i>{$lang.my_profile}</a></li>
-                <li><a><i class="fas fa-bell"></i>{$lang.my_notifications}</a></li>
                 <li><a><i class="fas fa-award"></i>{$lang.my_accounts}</a></li>
+                <li><a><i class="fas fa-bell"></i>{$lang.notifications}</a></li>
             </ul>
-        </nav>
-        <nav>
             <ul>
                 <li><a>{$lang.technical_support}</a></li>
                 <li><a>{$lang.foxior_updates}</a></li>
@@ -207,8 +200,6 @@
                 <li><a>{$lang.terms_and_conditions}</a></li>
                 <li><a data-action="logout">{$lang.logout}</a></li>
             </ul>
-        </nav>
-        <nav>
             <ul>
                 <li><a>Foxior 2.0</a></li>
                 <li><a>{$lang.development_by} Code Monkey</a></li>

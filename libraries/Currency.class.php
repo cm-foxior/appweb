@@ -5,7 +5,7 @@ defined('_EXEC') or die;
 /**
 * @package valkyrie.libraries
 *
-* @summary Stock de funciones opcionales para manejo de moneda y tipos de cambio.
+* @summary Stock de funciones para manejo de moneda y tipos de cambio.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 01 de enero, 2019.
@@ -34,7 +34,7 @@ class Currency
         curl_setopt($a1, CURLOPT_URL, 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF63528/datos/oportuno?token=ac32cf33a053bab54c26b061f4ebda76c4b21fa2d772a354779d121641c580f9');
         curl_setopt($a1, CURLOPT_RETURNTRANSFER, true);
 
-        $a2 = System::decoded_query_array(curl_exec($a1));
+        $a2 = System::decoded_json_array(curl_exec($a1));
         $a2 = $a2['bmx']['series'][0]['datos'][0]['dato'];
 
         curl_close($a1);

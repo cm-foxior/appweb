@@ -5,7 +5,7 @@ defined('_EXEC') or die;
 /**
 * @package valkyrie.libraries
 *
-* @summary Stock de funciones para revisar los permisos de acceso a los módulos y funcionalidades del dashboard general.
+* @summary Stock de funciones para revisar los permisos de acceso a los módulos y funcionalidades de sistema.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 08 de marzo, 2020.
@@ -18,20 +18,21 @@ defined('_EXEC') or die;
 class Permissions
 {
     /**
-    * @summary Revisa los permisos de acceso de la url deseada deacuerdo a los permisos del usuario logueado ó de la cuenta en linea.
+    * @summary Valida los permisos de acceso de la url deseada deacuerdo a los permisos del usuario logueado ó de la cuenta en linea.
     *
-    * @param string $path: Url deseada.
+    * @param string $option: Tipo de permiso a validar.
+    * @param string $path: Url a validar.
     *
     * @return boolean
     */
-    static public function urls($path, $type)
+    static public function urls($option, $path)
     {
         $access = false;
         $paths = [];
 
         array_push($paths, '/Dashboard/index');
 
-        if ($type == 'account')
+        if ($option == 'account')
         {
             if (!empty(Session::get_value('vkye_account')))
             {
@@ -48,6 +49,10 @@ class Permissions
                                 break;
 
                             case 'inventories' :
+                                array_push($paths, '/Inventories/index');
+                                array_push($paths, '/Inventories/categories');
+                                array_push($paths, '/Inventories/locations');
+                                array_push($paths, '/Inventories/types');
                                 array_push($paths, '/Branches/index');
                                 array_push($paths, '/Providers/index');
                                 array_push($paths, '/Products/index');
@@ -73,7 +78,7 @@ class Permissions
             $paths = array_values($paths);
             $access = in_array($path, $paths) ? true : false;
         }
-        else if ($type == 'user')
+        else if ($option == 'user')
         {
             if (Session::get_value('vkye_account')['type'] == 'business')
             {
@@ -83,6 +88,78 @@ class Permissions
                     {
                         switch ($value)
                         {
+                            case 'input_inventories' :
+                                array_push($paths, '/Inventories/index');
+                                break;
+
+                            case 'output_inventories' :
+                                array_push($paths, '/Inventories/index');
+                                break;
+
+                            case 'transfer_inventories' :
+                                array_push($paths, '/Inventories/index');
+                                break;
+
+                            case 'create_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'update_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'block_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'unblock_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'delete_inventories_categories' :
+                                array_push($paths, '/Inventories/categories');
+                                break;
+
+                            case 'create_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'update_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'block_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'unblock_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'delete_inventories_locations' :
+                                array_push($paths, '/Inventories/locations');
+                                break;
+
+                            case 'create_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'update_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'block_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'unblock_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
+                            case 'delete_inventories_types' :
+                                array_push($paths, '/Inventories/types');
+                                break;
+
                             case 'create_branches' :
                                 array_push($paths, '/Branches/index');
                                 break;
@@ -209,17 +286,17 @@ class Permissions
     /**
     * @summary Revisa los permisos de acceso de la cuenta en linea.
     *
-    * @param array $permissions: Códigos de los permisos permitidos.
+    * @param array $data: Códigos de los permisos permitidos.
     *
     * @return boolean
     */
-    static public function account($permissions)
+    static public function account($data)
     {
         $access = false;
 
         if (!empty(Session::get_value('vkye_account')))
         {
-            foreach ($permissions as $value)
+            foreach ($data as $value)
             {
                 if (in_array($value, Session::get_value('vkye_account')['permissions']))
                     $access = true;
@@ -232,11 +309,12 @@ class Permissions
     /**
     * @summary Revisa los permisos de acceso del usuario logueado.
     *
-    * @param array $permissions: Códigos de los permisos permitidos.
+    * @param array $data: Códigos de los permisos permitidos.
+    * @param boolean $group: Identificador para saber si se van a validar un permiso único o un grupo de permisos.
     *
     * @return boolean
     */
-    static public function user($permissions, $module = false)
+    static public function user($data, $group = false)
     {
         $access = false;
 
@@ -244,9 +322,9 @@ class Permissions
         {
             if (Session::get_value('vkye_user')['permissions'] != 'all')
             {
-                foreach ($permissions as $value)
+                foreach ($data as $value)
                 {
-                    if ($module == true)
+                    if ($group == true)
                     {
                         foreach (Session::get_value('vkye_user')['permissions'] as $subvalue)
                         {
@@ -279,6 +357,11 @@ class Permissions
     */
     static public function redirection()
     {
-        return '/dashboard';
+        if (empty(Session::get_value('vkye_user')['accounts']))
+            return '/accounts';
+        else if (Session::get_value('vkye_account')['status'] == false)
+            return '/account/payment';
+        else
+            return '/dashboard';
     }
 }

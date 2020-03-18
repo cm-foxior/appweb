@@ -29,15 +29,6 @@ $(window).on('ajaxStop', function()
     $('body').find('[data-ajax-loader]').remove();
 });
 
-/**
-* @summary Variables para trabajar en el CRUD.
-*
-* @var string action: Almacena la acción que ejecutará el CRUD.
-* @var int id: Almacena el id del registro en la base de datos con el que se trabajará en el CRUD.
-*/
-var action = null;
-var id = null;
-
 $(document).ready(function()
 {
     /**
@@ -45,7 +36,7 @@ $(document).ready(function()
     */
     $('[data-low-uploader]').each(function()
     {
-        uploader($(this), 'low');
+        uploader('low', $(this));
     });
 
     /**
@@ -53,7 +44,7 @@ $(document).ready(function()
     */
     $('[data-fast-uploader]').each(function()
     {
-        uploader($(this), 'fast', $(this).data('fast-uploader'));
+        uploader('fast', $(this));
     });
 
     /**
@@ -66,19 +57,161 @@ $(document).ready(function()
 });
 
 /**
+* @summary Busca una cadena de texto en una tabla.
+*
+* @var string data: Cadena de texto que se va a buscar.
+* @var <HTML Tag> target: Etiqueta HTML en la que se va a realizar la búsqueda.
+* @var string style: (tbl, cbx) Estilo de busqueda.
+* @var string type: (normal, hidden) Tipo de busqueda.
+*/
+function search_in_table(data, target, style, type)
+{
+    style = (style == undefined) ? 'tbl' : style;
+    type = (type == undefined) ? 'normal' : 'hidden';
+
+    $.each(target, function(key, value)
+    {
+        if (data.length > 0)
+        {
+            var string_1 = data.toLowerCase();
+            var string_2 = value.innerHTML.toLowerCase();
+            var result = string_2.indexOf(string_1);
+
+            if (result > 0)
+                value.className = '';
+            else if (result <= 0)
+                value.className = 'hidden';
+        }
+        else if (data.length <= 0 && type == 'hidden')
+            value.className = 'hidden';
+    });
+
+    // Que los checboxes seleccionados no desaparescan.
+    // Que las palabras iguales pero con acentos aparescan aunque se busque sin acento y viceversa.
+    // Buscar strings separados en los target.
+}
+
+/**
+* @summary Valida los valores de una cadena de texto en una etiqueta HTML <input>.
+*
+* @param string option: (uppercase, lowercase, int, float) Tipo de cadena de texto permitida.
+* @param string data: Cadena de texto a validar.
+* @param <input> target: Etiqueta HTML donde retornará la validación.
+*/
+function validate_string(option, data, target)
+{
+    var filter = '';
+    var uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+    var lowercase = 'abcdefghijklmnñopqrstuvwxyz';
+    var numbet_int = '0123456789';
+    var number_float = '.';
+
+    if (Array.isArray(option))
+    {
+        $.each(option, function(key, value)
+        {
+            if (value == 'uppercase')
+                filter = filter + uppercase;
+            else if (value == 'lowercase')
+                filter = filter + lowercase;
+            else if (value == 'int')
+                filter = filter + numbet_int;
+            else if (value == 'float')
+                filter = filter + number_float + numbet_int;
+        });
+    }
+    else if (option == 'uppercase')
+        filter = uppercase;
+    else if (option == 'lowercase')
+        filter = lowercase;
+    else if (option == 'int')
+        filter = numbet_int;
+    else if (option == 'float')
+        filter = number_float + numbet_int;
+
+    var out = '';
+
+    for (var i = 0; i < data.length; i++)
+    {
+        if (filter.indexOf(data.charAt(i)) != -1)
+            out += data.charAt(i);
+    }
+
+    target.val(out);
+}
+
+/**
+* @summary Genera una cadena de texto random.
+*
+* @param string option: (uppercase, lowercase, int, float) Tipo de cadena de texto que se va a generar.
+* @param string length: Tamaño de la cadena de texto que se va a generar.
+* @param <input> target: Etiqueta HTML donde retornará la cadena de texto generada.
+*/
+function generate_string(option, length, target)
+{
+    var filter = '';
+    var uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+    var lowercase = 'abcdefghijklmnñopqrstuvwxyz';
+    var numbet_int = '0123456789';
+    var number_float = '.';
+
+    if (Array.isArray(option))
+    {
+        $.each(option, function(key, value)
+        {
+            if (value == 'uppercase')
+                filter = filter + uppercase;
+            else if (value == 'lowercase')
+                filter = filter + lowercase;
+            else if (value == 'int')
+                filter = filter + numbet_int;
+            else if (value == 'float')
+                filter = filter + number_float + numbet_int;
+        });
+    }
+    else if (option == 'uppercase')
+        filter = uppercase;
+    else if (option == 'lowercase')
+        filter = lowercase;
+    else if (option == 'int')
+        filter = numbet_int;
+    else if (option == 'float')
+        filter = number_float + numbet_int;
+
+    var out  = '';
+
+    for (var x = 0; x < length; x++)
+    {
+        var math = Math.floor(Math.random() * filter.length);
+        out += filter.substr(math, 1);
+    }
+
+    target.val(out);
+}
+
+/**
+* @summary Variables para trabajar en el CRUD.
+*
+* @var string action: Almacena la acción que ejecutará el CRUD.
+* @var int id: Almacena el id del registro en la base de datos con el que se trabajará en el CRUD.
+*/
+var action = null;
+var id = null;
+
+/**
 * @summary Abre el modal para trabajar en el CRUD.
 *
-* @var string type: Tipo de modal que se abrirá.
-* @var HTML Object modal: Modal que se abrirá.
+* @var string option: (create, update, delete) Tipo de modal que se abrirá.
+* @var <[data-modal]> target: Modal que se abrirá.
 * @var function callback: Acciones que se ejecutarán al terminar de abrí el modal.
 */
-function open_form_modal(type, modal, callback)
+function open_form_modal(option, target, callback)
 {
-    if (type == 'create' || type == 'update')
+    if (option == 'create' || option == 'update')
     {
-        reset_form_modal(modal);
+        reset_form(target.find('form'));
 
-        if (type == 'update')
+        if (option == 'update')
         {
             $.ajax({
                 type: 'POST',
@@ -96,27 +229,24 @@ function open_form_modal(type, modal, callback)
             });
         }
     }
-    else if (type == 'delete')
-    {
 
-    }
-
-    modal.addClass('view');
+    target.addClass('view');
 }
 
 /**
 * @summary Envía el modal con el que se está trabajando en el CRUD al controlador.
 *
-* @var string type: Tipo de envío.
-* @var HTML Object form: Formulario que se enviará.
+* @var string option: (create, update, block, unblock, delete) Tipo de envío.
+* @var <form> target: Formulario que se enviará.
+* @var Event event: Evento de formulario.
 */
-function send_form_modal(type, form, event)
+function send_form_modal(option, target, event)
 {
-    if (type == 'create' || type == 'update')
+    if (option == 'create' || option == 'update')
     {
         event.preventDefault();
 
-        var data = new FormData(form[0]);
+        var data = new FormData(target[0]);
 
         data.append('action', action);
         data.append('id', id);
@@ -130,14 +260,14 @@ function send_form_modal(type, form, event)
             dataType: 'json',
             success: function(response)
             {
-                check_form_errors(form, response, function()
+                check_form_errors(target, response, function()
                 {
                     open_notification_modal('success', response.message);
                 });
             }
         });
     }
-    else if (type == 'block' || type == 'unblock')
+    else if (option == 'block' || option == 'unblock')
     {
         $.ajax({
             type: 'POST',
@@ -154,7 +284,7 @@ function send_form_modal(type, form, event)
             }
         });
     }
-    else if (type == 'delete')
+    else if (option == 'delete')
     {
         $.ajax({
             type: 'POST',
@@ -176,36 +306,36 @@ function send_form_modal(type, form, event)
 /**
 * @summary Restablece los datos de un formulario.
 *
-* @param string target: Formulario a revisar.
+* @param <form> target: Formulario a restablecer.
 */
-function reset_form_modal(modal)
+function reset_form(target)
 {
-    modal.find('form')[0].reset();
-    modal.find('form').find('.uploader').find('img').attr('src', '../images/empty.png');
-    modal.find('form').find('p.error').remove();
-    modal.find('form').find('.error').removeClass('error');
+    target[0].reset();
+    target.find('.uploader').find('img').attr('src', '../images/empty.png');
+    target.find('p.error').remove();
+    target.find('.error').removeClass('error');
 }
 
 /**
 * @summary Abre el modal de notificación.
 *
-* @var string type: Tipo de notificación.
+* @var string option: (success, alert) Tipo de notificación.
 * @var string message: Mensaje que mostrará el modal
 * @var string path: Ruta de recarga o redirección.
 * @var string timeout: Tiempo en que se ejecura la recarga o redirección.
 */
-function open_notification_modal(type, message, path, timeout)
+function open_notification_modal(option, message, path, timeout)
 {
     message = (message == undefined) ? '' : message;
-    path = (path == undefined) ? ((type == 'success') ? 'reload' : false) : path;
+    path = (path == undefined) ? ((option == 'success') ? 'reload' : false) : path;
     timeout = (timeout == undefined) ? '1000' : timeout;
 
-    if (type == 'success')
+    if (option == 'success')
     {
         $('[data-modal="success"]').addClass('view');
         $('[data-modal="success"]').find('main > p').html(message);
     }
-    else if (type == 'alert')
+    else if (option == 'alert')
     {
         $('[data-modal="alert"]').addClass('view');
         $('[data-modal="alert"]').find('main > p').html(message);
@@ -226,9 +356,9 @@ function open_notification_modal(type, message, path, timeout)
 /**
 * @summary Revisa los errores que retornó el controlador y los aplica visualmente.
 *
-* @param string target: Formulario a revisar.
-* @param string response: Respuesta del controlador.
-* @param string callback: Acciones que se ejecutarán en caso que no haya errores.
+* @param <form> target: Formulario a revisar.
+* @param Ajax response response: Respuesta del controlador.
+* @param Function callback: Acciones que se ejecutarán en caso que no haya errores.
 */
 function check_form_errors(target, response, callback)
 {
@@ -255,86 +385,12 @@ function check_form_errors(target, response, callback)
 }
 
 /**
-* @summary Revisa los valores de una cadena de texto.
-*
-* @param string type: Tipo de cadena de texto permitida.
-* @param string string: Cadena de texto.
-* @param string input: Input a revisar.
-*/
-function check_type_input(type, string, input)
-{
-    if (type == 'letter')
-        var filter = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz';
-    else if (type == 'uppercase')
-        var filter = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-    else if (type == 'lowercase')
-        var filter = 'abcdefghijklmnñopqrstuvwxyz';
-    else if (type == 'number')
-        var filter = '0123456789';
-    else if (type == 'decimal')
-        var filter = '.0123456789';
-    else if (type == 'letter_number')
-        var filter = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789';
-    else if (type == 'uppercase_number')
-        var filter = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789';
-    else if (type == 'lowercase_number')
-        var filter = 'abcdefghijklmnñopqrstuvwxyz0123456789';
-
-    var out = '';
-
-    for (var i = 0; i < string.length; i++)
-    {
-        if (filter.indexOf(string.charAt(i)) != -1)
-            out += string.charAt(i);
-    }
-
-    input.val(out);
-}
-
-/**
-* @summary Genera una cadena de texto random.
-*
-* @param string type: Tipo de cadena de texto a generar.
-* @param string length: Tamaño de la cadena de texto a generar.
-* @param string input: Input a generar.
-*/
-function generate_random_token(type, length, input)
-{
-    if (type == 'letter')
-        var string = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz';
-    else if (type == 'uppercase')
-        var string = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-    else if (type == 'lowercase')
-        var string = 'abcdefghijklmnñopqrstuvwxyz';
-    else if (type == 'number')
-        var string = '0123456789';
-    else if (type == 'letter_number')
-        var string = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789';
-    else if (type == 'uppercase_number')
-        var string = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789';
-    else if (type == 'lowercase_number')
-        var string = 'abcdefghijklmnñopqrstuvwxyz0123456789';
-
-    var out  = '';
-
-    for (var x = 0; x < length; x++)
-    {
-        var math = Math.floor(Math.random() * string.length);
-        out += string.substr(math, 1);
-    }
-
-    input.val(out);
-}
-
-/**
 * @summary Envia archivos al controlador para que se suban al almacenamiento.
 *
-* @param string target: Uploader.
-* @param string type: (low, fast) Tipo de subida.
-* @param boolean multiple: Define si se va a subir un solo archivo o muchos a la vez.
-* @param string action: Tipo de acción que se enviará al controlador.
+* @param string option: (low, fast) Tipo de subida.
+* @param <[data-uploader]> target: Etiqueta HTML del uploader.
 */
-function uploader(target, type, multiple, action)
+function uploader(option, target)
 {
     target.find('a[data-select]').on('click', function()
     {
@@ -345,7 +401,7 @@ function uploader(target, type, multiple, action)
     {
         if ($(this)[0].files[0].type.match($(this).attr('accept')))
         {
-            if (type == 'low')
+            if (option == 'low')
             {
                 var reader = new FileReader();
 
@@ -356,7 +412,7 @@ function uploader(target, type, multiple, action)
 
                 reader.readAsDataURL($(this)[0].files[0]);
             }
-            else if (type == 'fast')
+            else if (option == 'fast')
             {
                 var data = new FormData();
 

@@ -11,7 +11,7 @@ class Products_controller extends Controller
 
 	public function index($params)
 	{
-		if ($params[0] == 'menu')
+		if ($params[0] == 'salemenu')
 			$params[1] = 'sale';
 		else if ($params[0] == 'supplies')
 			$params[1] = 'supply';
@@ -33,8 +33,14 @@ class Products_controller extends Controller
 				{
 					if (Validations::empty($_POST['token']) == false)
 						array_push($errors, ['token','{$lang.dont_leave_this_field_empty}']);
-					else if (Validations::spaces($_POST['token']) == false OR Validations::special_characters($_POST['token']) == false)
+					else if (Validations::string(['uppercase','lowercase','int'], $_POST['token']) == false)
 						array_push($errors, ['token','{$lang.invalid_field}']);
+				}
+
+				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				{
+					if (Validations::empty($_POST['unity']) == false)
+						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
 				}
 
 				if ($params[1] == 'sale')
@@ -45,19 +51,13 @@ class Products_controller extends Controller
 						array_push($errors, ['price','{$lang.invalid_field}']);
 				}
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
-				{
-					if (Validations::empty($_POST['unity']) == false)
-						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
-				}
-
 				if ($params[1] == 'sale' OR $params[1] == 'supply')
 				{
-					if (Validations::number('float', $_POST['weight_empty'], true) == false)
-						array_push($errors, ['weight_empty','{$lang.invalid_field}']);
-
 					if (Validations::number('float', $_POST['weight_full'], true) == false)
 						array_push($errors, ['weight_full','{$lang.invalid_field}']);
+
+					if (Validations::number('float', $_POST['weight_empty'], true) == false)
+						array_push($errors, ['weight_empty','{$lang.invalid_field}']);
 				}
 
 				if (empty($errors))
@@ -149,10 +149,10 @@ class Products_controller extends Controller
 
 			$data['type'] = $params[1];
 			$data['products'] = $this->model->read_products($params[1]);
-			$data['products_categories'] = $this->model->read_products_categories(true);
 			$data['products_unities'] = $this->model->read_products_unities(true);
 			$data['products_supplies'] = $this->model->read_products('supply', true);
 			$data['products_recipes'] = $this->model->read_products('recipe', true);
+			$data['products_categories'] = $this->model->read_products_categories(true);
 
 			$template = $this->view->render($this, 'index');
 
@@ -178,8 +178,6 @@ class Products_controller extends Controller
 
 				if (empty($errors))
 				{
-					$_POST['avatar'] = $_FILES['avatar'];
-
 					if ($_POST['action'] == 'create_product_category')
 						$query = $this->model->create_product_category($_POST);
 					else if ($_POST['action'] == 'update_product_category')

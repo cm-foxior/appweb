@@ -2,55 +2,56 @@
 /**
 * @package valkyrie.css
 *
-* @summary Stock de estilos opcionales.
+* @summary Stock de estilos.
 *
 * @author Gersón Aarón Gómez Macías <ggomez@codemonkey.com.mx>
 * <@create> 01 de enero, 2019.
+* <@update> 08 de marzo, 2020.
 *
 * @version 1.0.0.
 *
 * @copyright Code Monkey <contacto@codemonkey.com.mx>
 */
 
+/* ------------------------------------------------------------- */
 /* Valkyrie framework rewrite
------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- */
+
 .container { height: 100% !important; }
 .container.not-full { height: auto !important; }
 
-.row [class*="span"] { margin: 0px; }
-.span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11, .span12 { margin: 0px; padding: 0px; }
+.row [class*="span"] { margin: 0px !important; }
+.span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11, .span12 { margin: 0px !important; padding: 0px !important; }
 
 @media (max-width: 768px) {
 
-    a.btn, button.btn { width: 100% !important; float: none !important; margin: 0px 0px 5px 0px !important; text-align: center !important; }
+    a.btn, button.btn { width: 100% !important; float: none !important; margin: 0px 0px 5px 0px !important; text-align: center !important; text-decoration: none !important; }
     a.btn:last-child, button.btn:last-child { margin: 0px !important; }
 
     .span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11, .span12 { width: 100% !important; float: none !important; margin: 0px 0px 10px 0px !important; }
     .span1:last-child, .span2:last-child, .span3:last-child, .span4:last-child, .span5:last-child, .span6:last-child, .span7:last-child, .span8:last-child, .span9:last-child, .span10:last-child, .span11:last-child, .span12:last-child { margin: 0px !important; }
 }
 
+/* ------------------------------------------------------------- */
 /* Generals
------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- */
+
 h1, h2, h3, h4, h5, h6, p { margin: 0px; padding: 0px; }
 
 figure { line-height: 0px; }
 
-a, button { margin: 0px; text-decoration: none; cursor: pointer; }
-a.success, button.success { background-color: #009688 !important; color: #fff !important; }
-a.warning, button.warning { background-color: #ffc107 !important; color: #fff !important; }
-a.alert, button.alert { background-color: #f44336 !important; color: #fff !important; }
+a, button { margin: 0px; text-align: center !important; text-decoration: none !important; cursor: pointer !important; }
+a.success, button.success, span.success { background-color: #009688 !important; color: #fff !important; }
+a.warning, button.warning, span.warning { background-color: #ffc107 !important; color: #fff !important; }
+a.alert, button.alert, span.alert { background-color: #f44336 !important; color: #fff !important; }
+a.busy, button.busy, span.busy { background-color: #9c27b0 !important; color: #fff !important; }
 
-.uppercase { text-transform: uppercase !important; }
-.lowercase { text-transform: lowercase !important; }
-.capitalize { text-transform: capitalize !important; }
+[data-mobile-off] { display: none !important; }
 
-.no-margin { margin: 0px !important; }
-.no-padding { padding: 0px !important; }
-
-[data-mobile-off] { display: none; }
-
+/* ------------------------------------------------------------- */
 /* Ajax loader
------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- */
+
 [data-ajax-loader] {
     top: 0px;
     right: 0px;
@@ -116,8 +117,10 @@ a.alert, button.alert { background-color: #f44336 !important; color: #fff !impor
     }
 }
 
-/* Checkboxes and Radios
------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------- */
+/* Checkboxes & Radios
+/* ------------------------------------------------------------- */
+
 input[type="checkbox"],
 input[type="radio"] {
     width: 20px;
@@ -222,381 +225,383 @@ input[type="radio"]::after {
     z-index: 0;
 }
 
-/* Data table
------------------------------------------------------------------------------- */
-table.dataTable {
+/* ------------------------------------------------------------- */
+/* Tables
+/* ------------------------------------------------------------- */
+
+/* Style 1 */
+table.tbl-st-1,
+table.tbl-st-1 > tbody,
+table.tbl-st-1 > tbody > tr {
     width: 100%;
-    padding: 25px 0px 40px 0px !important;
-    border: none !important;
-    background-color: #ffffff;
+    border-bottom: 1px dashed #eee;
+    box-sizing: border-box;
 }
 
-/* Wrapper */
-div.dataTables_wrapper div.dataTables_filter,
-div.dataTables_wrapper div.dataTables_length {
-    height: 50px;
+table.tbl-st-1 > tbody > tr:last-child {
+    border-color: #fff;
 }
 
-div.dataTables_wrapper div.dataTables_filter > label,
-div.dataTables_wrapper div.dataTables_length > label {
-    display: -webkit-box;
-    display: flex;
-    align-items: center;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1px;
-    color: #757575;
-    background-color: #ffffff;
-}
-
-div.dataTables_wrapper div.dataTables_filter > label > input,
-div.dataTables_wrapper div.dataTables_length > label > select {
-    height: 50px;
-    margin-left: 20px;
-    padding: 0px 20px;
-    border: 1px solid #e0e0e0;
-    color: #757575;
-    background-color: transparent;
-    transition: 800ms;
-}
-
-div.dataTables_wrapper div.dataTables_length > label > select {
-    margin-right: 20px;
-}
-
-div.dataTables_wrapper div.dataTables_filter > label > input:focus {
-    border: 1px solid #757575;
-    color: #000000;
-    transition: 800ms;
-}
-
-div.dataTables_wrapper div.dataTables_filter > label > input {
-    width: 300px;
-}
-
-/* Rows */
-table.dataTable thead th,
-table.dataTable thead td {
-    padding: 10px !important;
-    border: none !important;
-    font-size: 12px;
-    text-transform: uppercase;
-}
-
-table.dataTable thead th::after,
-table.dataTable thead td::after,
-table.dataTable thead th::before,
-table.dataTable thead td::before {
-    bottom: 21px !important;
-}
-
-table.dataTable tbody th,
-table.dataTable tbody td {
+table.tbl-st-1 > tbody > tr > td {
     vertical-align: middle;
-    padding: 10px !important;
-    border: none !important;
-}
-
-/* Checkboxes */
-table.dataTable tbody th > input[type="checkbox"],
-table.dataTable tbody td > input[type="checkbox"] {
-    margin: 0px !important;
-    padding: 0px !important;
-}
-
-/* Images */
-table.dataTable tbody th > figure,
-table.dataTable tbody td > figure {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    line-height: 0px;
-}
-
-table.dataTable tbody th > figure > img,
-table.dataTable tbody td > figure > img,
-table.dataTable tbody th > figure > a > img,
-table.dataTable tbody td > figure > a > img {
-    width: auto;
-    height: 100%;
-}
-
-table.dataTable tbody th > figure > img.empty:hover,
-table.dataTable tbody td > figure > img.empty:hover {
-    cursor: no-drop;
-}
-
-/* Buttons */
-table.dataTable tbody th > a,
-table.dataTable tbody td > a {
-    width: 30px;
-    height: 30px;
-    float: left;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: #757575;
-    transition: 800ms;
-}
-
-table.dataTable tbody th > a:hover,
-table.dataTable tbody td > a:hover  {
-    cursor: pointer;
-    color: #000000;
-    background-color: rgba(0, 0, 0, 0.1);
-    transition: 800ms;
-}
-
-table.dataTable tbody th > a[disabled],
-table.dataTable tbody td > a[disabled] {
-    opacity: 0.5;
-}
-
-table.dataTable tbody th > a[disabled]:hover,
-table.dataTable tbody td > a[disabled]:hover {
-    cursor: no-drop;
-    color: #757575;
-}
-
-table.dataTable tbody th > a > span,
-table.dataTable tbody td > a > span {
-    height: 30px;
-    top: -36px;
-    right: 0px;
-    position: absolute;
-    display: none;
-    align-items: center;
-    padding: 0px 10px;
-    font-size: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+    font-size: 14px;
     font-weight: 400;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    color: #ffffff;
-    background-color: #212121;
-    z-index: 99;
+    color: #757575;
 }
 
-table.dataTable tbody th > a > span::after,
-table.dataTable tbody td > a > span::after {
-    width: 0px;
-    height: 0px;
-    top: 100%;
-	right: 8px;
-    position: absolute;
-    content: '';
-    margin-left: -6px;
-	pointer-events: none;
-    border: solid transparent;
-    border-width: 6px;
-	border-color: rgba(33, 33, 33, 0);
-	border-top-color: #212121;
+table.tbl-st-1 > tbody > tr > td:first-child {
+    padding-left: 0px;
 }
 
-table.dataTable tbody th > a:hover > span,
-table.dataTable tbody td > a:hover > span {
-    display: flex;
+/*  */
+table.tbl-st-1 > tbody > tr > td.avatar {
+    width: 40px;
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
-table.dataTable tbody th > a[disabled]:hover > span,
-table.dataTable tbody td > a[disabled]:hover > span {
-    display: none;
-}
-
-table.dataTable tbody th > a.fancybox-thumb,
-table.dataTable tbody td > a.fancybox-thumb {
+table.tbl-st-1 > tbody > tr > td.avatar > figure {
     width: 40px;
     height: 40px;
-    text-decoration: none;
-}
-
-table.dataTable tbody th > a.fancybox-thumb:hover,
-table.dataTable tbody td > a.fancybox-thumb:hover {
-    cursor: pointer;
-}
-
-/* Spans */
-table.dataTable tbody th > span.notice,
-table.dataTable tbody td > span.notice {
-    width: auto;
-    height: 100%;
-    float: right;
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 400;
-    padding: 0px 5px;
-    box-sizing: border-box;
-    color: #ffffff;
-    background-color: #bdbdbd;
-}
-
-table.dataTable tbody th > span.success,
-table.dataTable tbody td > span.success,
-table.dataTable tbody th > span.alert,
-table.dataTable tbody td > span.alert,
-table.dataTable tbody th > span.warning,
-table.dataTable tbody td > span.warning,
-table.dataTable tbody th > span.busy,
-table.dataTable tbody td > span.busy,
-table.dataTable tbody th > span.empty,
-table.dataTable tbody td > span.empty {
-    width: auto;
-    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
-table.dataTable tbody th > span.success,
-table.dataTable tbody td > span.success {
-    background-color: #009688;
-}
-
-table.dataTable tbody th > span.alert,
-table.dataTable tbody td > span.alert {
-    background-color: #f44336;
-}
-
-table.dataTable tbody th > span.warning,
-table.dataTable tbody td > span.warning {
-    background-color: #ff9800;
-}
-
-table.dataTable tbody th > span.busy,
-table.dataTable tbody td > span.busy {
-    background-color: #3f51b5;
-}
-
-table.dataTable tbody th > span.empty,
-table.dataTable tbody td > span.empty {
-    background-color: #9e9e9e;
-}
-
-table.dataTable tbody th > span.success > i,
-table.dataTable tbody td > span.success > i,
-table.dataTable tbody th > span.alert > i,
-table.dataTable tbody td > span.alert > i,
-table.dataTable tbody th > span.warning > i,
-table.dataTable tbody td > span.warning > i,
-table.dataTable tbody th > span.busy > i,
-table.dataTable tbody td > span.busy > i,
-table.dataTable tbody th > span.empty > i,
-table.dataTable tbody td > span.empty > i {
-    margin-right: 2px;
-    font-size: 14px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-
-    table.dataTable thead,
-    table.dataTable thead {
-        display: none;
-    }
-
-    table.dataTable tbody,
-    table.dataTable tbody > tr,
-    table.dataTable tbody > tr > td {
-        display: block;
-    }
-
-    table.dataTable tbody > tr {
-        margin-bottom: 20px;
-        border: 1px solid #bdbdbd;
-        box-sizing: border-box;
-    }
-}
-
-/* Modals
------------------------------------------------------------------------------- */
-section.modal header {
-    border-bottom: 1px solid #e0e0e0;
-    box-sizing: border-box;
-    background-color: #fff !important;
-}
-
-section.modal.create header {
-    background-color: #009688 !important;
-}
-
-section.modal.update header {
-    background-color: #ffc107 !important;
-}
-
-section.modal.delete header {
-    background-color: #f44336 !important;
-}
-
-section.modal header > h4 {
+table.tbl-st-1 > tbody > tr > td.avatar > figure > img {
     width: 100%;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #000;
 }
 
-section.modal footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+/*  */
+table.tbl-st-1 > tbody > tr > td.smalltag,
+table.tbl-st-1 > tbody > tr > td.bigtag {
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
-@media (max-width: 768px) {
-
-    section.modal footer {
-        justify-content: center;
-        flex-direction: column;
-    }
+table.tbl-st-1 > tbody > tr > td.smalltag {
+    width: 100px;
 }
 
-section.modal footer > a[button-success],
-section.modal footer > a[button-cancel],
-section.modal footer > a[button-close] {
-    width: auto;
-    height: 50px;
+table.tbl-st-1 > tbody > tr > td.bigtag {
+    width: 200px;
+}
+
+table.tbl-st-1 > tbody > tr > td.smalltag > span,
+table.tbl-st-1 > tbody > tr > td.bigtag > span {
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: 5px;
-    padding: 0px 20px;
-    box-sizing: border-box;
+    border-radius: 2px;
     background-color: #eee;
     font-size: 12px;
     font-weight: 400;
-    text-transform: uppercase;
     color: #757575;
 }
 
-@media (max-width: 768px) {
+table.tbl-st-1 > tbody > tr > td.smalltag > span {
+    width: 100px;
+}
 
-    section.modal footer > a[button-success],
-    section.modal footer > a[button-cancel],
-    section.modal footer > a[button-close] {
-        width: 100%;
-        margin-bottom: 5px;
-        margin-left: 0px;
-    }
+table.tbl-st-1 > tbody > tr > td.bigtag > span {
+    width: 200px;
+}
 
-    section.modal footer > a[button-success]:last-child,
-    section.modal footer > a[button-cancel]:last-child,
-    section.modal footer > a[button-close]:last-child {
-        margin-bottom: 0px;
-    }
+table.tbl-st-1 > tbody > tr > td.smalltag:first-child > span,
+table.tbl-st-1 > tbody > tr > td.bigtag:first-child > span {
+    margin-left: 0px;
+}
+
+/*  */
+table.tbl-st-1 > tbody > tr > td.button,
+table.tbl-st-1 > tbody > tr > td.icon {
+    width: 30px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+table.tbl-st-1 > tbody > tr > td.button > a,
+table.tbl-st-1 > tbody > tr > td.icon > span {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    border-radius: 2px;
+    background-color: #eee;
+    font-size: 14px;
+    font-weight: 400;
+    color: #757575;
+}
+
+table.tbl-st-1 > tbody > tr > td.button > a > span {
+    width: auto;
+    height: 20px;
+    position: absolute;
+    top: 35px;
+    right: 0px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    background-color: #212121;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    color: #fff;
+}
+
+table.tbl-st-1 > tbody > tr > td.button > a:hover > span {
+    display: flex;
+}
+
+/* Style 2 */
+div.tbl-st-2 {
+    width: 100%;
+}
+
+div.tbl-st-2::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+div.tbl-st-2 > div {
+    width: calc(100% / 3);
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/*  */
+div.tbl-st-2 > div > figure {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
+}
+
+div.tbl-st-2 > div > figure > img {
+    width: 100%;
+}
+
+/*  */
+div.tbl-st-2 > div > h4,
+div.tbl-st-2 > div > span {
+    margin-bottom: 5px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.tbl-st-2 > div > h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+}
+
+div.tbl-st-2 > div > span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #757575;
+}
+
+/*  */
+div.tbl-st-2 > div > div.button {
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+div.tbl-st-2 > div > div.button > a {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 5px;
+    border-radius: 50%;
+    background-color: #eee;
+    font-size: 16px;
+    font-weight: 400;
+    color: #757575;
+}
+
+div.tbl-st-2 > div > div.button > a > span {
+    width: auto;
+    height: 20px;
+    position: absolute;
+    top: 55px;
+    left: 0px;
+    display: none;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 20px;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    background-color: #212121;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    color: #fff;
+}
+
+div.tbl-st-2 > div > div.button > a:hover > span {
+    display: flex;
+}
+
+/* ------------ */
+/* div.tbl-st-3 {
+    width: 100%;
+}
+
+div.tbl-st-3::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+div.tbl-st-3 > div {
+    width: calc(100% / 3);
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+div.tbl-st-3 > div > figure {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+}
+
+div.tbl-st-3 > div > figure > img {
+    width: 100%;
+}
+
+div.tbl-st-3 > div > div {
+    width: calc(100% - 100px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+
+div.tbl-st-3 > div > div > span {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #424242;
+}
+
+div.tbl-st-3 > div > div > div > a {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #757575;
+} */
+
+/* ------------------------------------------------------------- */
+/* Modals
+/* ------------------------------------------------------------- */
+
+/* Forms */
+section.modal > div.content {
+    margin-top: 0px;
+}
+
+section.modal > div.content > header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 20px 0px 20px;
+    background-color: #fff !important;
+}
+
+section.modal > div.content > header > a {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #fff;
+    font-size: 18px;
+    font-weight: 400;
+    color: #757575;
+}
+
+section.modal > div.content > footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px 20px 20px;
+    border: none !important;
+}
+
+section.modal > div.content > footer > a,
+section.modal > div.content > footer > button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 5px;
+    border-radius: 50%;
+    background-color: #eee;
+    font-size: 18px;
+    font-weight: 400;
+    color: #757575;
 }
 
 /* Success & Alert */
-section.modal.success > .content,
-section.modal.alert > .content {
+section.modal.success > div.content,
+section.modal.alert > div.content {
     min-width: 100%;
     margin: 0px;
 }
 
-section.modal.success main,
-section.modal.alert main {
+section.modal.success > div.content > main,
+section.modal.alert > div.content > main {
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -605,70 +610,63 @@ section.modal.alert main {
     flex-direction: column;
 }
 
-section.modal.success main,
-section.modal.alert main {
-    padding: 40px;
-}
-
-section.modal.success main {
+section.modal.success > div.content > main {
     background-color: #009688;
 }
 
-section.modal.alert main {
+section.modal.alert > div.content > main {
     background-color: #f44336;
 }
 
-section.modal.success main > i,
-section.modal.alert main > i {
-    margin-bottom: 40px;
-    font-size: 160px;
+section.modal.success > div.content > main > i,
+section.modal.alert > div.content > main > i {
+    margin-bottom: 20px;
+    font-size: 200px;
     color: #fff;
 }
 
-section.modal.success main > p,
-section.modal.alert main > p {
-    margin-bottom: 20px;
+section.modal.success > div.content > main > p,
+section.modal.alert > div.content > main > p {
     font-size: 14px;
     text-align: center;
     color: #fff;
 }
 
-section.modal.success main > a,
-section.modal.alert main > a {
-    width: auto;
+section.modal.success > div.content > main > div,
+section.modal.alert > div.content > main > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+section.modal.success > div.content > main > div > a,
+section.modal.alert > div.content > main > div > a {
+    width: 50px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
-    padding: 0px 20px;
-    box-sizing: border-box;
+    margin: 20px 5px 0px 5px;
+    border-radius: 50%;
     background-color: #fff;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 400;
-    text-align: center;
 }
 
-section.modal.success main > a {
-    color: #009688;
+section.modal.success > div.content > main > div > a {
+    color: #009688
 }
 
-section.modal.alert main > a {
+section.modal.alert > div.content > main > div > a {
     color: #f44336;
 }
 
-section.modal.success main > i:last-child,
-section.modal.alert main > i:last-child,
-section.modal.success main > p:last-child,
-section.modal.alert main > p:last-child,
-section.modal.success main > a:last-child,
-section.modal.alert main > a:last-child {
-    margin-bottom: 0px;
-}
+/* ------------------------------------------------------------- */
+/* Fields groups
+/* ------------------------------------------------------------- */
 
-/* Fields group
------------------------------------------------------------------------------- */
 fieldset.fields-group {
+    width: 100%;
     margin-bottom: 10px;
 }
 
@@ -676,25 +674,15 @@ fieldset.fields-group:last-child {
     margin-bottom: 0px;
 }
 
-/* Titles & Subtitles */
-fieldset.fields-group div.title > h4 {
+/* Inputs, textareas and selects */
+fieldset.fields-group div.text {
     width: 100%;
-    margin: 20px 0px 10px 0px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    text-overflow: ellipsis;
-    letter-spacing: 0px;
-    white-space: nowrap;
-    color: #000;
 }
 
-/* Inputs (text, number, date, time, etc.), textareas and selects */
 fieldset.fields-group div.text > h6 {
     width: 100%;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
-    text-transform: uppercase;
     text-overflow: ellipsis;
     letter-spacing: 0px;
     white-space: nowrap;
@@ -708,13 +696,18 @@ fieldset.fields-group div.text > select {
     height: 50px;
     padding: 0px 20px;
     border: 1px solid #eee;
+    border-radius: 50px;
     box-sizing: border-box;
     background-color: #eee;
-    transition: 400ms;
+    font-size: 12px;
+    font-weight: 400;
+    color: #212121;
 }
 
 fieldset.fields-group div.text > textarea {
+    height: auto;
     min-height: 150px;
+    padding: 20px;
 }
 
 fieldset.fields-group div.text > input:focus,
@@ -731,96 +724,125 @@ fieldset.fields-group div.text > select:disabled {
     cursor: no-drop;
 }
 
-/*  */
-fieldset.fields-group div.compound {
-    position: relative;
+/* Checkboxes and radios */
+fieldset.fields-group div.checkbox {
+    width: 100%;
 }
 
-fieldset.fields-group div.compound > h6 {
+fieldset.fields-group div.checkbox.st-1 > h6 {
     width: 100%;
-    font-size: 12px;
+    padding: 15px 10px 5px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
     font-weight: 400;
-    text-transform: uppercase;
     text-overflow: ellipsis;
     letter-spacing: 0px;
     white-space: nowrap;
     color: #757575;
 }
 
-fieldset.fields-group div.compound > input {
-    width: 100%;
-    height: 50px;
-    border: 1px solid #eee;
+fieldset.fields-group div.checkbox.st-1 > h6:first-child {
+    padding-top: 20px;
+}
+
+fieldset.fields-group div.checkbox.st-1 > label,
+fieldset.fields-group div.checkbox.st-2 > label {
+    margin-bottom: 5px;
+    padding: 5px;
     box-sizing: border-box;
+    border-radius: 20px;
     background-color: #eee;
-    transition: 400ms;
+    cursor: pointer;
 }
 
-fieldset.fields-group div.compound.select > input {
-    padding: 0px 20px 0px 110px;
+fieldset.fields-group div.checkbox.st-1 > label {
+    width: auto;
+    display: inline-block;
+    margin-right: 5px;
 }
 
-fieldset.fields-group div.compound.span > input {
-    padding: 0px 110px 0px 60px;
+fieldset.fields-group div.checkbox.st-2 > label {
+    width: 100%;
+    display: block;
 }
 
-fieldset.fields-group div.compound.action > input {
-    padding: 0px 20px 0px 60px;
+fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]::before,
+fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]::before {
+    border-radius: 50%;
+    border-color: #e0e0e0;
 }
 
-fieldset.fields-group div.compound.select > select,
-fieldset.fields-group div.compound.span > span.first,
-fieldset.fields-group div.compound.span > span.last,
-fieldset.fields-group div.compound.action > a {
-    height: 48px;
-    position: absolute;
-    top: 1px;
-    bottom: 1px;
-    border: none;
-    box-sizing: border-box;
+fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]:checked::before,
+fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]:checked::before {
+    border-radius: 0px;
+    border-color: #fff;
+}
+
+fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]::after,
+fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]::after {
+    border-radius: 50%;
     background-color: #e0e0e0;
 }
 
-fieldset.fields-group div.compound.select > select {
-    width: 100px;
-    left: 3.5px;
-    padding-left: 15px;
-    cursor: pointer;
+fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]:checked::after,
+fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]:checked::after {
+    background-color: #009688;
+}
+
+fieldset.fields-group div.checkbox.st-1 > label > span,
+fieldset.fields-group div.checkbox.st-2 > label > span {
+    width: auto;
+    font-size: 12px;
+    font-weight: 400;
+    color: #757575;
+}
+
+/* Compounds groups */
+fieldset.fields-group div.compound {
+    width: 100%;
+    position: relative;
+}
+
+fieldset.fields-group div.compound > h6 {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    letter-spacing: 0px;
+    white-space: nowrap;
+    color: #757575;
+}
+
+/* --- */
+fieldset.fields-group div.compound.st-1-left > input,
+fieldset.fields-group div.compound.st-1-right > input,
+fieldset.fields-group div.compound.st-2-left > input,
+fieldset.fields-group div.compound.st-2-right > input,
+fieldset.fields-group div.compound.st-3-left > input,
+fieldset.fields-group div.compound.st-3-right > input,
+fieldset.fields-group div.compound.st-4-left > input,
+fieldset.fields-group div.compound.st-4-right > input,
+fieldset.fields-group div.compound.st-4-left > select,
+fieldset.fields-group div.compound.st-4-right > select {
+    width: 100%;
+    height: 50px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border: 1px solid #eee;
+    border-radius: 50px;
+    box-sizing: border-box;
+    background-color: #eee;
+    font-size: 12px;
+    font-weight: 400;
+    color: #212121;
+}
+
+fieldset.fields-group div.compound.st-4-left > select,
+fieldset.fields-group div.compound.st-4-right > select {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-}
-
-fieldset.fields-group div.compound.span > span.first,
-fieldset.fields-group div.compound.span > span.last {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #757575;
-}
-
-fieldset.fields-group div.compound.span > span.first {
-    width: 50px;
-    left: 3.5px;
-    font-size: 16px;
-}
-
-fieldset.fields-group div.compound.span > span.last {
-    width: 100px;
-    right: 3.5px;
-    font-size: 12px;
-}
-
-fieldset.fields-group div.compound.action > a {
-    width: 50px;
-    left: 3.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: 600;
-    color: #757575;
+    cursor: pointer;
 }
 
 fieldset.fields-group div.compound > input:focus {
@@ -833,20 +855,185 @@ fieldset.fields-group div.compound > input:disabled {
     cursor: no-drop;
 }
 
-/* Uploaders (Low) */
+/*  */
+fieldset.fields-group div.compound.st-1-left > input {
+    padding-right: 20px;
+    padding-left: 120px;
+}
+
+fieldset.fields-group div.compound.st-1-right > input {
+    padding-right: 120px;
+    padding-left: 20px;
+}
+
+fieldset.fields-group div.compound.st-1-left > select,
+fieldset.fields-group div.compound.st-1-right > select {
+    width: 100px;
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    border: none;
+    border-radius: 50px 0px 0px 50px;
+    box-sizing: border-box;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #e0e0e0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #212121;
+    cursor: pointer;
+}
+
+fieldset.fields-group div.compound.st-1-left > select {
+    left: 1px;
+    padding-left: 20px;
+}
+
+fieldset.fields-group div.compound.st-1-right > select {
+    right: 1px;
+    padding-right: 20px;
+}
+
+/*  */
+fieldset.fields-group div.compound.st-2-left > input {
+    padding-right: 20px;
+    padding-left: 70px;
+}
+
+fieldset.fields-group div.compound.st-2-right > input {
+    padding-right: 70px;
+    padding-left: 20px;
+}
+
+fieldset.fields-group div.compound.st-2-left > a,
+fieldset.fields-group div.compound.st-2-right > a {
+    width: 50px;
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px 0px 0px 50px;
+    background-color: #e0e0e0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #757575;
+}
+
+fieldset.fields-group div.compound.st-2-left > a {
+    left: 1px;
+}
+
+fieldset.fields-group div.compound.st-2-right > a {
+    right: 1px;
+}
+
+/*  */
+fieldset.fields-group div.compound.st-3-left > input {
+    padding-right: 120px;
+    padding-left: 70px;
+}
+
+fieldset.fields-group div.compound.st-3-right > input {
+    padding-right: 70px;
+    padding-left: 120px;
+}
+
+fieldset.fields-group div.compound.st-3-left > span.first,
+fieldset.fields-group div.compound.st-3-left > span.last,
+fieldset.fields-group div.compound.st-3-right > span.first,
+fieldset.fields-group div.compound.st-3-right > span.last {
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0;
+    color: #757575;
+}
+
+fieldset.fields-group div.compound.st-3-left > span.first,
+fieldset.fields-group div.compound.st-3-right > span.first {
+    left: 1px;
+    border-radius: 50px 0px 0px 50px;
+}
+
+fieldset.fields-group div.compound.st-3-left > span.last,
+fieldset.fields-group div.compound.st-3-right > span.last {
+    right: 1px;
+    border-radius: 0px 50px 50px 0px;
+}
+
+fieldset.fields-group div.compound.st-3-left > span.first,
+fieldset.fields-group div.compound.st-3-right > span.last {
+    width: 50px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+fieldset.fields-group div.compound.st-3-left > span.last,
+fieldset.fields-group div.compound.st-3-right > span.first {
+    width: 100px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/*  */
+fieldset.fields-group div.compound.st-4-left > input,
+fieldset.fields-group div.compound.st-4-left > select {
+    padding-right: 20px;
+    padding-left: 50px;
+}
+
+fieldset.fields-group div.compound.st-4-right > input,
+fieldset.fields-group div.compound.st-4-right > select {
+    padding-right: 50px;
+    padding-left: 20px;
+}
+
+fieldset.fields-group div.compound.st-4-left > span,
+fieldset.fields-group div.compound.st-4-right > span {
+    width: 50px;
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #eee;
+    font-size: 16px;
+    font-weight: 600;
+    color: #757575;
+}
+
+fieldset.fields-group div.compound.st-4-left > span {
+    left: 1px;
+}
+
+fieldset.fields-group div.compound.st-4-right > span {
+    right: 1px;
+}
+
+/* Low uploaders */
 fieldset.fields-group div.uploader[data-low-uploader] {
     width: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 fieldset.fields-group div.uploader[data-low-uploader] > h6 {
-    width: 100%;
-    font-size: 12px;
+    width: auto;
+    margin-bottom: 20px;
+    font-size: 14px;
     font-weight: 400;
-    text-transform: uppercase;
     text-overflow: ellipsis;
     letter-spacing: 0px;
     white-space: nowrap;
@@ -854,38 +1041,46 @@ fieldset.fields-group div.uploader[data-low-uploader] > h6 {
 }
 
 fieldset.fields-group div.uploader[data-low-uploader] > figure {
-    width: 100%;
-    margin-bottom: 5px;
-    border: 1px solid #eee;
-    box-sizing: border-box;
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 fieldset.fields-group div.uploader[data-low-uploader] > figure > img {
     width: 100%;
 }
 
-fieldset.fields-group div.uploader[data-low-uploader] > a[data-select] {
-    width: auto;
-    height: 50px;
+fieldset.fields-group div.uploader[data-low-uploader] > figure > a {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 5px;
-    padding: 0px 20px;
-    box-sizing: border-box;
-    background-color: #eee;
-    font-size: 12px;
-    font-weight: 400;
-    text-transform: uppercase;
-    color: #757575;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-size: 50px;
+    color: #fff;
+    opacity: 0;
+    transition: 400ms;
+}
+
+fieldset.fields-group div.uploader[data-low-uploader] > figure > a:hover {
+    opacity: 1;
 }
 
 fieldset.fields-group div.uploader[data-low-uploader] > input[data-select] {
     display: none;
 }
 
-/* Uploader (Fast) */
-fieldset.fields-group div.uploader[data-fast-uploader] {
+/* Fast uploader */
+/* fieldset.fields-group div.uploader[data-fast-uploader] {
     width: auto;
     display: inline-block;
     padding: 10px 0px;
@@ -935,10 +1130,10 @@ fieldset.fields-group div.uploader[data-fast-uploader] > a[data-select] {
 
 fieldset.fields-group div.uploader[data-fast-uploader] > input[data-select] {
     display: none;
-}
+} */
 
-/*  Uploader (Multiple) */
-fieldset.fields-group div.uploader[data-multiple-uploader] > h6 {
+/*  Multiple uploader */
+/* fieldset.fields-group div.uploader[data-multiple-uploader] > h6 {
     width: 100%;
     font-size: 12px;
     font-weight: 400;
@@ -974,12 +1169,10 @@ fieldset.fields-group div.uploader[data-multiple-uploader] > figure[data-preview
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.6);
     color: #fff;
-    transition: 400ms;
 }
 
 fieldset.fields-group div.uploader[data-multiple-uploader] > figure[data-preview] > a:hover {
     opacity: 1;
-    transition: 400ms;
 }
 
 fieldset.fields-group div.uploader[data-multiple-uploader] > a[data-select] {
@@ -997,43 +1190,42 @@ fieldset.fields-group div.uploader[data-multiple-uploader] > a[data-select] {
 
 fieldset.fields-group div.uploader[data-multiple-uploader] > input[data-select] {
     display: none;
+} */
+
+/* Title */
+fieldset.fields-group div.title {
+    width: 100%;
 }
 
-/* Displayers */
-fieldset.fields-group div.display > h6 {
-    width: 100%;
-    font-size: 12px;
-    font-weight: 400;
-    text-transform: uppercase;
-    text-overflow: ellipsis;
-    letter-spacing: 0px;
-    white-space: nowrap;
-    color: #757575;
-}
-
-fieldset.fields-group div.display > aside {
-    width: 100%;
-    min-height: 40px;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
+fieldset.fields-group div.title > h6 {
+    padding: 30px 10px 10px 10px;
     box-sizing: border-box;
-    background-color: #eeeeee;
+    font-size: 14px;
+    font-weight: 400;
+    color: #212121;
 }
 
-fieldset.fields-group div.display > a {
+/* Buttons */
+fieldset.fields-group div.button {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+fieldset.fields-group div.button > a,
+fieldset.fields-group div.button > button {
+    width: 50px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 5px;
-    padding: 0px 20px;
-    box-sizing: border-box;
+    margin: 0px 5px;
+    border-radius: 50%;
     background-color: #eee;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 400;
-    text-align: center;
-    text-transform: uppercase;
     color: #757575;
 }
 
@@ -1043,13 +1235,7 @@ fieldset.fields-group div.caption {
     float: left;
 }
 
-fieldset.fields-group div.caption > p {
-    width: auto;
-    font-size: 12px;
-    font-weight: 400;
-    color: #757575;
-}
-
+fieldset.fields-group div.caption > p,
 fieldset.fields-group div.caption > a {
     width: auto;
     font-size: 12px;
@@ -1063,161 +1249,34 @@ fieldset.fields-group div.warning {
     float: right;
 }
 
-fieldset.fields-group div.warning > p {
+fieldset.fields-group div.warning > p,
+fieldset.fields-group div.warning > a {
     width: auto;
     font-size: 12px;
     font-weight: 400;
     color: #f44336;
 }
 
-/* Inputs (checkbox & radio) */
-fieldset.fields-group div.checkbox > h6 {
+/* Messages */
+fieldset.fields-group div.message {
     width: 100%;
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #212121;
-}
-
-fieldset.fields-group div.checkbox > fieldset {
-    width: 100%;
-    height: 40px;
-    position: relative;
-    margin-bottom: 10px;
-}
-
-fieldset.fields-group div.checkbox > fieldset > span {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    color: #757575;
-}
-
-fieldset.fields-group div.checkbox > fieldset > input {
-    width: 100%;
-    height: 40px;
-    padding: 0px 20px 0px 40px;
-    border: none;
+    padding: 20px;
     box-sizing: border-box;
-    background-color: #eee;
 }
 
-fieldset.fields-group div.checkbox > label {
-    width: auto;
-    min-height: 20px;
-    display: inline-block;
-    margin-right: 2px;
-    margin-bottom: 5px;
-    padding: 5px 8px 5px 5px;
-    box-sizing: border-box;
-    background-color: #eee;
-    cursor: pointer;
-}
-
-fieldset.fields-group div.checkbox.list > label {
-    width: 100%;
-    display: block;
-}
-
-fieldset.fields-group div.checkbox > label > input[type="checkbox"]::before {
-    border-color: #e0e0e0;
-}
-
-fieldset.fields-group div.checkbox > label > input[type="checkbox"]:checked::before {
-    border-color: #fff;
-}
-
-fieldset.fields-group div.checkbox > label > input[type="checkbox"]::after {
-    background-color: #e0e0e0;
-}
-
-fieldset.fields-group div.checkbox > label > input[type="checkbox"]:checked::after {
-    background-color: #009688;
-}
-
-fieldset.fields-group div.checkbox > label > span {
-    font-size: 12px;
-    font-weight: 400;
-    color: #757575;
-}
-
-/* fieldset.fields-group div.checkbox {
-    width: auto;
-    float: right;
-    margin: 5px 0px 0px 5px;
-}
-
-fieldset.fields-group div.checkbox > span {
-    font-size: 12px;
-    font-weight: 400;
-    color: #757575;
-} */
-
-/* Message */
 fieldset.fields-group div.message > p {
     width: 100%;
     font-size: 12px;
     font-weight: 400;
     text-align: center;
-    color: #757575;
-}
-
-/* Buttons */
-fieldset.fields-group div.button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-@media (max-width: 768px) {
-
-    fieldset.fields-group div.button {
-        justify-content: center;
-        flex-direction: column;
-    }
-}
-
-fieldset.fields-group div.button > a,
-fieldset.fields-group div.button > button {
-    width: auto;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 5px;
-    padding: 0px 20px;
-    box-sizing: border-box;
-    background-color: #eee;
-    font-size: 12px;
-    font-weight: 400;
-    text-transform: uppercase;
-    color: #757575;
-}
-
-@media (max-width: 768px) {
-
-    fieldset.fields-group div.button > a,
-    fieldset.fields-group div.button > button {
-        width: 100%;
-        margin-bottom: 5px;
-        margin-left: 0px;
-    }
-
-    fieldset.fields-group div.button > a:last-child,
-    fieldset.fields-group div.button > button:last-child {
-        margin-bottom: 0px;
-    }
+    color: #bdbdbd;
 }
 
 /* Errors */
+fieldset.fields-group div.error {
+    width: inherit;
+}
+
 fieldset.fields-group div.error > h6 {
     color: #f44336 !important;
 }
@@ -1233,6 +1292,7 @@ fieldset.fields-group div.error > p.error {
     width: 100% !important;
     font-size: 12px !important;
     font-weight: 400 !important;
+    text-align: center !important;
     color: #f44336 !important;
 }
 
@@ -1242,7 +1302,7 @@ fieldset.fields-group span.required-field {
     color: #f44336;
 }
 
-/* Forms */
+/* Spans */
 form > fieldset.fields-group > *,
 form > fieldset.fields-group > .row > [class*="span"] > * {
     padding-right: 2.5px !important;

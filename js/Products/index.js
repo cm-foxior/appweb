@@ -4,37 +4,47 @@ $(document).ready(function()
 {
     $('[data-search="products"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="products"]'), 'tbl-st-1');
+        search_in_table($(this).val(), $('[data-table="products"]').find(' > tbody > tr'));
     });
 
     $('[data-random="token"]').on('click', function()
     {
-        generate_random_token('uppercase_number', 8, $('[name="token"]'));
+        generate_string(['uppercase','lowercase','int'], 8, $('[name="token"]'));
     });
 
     $('[name="token"]').on('keyup', function()
     {
-        check_type_input('letter_number', $(this).val(), $(this));
+        validate_string(['uppercase','lowercase','int'], $(this).val(), $(this));
     });
 
     $('[name="price"]').on('keyup', function()
     {
-        check_type_input('decimal', $(this).val(), $(this));
-    });
-
-    $('[name="weight_empty"]').on('keyup', function()
-    {
-        check_type_input('decimal', $(this).val(), $(this));
+        validate_string('float', $(this).val(), $(this));
     });
 
     $('[name="weight_full"]').on('keyup', function()
     {
-        check_type_input('decimal', $(this).val(), $(this));
+        validate_string('float', $(this).val(), $(this));
+    });
+
+    $('[name="weight_empty"]').on('keyup', function()
+    {
+        validate_string('float', $(this).val(), $(this));
     });
 
     $('[data-search="supplies"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="supplies"]'), 'cbx');
+        search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'), 'cbx', 'hidden');
+    });
+
+    $('[data-search="recipes"]').on('keyup', function()
+    {
+        search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'), 'cbx', 'hidden');
+    });
+
+    $('[data-search="categories"]').on('keyup', function()
+    {
+        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'), 'cbx');
     });
 
     var create_action = 'create_product';
@@ -79,8 +89,16 @@ $(document).ready(function()
 
             if (data.type == 'sale' || data.type == 'supply')
             {
-                $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_empty"]').val(data.weight.empty);
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_full"]').val(data.weight.full);
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_empty"]').val(data.weight.empty);
+            }
+
+            if (data.type == 'sale' || data.type == 'recipe')
+            {
+                $.each(data.supplies, function (key, value)
+                {
+                    $('[data-modal="' + create_action + '"]').find('[name="supplies[]"][value="' + value + '"]').prop('checked', true);
+                });
             }
 
             if (data.type == 'sale')
@@ -88,14 +106,6 @@ $(document).ready(function()
                 $.each(data.recipes, function (key, value)
                 {
                     $('[data-modal="' + create_action + '"]').find('[name="recipes[]"][value="' + value + '"]').prop('checked', true);
-                });
-            }
-
-            if (data.type == 'recipe')
-            {
-                $.each(data.supplies, function (key, value)
-                {
-                    $('[data-modal="' + create_action + '"]').find('[name="supplies[]"][value="' + value + '"]').prop('checked', true);
                 });
             }
 

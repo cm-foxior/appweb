@@ -4,7 +4,7 @@ $(document).ready(function()
 {
     $('[data-search="products_unities"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="products_unities"]'), 'tbl-st-1');
+        search_in_table($(this).val(), $('[data-table="products_unities"]').find(' > tbody > tr'));
     });
 
     var create_action = 'create_product_unity';
