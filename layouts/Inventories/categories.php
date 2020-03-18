@@ -8,13 +8,17 @@ $this->dependencies->add(['js', '{$path.js}Inventories/categories.min.js']);
 
 %{header}%
 <header class="modbar">
+    <?php if (Permissions::user(['inventories'], true) == true) : ?>
+    <a href="/inventories" class="unfocus"><i class="fas fa-box-open"></i><span>{$lang.inventories}</span></a>
+    <span></span>
+    <?php endif; ?>
     <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
     <a href="/inventories/types" class="unfocus"><i class="fas fa-bookmark"></i><span>{$lang.types}</span></a>
     <?php endif; ?>
     <?php if (Permissions::user(['inventories_locations'], true) == true) : ?>
     <a href="/inventories/locations" class="unfocus"><i class="fas fa-map-marker-alt"></i><span>{$lang.locations}</span></a>
     <?php endif; ?>
-    <a href="/inventories/categories"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
+    <a href="/inventories/categories"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
     <span></span>
     <?php if (Permissions::user(['create_inventories_categories']) == true) : ?>
     <a data-action="create_inventory_category" class="success"><i class="fas fa-plus"></i><span>{$lang.create}</span></a>
@@ -25,6 +29,7 @@ $this->dependencies->add(['js', '{$path.js}Inventories/categories.min.js']);
             <input type="text" data-search="inventories_categories" placeholder="{$lang.search}">
         </div>
     </fieldset>
+    <span></span>
     <fieldset class="fields-group">
         <div class="compound st-4-left">
             <span><i class="fas fa-angle-double-down"></i></span>

@@ -148,7 +148,7 @@
                     <li><a href="/products/salemenu"><i class="fas fa-dollar-sign"></i>{$lang.sale_menu}</a></li>
                     <li><a href="/products/supplies"><i class="fas fa-layer-group"></i>{$lang.supplies}</a></li>
                     <li><a href="/products/recipes"><i class="fas fa-receipt"></i>{$lang.recipes}</a></li>
-                    <li><a href="/products/workmaterials"><i class="fas fa-mail-bulk"></i>{$lang.work_materials}</a></li>
+                    <li><a href="/products/workmaterial"><i class="fas fa-mail-bulk"></i>{$lang.work_material}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
                     <li><a href="/products/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>

@@ -11,10 +11,10 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
     <a href="/products/salemenu" <?php echo ($data['type'] != 'sale') ? 'class="unfocus"' : ''; ?>><i class="fas fa-dollar-sign"></i><span>{$lang.sale_menu}</span></a>
     <a href="/products/supplies" <?php echo ($data['type'] != 'supply') ? 'class="unfocus"' : ''; ?>><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
     <a href="/products/recipes" <?php echo ($data['type'] != 'recipe') ? 'class="unfocus"' : ''; ?>><i class="fas fa-receipt"></i><span>{$lang.recipes}</span></a>
-    <a href="/products/workmaterials" <?php echo ($data['type'] != 'work_material') ? 'class="unfocus"' : ''; ?>><i class="fas fa-mail-bulk"></i><span>{$lang.work_materials}</span></a>
+    <a href="/products/workmaterial" <?php echo ($data['type'] != 'work_material') ? 'class="unfocus"' : ''; ?>><i class="fas fa-mail-bulk"></i><span>{$lang.work_material}</span></a>
     <span></span>
     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
-    <a href="/products/categories" class="unfocus"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
+    <a href="/products/categories" class="unfocus"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
     <?php endif; ?>
     <?php if (Permissions::user(['products_unities'], true) == true) : ?>
     <a href="/products/unities" class="unfocus"><i class="fas fa-balance-scale-left"></i><span>{$lang.unities}</span></a>

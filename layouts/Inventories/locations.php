@@ -8,12 +8,16 @@ $this->dependencies->add(['js', '{$path.js}Inventories/locations.min.js']);
 
 %{header}%
 <header class="modbar">
+    <?php if (Permissions::user(['inventories'], true) == true) : ?>
+    <a href="/inventories" class="unfocus"><i class="fas fa-box-open"></i><span>{$lang.inventories}</span></a>
+    <span></span>
+    <?php endif; ?>
     <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
     <a href="/inventories/types" class="unfocus"><i class="fas fa-bookmark"></i><span>{$lang.types}</span></a>
     <?php endif; ?>
     <a href="/inventories/locations"><i class="fas fa-map-marker-alt"></i><span>{$lang.locations}</span></a>
     <?php if (Permissions::user(['inventories_categories'], true) == true) : ?>
-    <a href="/inventories/categories" class="unfocus"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
+    <a href="/inventories/categories" class="unfocus"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
     <?php endif; ?>
     <span></span>
     <?php if (Permissions::user(['create_inventories_locations']) == true) : ?>

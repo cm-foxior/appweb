@@ -17,7 +17,7 @@ class Products_controller extends Controller
 			$params[1] = 'supply';
 		else if ($params[0] == 'recipes')
 			$params[1] = 'recipe';
-		else if ($params[0] == 'workmaterials')
+		else if ($params[0] == 'workmaterial')
 			$params[1] = 'work_material';
 
 		if (Format::exist_ajax_request() == true)
