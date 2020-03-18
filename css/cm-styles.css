@@ -246,11 +246,11 @@ table.tbl-st-1 > tbody > tr > td {
     vertical-align: middle;
     padding: 20px;
     box-sizing: border-box;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #212121;
+    color: #757575;
 }
 
 table.tbl-st-1 > tbody > tr > td:first-child {
@@ -259,14 +259,14 @@ table.tbl-st-1 > tbody > tr > td:first-child {
 
 /*  */
 table.tbl-st-1 > tbody > tr > td.avatar {
-    width: 50px;
+    width: 40px;
     padding-right: 0px;
     padding-left: 0px;
 }
 
 table.tbl-st-1 > tbody > tr > td.avatar > figure {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -725,14 +725,24 @@ fieldset.fields-group div.text > select:disabled {
 }
 
 /* Checkboxes and radios */
-fieldset.fields-group div.checkbox > h6 {
+fieldset.fields-group div.checkbox {
     width: 100%;
+}
+
+fieldset.fields-group div.checkbox.st-1 > h6 {
+    width: 100%;
+    padding: 15px 10px 5px 10px;
+    box-sizing: border-box;
     font-size: 14px;
     font-weight: 400;
     text-overflow: ellipsis;
     letter-spacing: 0px;
     white-space: nowrap;
     color: #757575;
+}
+
+fieldset.fields-group div.checkbox.st-1 > h6:first-child {
+    padding-top: 20px;
 }
 
 fieldset.fields-group div.checkbox.st-1 > label,
@@ -827,6 +837,14 @@ fieldset.fields-group div.compound.st-4-right > select {
     color: #212121;
 }
 
+fieldset.fields-group div.compound.st-4-left > select,
+fieldset.fields-group div.compound.st-4-right > select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
 fieldset.fields-group div.compound > input:focus {
     border-color: #e0e0e0;
 }
@@ -897,8 +915,9 @@ fieldset.fields-group div.compound.st-2-right > a {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50px 0px 0px 50px;
     background-color: #e0e0e0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #757575;
 }
@@ -939,17 +958,19 @@ fieldset.fields-group div.compound.st-3-right > span.last {
 fieldset.fields-group div.compound.st-3-left > span.first,
 fieldset.fields-group div.compound.st-3-right > span.first {
     left: 1px;
+    border-radius: 50px 0px 0px 50px;
 }
 
 fieldset.fields-group div.compound.st-3-left > span.last,
 fieldset.fields-group div.compound.st-3-right > span.last {
     right: 1px;
+    border-radius: 0px 50px 50px 0px;
 }
 
 fieldset.fields-group div.compound.st-3-left > span.first,
 fieldset.fields-group div.compound.st-3-right > span.last {
     width: 50px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -984,7 +1005,7 @@ fieldset.fields-group div.compound.st-4-right > span {
     justify-content: center;
     border-radius: 50%;
     background-color: #eee;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #757575;
 }
@@ -1170,6 +1191,19 @@ fieldset.fields-group div.uploader[data-multiple-uploader] > a[data-select] {
 fieldset.fields-group div.uploader[data-multiple-uploader] > input[data-select] {
     display: none;
 } */
+
+/* Title */
+fieldset.fields-group div.title {
+    width: 100%;
+}
+
+fieldset.fields-group div.title > h6 {
+    padding: 30px 10px 10px 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 400;
+    color: #212121;
+}
 
 /* Buttons */
 fieldset.fields-group div.button {

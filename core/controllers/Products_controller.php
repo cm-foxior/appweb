@@ -37,18 +37,18 @@ class Products_controller extends Controller
 						array_push($errors, ['token','{$lang.invalid_field}']);
 				}
 
+				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				{
+					if (Validations::empty($_POST['unity']) == false)
+						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
+				}
+
 				if ($params[1] == 'sale')
 				{
 					if (Validations::empty($_POST['price']) == false)
 						array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
 					else if (Validations::number('float', $_POST['price']) == false)
 						array_push($errors, ['price','{$lang.invalid_field}']);
-				}
-
-				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
-				{
-					if (Validations::empty($_POST['unity']) == false)
-						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
 				}
 
 				if ($params[1] == 'sale' OR $params[1] == 'supply')
@@ -149,10 +149,10 @@ class Products_controller extends Controller
 
 			$data['type'] = $params[1];
 			$data['products'] = $this->model->read_products($params[1]);
-			$data['products_categories'] = $this->model->read_products_categories(true);
 			$data['products_unities'] = $this->model->read_products_unities(true);
 			$data['products_supplies'] = $this->model->read_products('supply', true);
 			$data['products_recipes'] = $this->model->read_products('recipe', true);
+			$data['products_categories'] = $this->model->read_products_categories(true);
 
 			$template = $this->view->render($this, 'index');
 

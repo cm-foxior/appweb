@@ -15,9 +15,7 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
     <a href="/products/workmaterials" class="unfocus"><i class="fas fa-mail-bulk"></i><span>{$lang.work_materials}</span></a>
     <span></span>
     <?php endif; ?>
-    <?php if (Permissions::user(['products_categories'], true) == true) : ?>
     <a href="/products/categories"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
-    <?php endif; ?>
     <?php if (Permissions::user(['products_unities'], true) == true) : ?>
     <a href="/products/unities" class="unfocus"><i class="fas fa-balance-scale-left"></i><span>{$lang.unities}</span></a>
     <?php endif; ?>
@@ -28,19 +26,22 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
     <?php if (Permissions::user(['create_products_categories']) == true) : ?>
     <a data-action="create_product_category" class="success"><i class="fas fa-plus"></i><span>{$lang.create}</span></a>
     <?php endif; ?>
-    <fieldset>
-        <span><i class="fas fa-search"></i></span>
-        <input type="text" data-search="products_categories">
+    <fieldset class="fields-group">
+        <div class="compound st-4-left">
+            <span><i class="fas fa-search"></i></span>
+            <input type="text" data-search="products_categories" placeholder="{$lang.search}">
+        </div>
     </fieldset>
-    <span></span>
-    <fieldset>
-        <span><i class="fas fa-angle-double-down"></i></span>
-        <select name="level" data-search="products_categories">
-            <option value="" selected>{$lang.all_levels}</option>
-            <?php foreach ($data['products_categories_levels'] as $value) : ?>
-            <option value="{$lang.level} <?php echo $value; ?>">{$lang.level} <?php echo $value; ?></option>
-            <?php endforeach; ?>
-        </select>
+    <fieldset class="fields-group">
+        <div class="compound st-4-left">
+            <span><i class="fas fa-angle-double-down"></i></span>
+            <select name="level" data-search="products_categories">
+                <option value="" selected>{$lang.all_levels}</option>
+                <?php foreach ($data['products_categories_levels'] as $value) : ?>
+                <option value="{$lang.level} <?php echo $value; ?>">{$lang.level} <?php echo $value; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
     </fieldset>
 </header>
 <main>
@@ -53,7 +54,7 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
                 <td class="smalltag">
                     <?php if ($value['blocked'] == true) : ?>
                     <span class="busy">{$lang.blocked}</span>
-                <?php elseif ($value['blocked'] == false) : ?>
+                    <?php elseif ($value['blocked'] == false) : ?>
                     <span>{$lang.unblocked}</span>
                     <?php endif; ?>
                 </td>
@@ -120,7 +121,7 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
     <div class="content">
         <main>
             <i class="fas fa-trash"></i>
-            <div class="button">
+            <div>
                 <a button-success><i class="fas fa-check"></i></a>
                 <a button-close><i class="fas fa-times"></i></a>
             </div>

@@ -34,17 +34,17 @@ $(document).ready(function()
 
     $('[data-search="supplies"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'));
-    });
-
-    $('[data-search="categories"]').on('keyup', function()
-    {
-        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'));
+        search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'), 'cbx', 'hidden');
     });
 
     $('[data-search="recipes"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'));
+        search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'), 'cbx', 'hidden');
+    });
+
+    $('[data-search="categories"]').on('keyup', function()
+    {
+        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'), 'cbx');
     });
 
     var create_action = 'create_product';
@@ -93,10 +93,13 @@ $(document).ready(function()
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_empty"]').val(data.weight.empty);
             }
 
-            $.each(data.categories, function (key, value)
+            if (data.type == 'sale' || data.type == 'recipe')
             {
-                $('[data-modal="' + create_action + '"]').find('[name="categories[]"][value="' + value + '"]').prop('checked', true);
-            });
+                $.each(data.supplies, function (key, value)
+                {
+                    $('[data-modal="' + create_action + '"]').find('[name="supplies[]"][value="' + value + '"]').prop('checked', true);
+                });
+            }
 
             if (data.type == 'sale')
             {
@@ -106,13 +109,10 @@ $(document).ready(function()
                 });
             }
 
-            if (data.type == 'recipe')
+            $.each(data.categories, function (key, value)
             {
-                $.each(data.supplies, function (key, value)
-                {
-                    $('[data-modal="' + create_action + '"]').find('[name="supplies[]"][value="' + value + '"]').prop('checked', true);
-                });
-            }
+                $('[data-modal="' + create_action + '"]').find('[name="categories[]"][value="' + value + '"]').prop('checked', true);
+            });
         });
     });
 

@@ -8,13 +8,11 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
 
 %{header}%
 <header class="modbar">
-    <?php if (Permissions::user(['products'], true) == true) : ?>
     <a href="/products/salemenu" <?php echo ($data['type'] != 'sale') ? 'class="unfocus"' : ''; ?>><i class="fas fa-dollar-sign"></i><span>{$lang.sale_menu}</span></a>
     <a href="/products/supplies" <?php echo ($data['type'] != 'supply') ? 'class="unfocus"' : ''; ?>><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
     <a href="/products/recipes" <?php echo ($data['type'] != 'recipe') ? 'class="unfocus"' : ''; ?>><i class="fas fa-receipt"></i><span>{$lang.recipes}</span></a>
     <a href="/products/workmaterials" <?php echo ($data['type'] != 'work_material') ? 'class="unfocus"' : ''; ?>><i class="fas fa-mail-bulk"></i><span>{$lang.work_materials}</span></a>
     <span></span>
-    <?php endif; ?>
     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
     <a href="/products/categories" class="unfocus"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
     <?php endif; ?>
@@ -28,9 +26,11 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
     <?php if (Permissions::user(['create_products']) == true) : ?>
     <a data-action="create_product" class="success"><i class="fas fa-plus"></i><span>{$lang.create}</span></a>
     <?php endif; ?>
-    <fieldset>
-        <span><i class="fas fa-search"></i></span>
-        <input type="text" data-search="products">
+    <fieldset class="fields-group">
+        <div class="compound st-4-left">
+            <span><i class="fas fa-search"></i></span>
+            <input type="text" data-search="products" placeholder="{$lang.search}">
+        </div>
     </fieldset>
 </header>
 <main>
@@ -85,11 +85,6 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     <a data-action="update_product" data-id="<?php echo $value['id']; ?>" class="warning"><i class="fas fa-pen"></i><span>{$lang.update}</span></a>
                     <?php endif; ?>
                 </td>
-                <td class="button">
-                    <?php if ($value['blocked'] == false) : ?>
-                    <a data-action="update_product" data-id="<?php echo $value['id']; ?>"><i class="fas fa-info-circle"></i><span>{$lang.details}</span></a>
-                    <?php endif; ?>
-                </td>
                 <?php endif; ?>
             </tr>
             <?php endforeach; ?>
@@ -97,7 +92,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
     </table>
 </main>
 <?php if (Permissions::user(['create_products','update_products']) == true) : ?>
-<section class="modal view" data-modal="create_product">
+<section class="modal" data-modal="create_product">
     <div class="content">
         <main>
             <form>
@@ -114,7 +109,11 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php endif; ?>
                 <fieldset class="fields-group">
                     <div class="row">
-                        <div class="<?php echo ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? 'span8' : 'span12' ?>">
+                        <?php if ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
+                        <div class="span8">
+                        <?php else: ?>
+                        <div class="span12">
+                        <?php endif; ?>
                             <fieldset class="fields-group">
                                 <div class="text">
                                     <input type="text" name="name" placeholder="{$lang.name}">
@@ -123,9 +122,9 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         </div>
                         <?php if ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
                         <div class="span4">
-                            <div class="compound action">
+                            <div class="compound st-2-left">
                                 <a data-random="token"><i class="fas fa-redo"></i></a>
-                                <input type="text" name="token" placeholder="{$lang.token}">
+                                <input type="text" name="token" placeholder="{$lang.folio}">
                             </div>
                         </div>
                         <?php endif; ?>
@@ -134,7 +133,11 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php if ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
                 <fieldset class="fields-group">
                     <div class="row">
-                        <div class="<?php echo ($data['type'] == 'sale') ? 'span4' : 'span12' ?>">
+                        <?php if ($data['type'] == 'sale') : ?>
+                        <div class="span4">
+                        <?php else: ?>
+                        <div class="span12">
+                        <?php endif; ?>
                             <div class="text">
                                 <select name="unity">
                                     <option value="" selected hidden>{$lang.unity}</option>
@@ -146,7 +149,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         </div>
                         <?php if ($data['type'] == 'sale') : ?>
                         <div class="span8">
-                            <div class="compound span">
+                            <div class="compound st-3-left">
                                 <span class="first"><i class="fas fa-dollar-sign"></i></span>
                                 <input type="text" name="price" placeholder="{$lang.price_per_unity}">
                                 <span class="last"><?php echo Session::get_value('vkye_account')['currency']; ?></span>
@@ -172,42 +175,72 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     </div>
                 </fieldset>
                 <?php endif; ?>
-                <?php if ($data['type'] == 'recipe') : ?>
-                <?php if (!empty($data['products_supplies'])): ?>
+                <?php if ($data['type'] == 'sale' OR $data['type'] == 'recipe') : ?>
                 <fieldset class="fields-group">
-                    <div class="checkbox" data-cbx="supplies">
+                    <div class="title">
                         <h6>{$lang.supplies}</h6>
-                        <fieldset>
-                            <span><i class="fas fa-search"></i></span>
-                            <input type="text" data-search="supplies">
-                        </fieldset>
+                    </div>
+                    <?php if (!empty($data['products_supplies'])) : ?>
+                    <div class="compound st-4-left">
+                        <span><i class="fas fa-search"></i></span>
+                        <input type="text" data-search="supplies" placeholder="{$lang.search_supplies}">
+                    </div>
+                    <div class="checkbox st-1" data-cbx="supplies">
                         <?php foreach ($data['products_supplies'] as $value) : ?>
-                        <label>
+                        <label class="hidden">
                             <input type="checkbox" name="supplies[]" value="<?php echo $value['id']; ?>">
                             <span><?php echo $value['name']; ?></span>
                         </label>
                         <?php endforeach; ?>
                     </div>
-                </fieldset>
-                <?php else : ?>
-                <fieldset class="fields-group">
+                    <?php else : ?>
                     <div class="button">
                         <a href="/products/supplies"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="message">
                         <p>{$lang.to_select_supplies}</p>
                     </div>
+                    <?php endif; ?>
                 </fieldset>
                 <?php endif; ?>
-                <?php endif; ?>
-                <?php if (!empty($data['products_categories'])) : ?>
+                <?php if ($data['type'] == 'sale') : ?>
                 <fieldset class="fields-group">
-                    <div class="checkbox"  data-cbx="categories">
+                    <div class="title">
+                        <h6>{$lang.recipes}</h6>
+                    </div>
+                    <?php if (!empty($data['products_recipes'])) : ?>
+                    <div class="compound st-4-left">
+                        <span><i class="fas fa-search"></i></span>
+                        <input type="text" data-search="recipes" placeholder="{$lang.search_recipes}">
+                    </div>
+                    <div class="checkbox st-2" data-cbx="recipes">
+                        <?php foreach ($data['products_recipes'] as $value) : ?>
+                        <label class="hidden">
+                            <input type="checkbox" name="recipes[]" value="<?php echo $value['id']; ?>">
+                            <span><?php echo $value['name']; ?></span>
+                        </label>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php else : ?>
+                    <div class="button">
+                        <a href="/products/recipes"><i class="fas fa-plus"></i></a>
+                    </div>
+                    <div class="message">
+                        <p>{$lang.to_select_recipes}</p>
+                    </div>
+                    <?php endif; ?>
+                </fieldset>
+                <?php endif; ?>
+                <fieldset class="fields-group">
+                    <div class="title">
                         <h6>{$lang.categories}</h6>
-                        <fieldset>
-                            <span><i class="fas fa-search"></i></span>
-                            <input type="text" data-search="categories">
-                        </fieldset>
+                    </div>
+                    <?php if (!empty($data['products_categories'])) : ?>
+                    <div class="compound st-4-left">
+                        <span><i class="fas fa-search"></i></span>
+                        <input type="text" data-search="categories" placeholder="{$lang.search_categories}">
+                    </div>
+                    <div class="checkbox st-1" data-cbx="categories">
                         <?php foreach ($data['products_categories'] as $key => $value) : ?>
                         <h6>{$lang.level} <?php echo $key; ?></h6>
                         <?php foreach ($value as $subkey => $subvalue) : ?>
@@ -218,45 +251,15 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         <?php endforeach; ?>
                         <?php endforeach; ?>
                     </div>
-                </fieldset>
-                <?php else : ?>
-                <fieldset class="fields-group">
+                    <?php else : ?>
                     <div class="button">
                         <a href="/products/categories"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="message">
                         <p>{$lang.to_select_categories}</p>
                     </div>
+                    <?php endif; ?>
                 </fieldset>
-                <?php endif; ?>
-                <?php if ($data['type'] == 'sale') : ?>
-                <?php if (!empty($data['products_recipes'])) : ?>
-                <fieldset class="fields-group">
-                    <div class="checkbox list"  data-cbx="recipes">
-                        <h6>{$lang.recipes}</h6>
-                        <fieldset>
-                            <span><i class="fas fa-search"></i></span>
-                            <input type="text" data-search="recipes">
-                        </fieldset>
-                        <?php foreach ($data['products_recipes'] as $value) : ?>
-                        <label>
-                            <input type="checkbox" name="recipes[]" value="<?php echo $value['id']; ?>">
-                            <span><?php echo $value['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
-                    </div>
-                </fieldset>
-                <?php else : ?>
-                <fieldset class="fields-group">
-                    <div class="button">
-                        <a href="/products/recipes"><i class="fas fa-plus"></i></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_recipes}</p>
-                    </div>
-                </fieldset>
-                <?php endif; ?>
-                <?php endif; ?>
                 <fieldset class="fields-group">
                     <div class="button">
                         <button type="submit" class="success"><i class="fas fa-plus"></i></button>
@@ -273,7 +276,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
     <div class="content">
         <main>
             <i class="fas fa-trash"></i>
-            <div class="button">
+            <div>
                 <a button-success><i class="fas fa-check"></i></a>
                 <a button-close><i class="fas fa-times"></i></a>
             </div>

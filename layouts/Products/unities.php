@@ -18,9 +18,7 @@ $this->dependencies->add(['js', '{$path.js}Products/unities.min.js']);
     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
     <a href="/products/categories" class="unfocus"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
     <?php endif; ?>
-    <?php if (Permissions::user(['products_unities'], true) == true) : ?>
     <a href="/products/unities"><i class="fas fa-balance-scale-left"></i><span>{$lang.unities}</span></a>
-    <?php endif; ?>
     <?php if (Permissions::user(['products_barcodes'], true) == true) : ?>
     <a href="/products/barcodes" class="unfocus"><i class="fas fa-barcode"></i><span>{$lang.barcodes}</span></a>
     <?php endif; ?>
@@ -28,9 +26,11 @@ $this->dependencies->add(['js', '{$path.js}Products/unities.min.js']);
     <?php if (Permissions::user(['create_products_unities']) == true) : ?>
     <a data-action="create_product_unity" class="success"><i class="fas fa-plus"></i><span>{$lang.create}</span></a>
     <?php endif; ?>
-    <fieldset>
-        <span><i class="fas fa-search"></i></span>
-        <input type="text" data-search="products_unities">
+    <fieldset class="fields-group">
+        <div class="compound st-4-left">
+            <span><i class="fas fa-search"></i></span>
+            <input type="text" data-search="products_unities" placeholder="{$lang.search}">
+        </div>
     </fieldset>
 </header>
 <main>
@@ -100,7 +100,7 @@ $this->dependencies->add(['js', '{$path.js}Products/unities.min.js']);
     <div class="content">
         <main>
             <i class="fas fa-trash"></i>
-            <div class="button">
+            <div>
                 <a button-success><i class="fas fa-check"></i></a>
                 <a button-close><i class="fas fa-times"></i></a>
             </div>

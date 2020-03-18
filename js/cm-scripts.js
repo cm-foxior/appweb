@@ -61,11 +61,13 @@ $(document).ready(function()
 *
 * @var string data: Cadena de texto que se va a buscar.
 * @var <HTML Tag> target: Etiqueta HTML en la que se va a realizar la búsqueda.
-* @var boolean hidden: Establece si al terminar la búsqueda se esconderán las etiquetas HTML del target.
+* @var string style: (tbl, cbx) Estilo de busqueda.
+* @var string type: (normal, hidden) Tipo de busqueda.
 */
-function search_in_table(data, target, hidden)
+function search_in_table(data, target, style, type)
 {
-    hidden = (hidden == undefined) ? false : true;
+    style = (style == undefined) ? 'tbl' : style;
+    type = (type == undefined) ? 'normal' : 'hidden';
 
     $.each(target, function(key, value)
     {
@@ -80,7 +82,7 @@ function search_in_table(data, target, hidden)
             else if (result <= 0)
                 value.className = 'hidden';
         }
-        else if (data.length <= 0 && hidden == true)
+        else if (data.length <= 0 && type == 'hidden')
             value.className = 'hidden';
     });
 

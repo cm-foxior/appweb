@@ -69,8 +69,8 @@ class Products_model extends Model
 				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
 				'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
 			]) : null,
+			'supplies' => ($data['type'] == 'sale' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 			'recipes' => ($data['type'] == 'sale') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
-			'supplies' => ($data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 			'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
 			'blocked' => false
 		]);
@@ -93,7 +93,6 @@ class Products_model extends Model
             $query = $this->database->update('products', [
 				'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : $edited[0]['avatar'],
 				'name' => $data['name'],
-				'type' => $data['type'],
 				'token' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
 				'price' => ($data['type'] == 'sale') ? $data['price'] : null,
 				'unity' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
@@ -101,8 +100,8 @@ class Products_model extends Model
 					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
 					'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
 				]) : null,
+				'supplies' => ($data['type'] == 'sale' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 				'recipes' => ($data['type'] == 'sale') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
-				'supplies' => ($data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
 				'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : []))
             ], [
                 'id' => $data['id']
@@ -287,9 +286,9 @@ class Products_model extends Model
         return $query;
     }
 
-	public function read_products_unities($slct = false)
+	public function read_products_unities($slt = false)
 	{
-		if ($slct == true)
+		if ($slt == true)
 		{
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
