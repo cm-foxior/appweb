@@ -32,7 +32,7 @@ $this->dependencies->add(['js', '{$path.js}Inventories/types.min.js']);
     <span></span>
     <fieldset class="fields-group">
         <div class="compound st-4-left">
-            <span><i class="fas fa-angle-double-down"></i></span>
+            <span><i class="fas fa-bookmark"></i></span>
             <select data-search="inventories_types">
                 <option value="" selected>{$lang.all_types}</option>
                 <option value="{$lang.input}">{$lang.input}</option>
@@ -57,24 +57,30 @@ $this->dependencies->add(['js', '{$path.js}Inventories/types.min.js']);
                 </td>
                 <?php if (Permissions::user(['block_inventories_types','unblock_inventories_types']) == true) : ?>
                 <td class="button">
-                    <?php if ($value['blocked'] == true) : ?>
-                    <a data-action="unblock_inventory_type" data-id="<?php echo $value['id']; ?>"><i class="fas fa-lock-open"></i><span>{$lang.unblock}</span></a>
-                    <?php elseif ($value['blocked'] == false) : ?>
-                    <a data-action="block_inventory_type" data-id="<?php echo $value['id']; ?>"><i class="fas fa-lock"></i><span>{$lang.block}</span></a>
+                    <?php if ($value['system'] == false) : ?>
+                        <?php if ($value['blocked'] == true) : ?>
+                        <a data-action="unblock_inventory_type" data-id="<?php echo $value['id']; ?>"><i class="fas fa-lock-open"></i><span>{$lang.unblock}</span></a>
+                        <?php elseif ($value['blocked'] == false) : ?>
+                        <a data-action="block_inventory_type" data-id="<?php echo $value['id']; ?>"><i class="fas fa-lock"></i><span>{$lang.block}</span></a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
                 <?php endif; ?>
                 <?php if (Permissions::user(['delete_inventories_types']) == true) : ?>
                 <td class="button">
-                    <?php if ($value['blocked'] == false) : ?>
-                    <a data-action="delete_inventory_type" data-id="<?php echo $value['id']; ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.delete}</span></a>
+                    <?php if ($value['system'] == false) : ?>
+                        <?php if ($value['blocked'] == false) : ?>
+                        <a data-action="delete_inventory_type" data-id="<?php echo $value['id']; ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.delete}</span></a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
                 <?php endif; ?>
                 <?php if (Permissions::user(['update_inventories_types']) == true) : ?>
                 <td class="button">
-                    <?php if ($value['blocked'] == false) : ?>
-                    <a data-action="update_inventory_type" data-id="<?php echo $value['id']; ?>" class="warning"><i class="fas fa-pen"></i><span>{$lang.update}</span></a>
+                    <?php if ($value['system'] == false) : ?>
+                        <?php if ($value['blocked'] == false) : ?>
+                        <a data-action="update_inventory_type" data-id="<?php echo $value['id']; ?>" class="warning"><i class="fas fa-pen"></i><span>{$lang.update}</span></a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
                 <?php endif; ?>

@@ -35,8 +35,8 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
     <span></span>
     <fieldset class="fields-group">
         <div class="compound st-4-left">
-            <span><i class="fas fa-angle-double-down"></i></span>
-            <select name="level" data-search="products_categories">
+            <span><i class="fas fa-list-ol"></i></span>
+            <select data-search="products_categories">
                 <option value="" selected>{$lang.all_levels}</option>
                 <?php foreach ($data['products_categories_levels'] as $value) : ?>
                 <option value="{$lang.level} <?php echo $value; ?>">{$lang.level} <?php echo $value; ?></option>

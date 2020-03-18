@@ -351,6 +351,33 @@ class Permissions
     }
 
     /**
+    * @summary Revisa los permisos de acceso del usuario a una sucursal.
+    *
+    * @param array $data: Id de la sucursal a revisar.
+    *
+    * @return boolean
+    */
+    static public function branch($id)
+    {
+        $access = false;
+
+        if (Session::get_value('vkye_account')['type'] == 'business')
+        {
+            if (Session::get_value('vkye_user')['permissions'] != 'all')
+            {
+                if (in_array($id, Session::get_value('vkye_user')['branches']))
+                    $access = true;
+            }
+            else
+                $access = true;
+        }
+        else
+            $access = true;
+
+        return $access;
+    }
+
+    /**
     * @summary Redirige a la url corresponidiente de acuerdo a los permisos de acceso del usuario logueado y la cuenta en linea.
     *
     * @return string

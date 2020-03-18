@@ -125,8 +125,18 @@ class Dates
     */
     static public function format_hour($hour, $format = 'H:i:s')
     {
-        if ($format == 'hrs')
+        if ($format == '24')
             return $hour . ' Hrs';
+        else if ($format == '12')
+        {
+            $hour = explode(':', $hour);
+            $hour[3] = ($hour[0] < 12) ? 'am' : 'pm';
+            $hour[0] = ($hour[0] > 12) ? $hour[0] - 12 : $hour[0];
+            $hour[0] = ($hour[0] <= 9 AND $hour[3] == 'pm') ? '0' . $hour[0] : $hour[0];
+            $hour = $hour[0] . (array_key_exists(1, $hour) ? ':' . $hour[1] : '') . (array_key_exists(2, $hour) ? ':' . $hour[2] : '') . ' ' . $hour[3];
+
+            return $hour;
+        }
         else
             return date($format, strtotime($hour));
     }

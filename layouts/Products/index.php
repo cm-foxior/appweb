@@ -195,7 +195,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     </div>
                     <?php else : ?>
                     <div class="button">
-                        <a href="/products/supplies"><i class="fas fa-plus"></i></a>
+                        <a href="/products/supplies" class="success"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="message">
                         <p>{$lang.to_select_supplies}</p>
@@ -223,7 +223,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     </div>
                     <?php else : ?>
                     <div class="button">
-                        <a href="/products/recipes"><i class="fas fa-plus"></i></a>
+                        <a href="/products/recipes" class="success"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="message">
                         <p>{$lang.to_select_recipes}</p>
@@ -253,7 +253,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     </div>
                     <?php else : ?>
                     <div class="button">
-                        <a href="/products/categories"><i class="fas fa-plus"></i></a>
+                        <a href="/products/categories" class="success"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="message">
                         <p>{$lang.to_select_categories}</p>

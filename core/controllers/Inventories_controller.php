@@ -13,11 +13,44 @@ class Inventories_controller extends Controller
 	{
 		if (Format::exist_ajax_request() == true)
 		{
+			if ($_POST['action'] == 'switch_branch')
+			{
+				$query = $this->model->read_branch($_POST['token']);
 
+				if (!empty($query))
+				{
+					echo json_encode([
+						'status' => 'success',
+						'path' => '/inventories/' . strtolower($query['token']) . '/' . System::cleaned_url($query['name'])
+					]);
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'message' => '{$lang.operation_error}'
+					]);
+				}
+			}
 		}
 		else
 		{
 			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '}');
+
+			global $data;
+
+			$data['branches'] = $this->model->read_branches();
+
+			if (!empty($data['branches']))
+			{
+				if (!isset($params[0]) OR empty($params[0]))
+					header('Location: /inventories/' . strtolower($data['branches'][0]['token']) . '/' . System::cleaned_url($data['branches'][0]['name']));
+				else
+				{
+					$data['branch'] = $this->model->read_branch($params[0]);
+					$data['inventories'] = $this->model->read_inventories($data['branch']['id']);
+				}
+			}
 
 			$template = $this->view->render($this, 'index');
 

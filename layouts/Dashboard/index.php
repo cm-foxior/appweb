@@ -7,6 +7,6 @@ $this->dependencies->add(['js', '{$path.js}Dashboard/index.min.js']);
 ?>
 
 %{header}%
-<main class="dashboard">
-    
+<main>
+
 </main>

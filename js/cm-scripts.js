@@ -57,6 +57,64 @@ $(document).ready(function()
 });
 
 /**
+* @summary Envía un ajax al controlador.
+*
+* @var string option: (norma, form) Tipo de envío.
+* @var Function callback: Acciones a realizar despues del envio exitoso.
+*/
+function send_ajax(option, vars, callback)
+{
+    if (option == 'normal')
+    {
+        var data = 'action=' + action;
+
+        $.each(vars, function(key, value)
+        {
+            data = data + '&' + key + '=' + value;
+        });
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response)
+            {
+                if (response.status == 'success')
+                    callback(response);
+                else if (response.status == 'error')
+                    open_notification_modal('alert', response.message);
+            }
+        });
+    }
+    else if (option == 'form')
+    {
+        // event.preventDefault();
+        //
+        // var data = new FormData(target[0]);
+        //
+        // data.append('action', action);
+        //
+        // $.ajax({
+        //     type: 'POST',
+        //     data: data,
+        //     contentType: false,
+        //     processData: false,
+        //     cache: false,
+        //     dataType: 'json',
+        //     success: function(response)
+        //     {
+        //         check_form_errors(target, response, function()
+        //         {
+        //
+        //         });
+        //     }
+        // });
+    }
+}
+
+/**
 * @summary Busca una cadena de texto en una tabla.
 *
 * @var string data: Cadena de texto que se va a buscar.

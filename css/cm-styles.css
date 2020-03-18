@@ -315,9 +315,24 @@ table.tbl-st-1 > tbody > tr > td.bigtag > span {
     width: 200px;
 }
 
-table.tbl-st-1 > tbody > tr > td.smalltag:first-child > span,
-table.tbl-st-1 > tbody > tr > td.bigtag:first-child > span {
-    margin-left: 0px;
+table.tbl-st-1 > tbody > tr > td.smalltag > span > i,
+table.tbl-st-1 > tbody > tr > td.bigtag > span > i {
+    font-size: 10px;
+}
+
+table.tbl-st-1 > tbody > tr > td.smalltag.left > span > i,
+table.tbl-st-1 > tbody > tr > td.bigtag.left > span > i {
+    margin-right: 5px;
+}
+
+table.tbl-st-1 > tbody > tr > td.smalltag.right > span > i,
+table.tbl-st-1 > tbody > tr > td.bigtag.right > span > i {
+    margin-left: 5px;
+}
+
+table.tbl-st-1 > tbody > tr > td.smalltag > span,
+table.tbl-st-1 > tbody > tr > td.bigtag > span {
+
 }
 
 /*  */
