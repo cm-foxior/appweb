@@ -147,12 +147,12 @@ class Products_controller extends Controller
 
 			global $data;
 
-			$data['type'] = $params[1];
 			$data['products'] = $this->model->read_products($params[1]);
 			$data['products_unities'] = $this->model->read_products_unities(true);
 			$data['products_supplies'] = $this->model->read_products('supply', true);
 			$data['products_recipes'] = $this->model->read_products('recipe', true);
 			$data['products_categories'] = $this->model->read_products_categories(true);
+			$data['type'] = $params[1];
 
 			$template = $this->view->render($this, 'index');
 
@@ -259,7 +259,6 @@ class Products_controller extends Controller
 			global $data;
 
 			$data['products_categories'] = $this->model->read_products_categories();
-			$data['products_categories_levels'] = $this->model->read_products_categories_levels();
 
 			$template = $this->view->render($this, 'categories');
 

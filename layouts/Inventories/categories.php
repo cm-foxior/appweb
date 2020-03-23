@@ -29,18 +29,6 @@ $this->dependencies->add(['js', '{$path.js}Inventories/categories.min.js']);
             <input type="text" data-search="inventories_categories" placeholder="{$lang.search}">
         </div>
     </fieldset>
-    <span></span>
-    <fieldset class="fields-group">
-        <div class="compound st-4-left">
-            <span><i class="fas fa-list-ol"></i></span>
-            <select name="level" data-search="inventories_categories">
-                <option value="" selected>{$lang.all_levels}</option>
-                <?php foreach ($data['inventories_categories_levels'] as $value) : ?>
-                <option value="{$lang.level} <?php echo $value; ?>">{$lang.level} <?php echo $value; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </fieldset>
 </header>
 <main>
     <table class="tbl-st-1" data-table="inventories_categories">

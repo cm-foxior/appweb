@@ -118,7 +118,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                                 <div class="text">
                                     <input type="text" name="name" placeholder="{$lang.name}">
                                 </div>
-                                <?php if ($data['type'] == 'sale_menu') : ?>
+                                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
                                 <div class="checkbox st-3">
                                     <label>
                                         <input type="checkbox" name="inventory" checked>
@@ -131,7 +131,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
                         <div class="span4">
                             <div class="compound st-2-left">
-                                <a data-random="token"><i class="fas fa-redo"></i></a>
+                                <a data-action="generate_random_token"><i class="fas fa-redo"></i></a>
                                 <input type="text" name="token" placeholder="{$lang.folio}">
                             </div>
                         </div>
@@ -183,6 +183,35 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     </div>
                 </fieldset>
                 <?php endif; ?>
+                <fieldset class="fields-group">
+                    <?php if (!empty($data['products_categories'])) : ?>
+                    <div class="title">
+                        <h6>{$lang.categories}</h6>
+                    </div>
+                    <div class="compound st-4-left">
+                        <span><i class="fas fa-search"></i></span>
+                        <input type="text" data-search="categories" placeholder="{$lang.search_categories}">
+                    </div>
+                    <div class="checkbox st-1" data-cbx="categories">
+                        <?php foreach ($data['products_categories'] as $key => $value) : ?>
+                        <h6>{$lang.level} <?php echo $key; ?></h6>
+                        <?php foreach ($value as $subkey => $subvalue) : ?>
+                        <label>
+                            <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
+                            <span><?php echo $subvalue['name']; ?></span>
+                        </label>
+                        <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php else : ?>
+                    <div class="button">
+                        <a href="/products/categories"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
+                    </div>
+                    <div class="message">
+                        <p>{$lang.to_select_categories}</p>
+                    </div>
+                    <?php endif; ?>
+                </fieldset>
                 <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') : ?>
                 <fieldset class="fields-group">
                     <?php if (!empty($data['products_supplies'])) : ?>
@@ -239,35 +268,6 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     <?php endif; ?>
                 </fieldset>
                 <?php endif; ?>
-                <fieldset class="fields-group">
-                    <?php if (!empty($data['products_categories'])) : ?>
-                    <div class="title">
-                        <h6>{$lang.categories}</h6>
-                    </div>
-                    <div class="compound st-4-left">
-                        <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="categories" placeholder="{$lang.search_categories}">
-                    </div>
-                    <div class="checkbox st-1" data-cbx="categories">
-                        <?php foreach ($data['products_categories'] as $key => $value) : ?>
-                        <h6>{$lang.level} <?php echo $key; ?></h6>
-                        <?php foreach ($value as $subkey => $subvalue) : ?>
-                        <label>
-                            <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
-                            <span><?php echo $subvalue['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php else : ?>
-                    <div class="button">
-                        <a href="/products/categories"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_categories}</p>
-                    </div>
-                    <?php endif; ?>
-                </fieldset>
                 <fieldset class="fields-group">
                     <div class="button">
                         <button type="submit" class="success"><i class="fas fa-plus"></i></button>

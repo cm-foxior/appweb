@@ -7,11 +7,6 @@ $(document).ready(function()
         search_in_table($(this).val(), $('[data-table="inventories_categories"]').find(' > tbody > tr'));
     });
 
-    $('[data-search="inventories_categories"]').on('change', function()
-    {
-        search_in_table($(this).val(), $('[data-table="inventories_categories"]').find(' > tbody > tr'));
-    });
-
     $('[name="level"]').on('keyup', function()
     {
         validate_string('int', $(this).val(), $(this));

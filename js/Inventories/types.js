@@ -7,11 +7,6 @@ $(document).ready(function()
         search_in_table($(this).val(), $('[data-table="inventories_types"]').find(' > tbody > tr'));
     });
 
-    $('[data-search="inventories_types"]').on('change', function()
-    {
-        search_in_table($(this).val(), $('[data-table="inventories_types"]').find(' > tbody > tr'));
-    });
-
     var create_action = 'create_inventory_type';
     var read_action = 'read_inventory_type';
     var update_action = 'update_inventory_type';

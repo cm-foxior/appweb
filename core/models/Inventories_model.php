@@ -9,6 +9,44 @@ class Inventories_model extends Model
 		parent::__construct();
 	}
 
+	public function read_branches()
+	{
+		$query = $this->database->select('branches', [
+			'id',
+			'name'
+		], [
+			'account' => Session::get_value('vkye_account')['id'],
+			'ORDER' => [
+				'name' => 'ASC'
+			]
+		]);
+
+		if (Permissions::user(['view_branches']) == true)
+		{
+			foreach ($query as $key => $value)
+			{
+				if (Permissions::branch($value['id']) == false)
+					unset($query[$key]);
+			}
+
+			$query = array_values($query);
+		}
+
+		return $query;
+	}
+
+	public function read_branch($id)
+	{
+		$query = $this->database->select('branches', [
+			'id',
+			'name'
+		], [
+			'id' => $id
+		]);
+
+		return !empty($query) ? $query[0] : null;
+	}
+
 	public function read_inventories($branch)
 	{
 		$query = $this->database->select('inventories', [
@@ -55,68 +93,7 @@ class Inventories_model extends Model
 		return $query;
 	}
 
-	public function read_branches()
-	{
-		$query = $this->database->select('branches', [
-			'id',
-			'name'
-		], [
-			'account' => Session::get_value('vkye_account')['id'],
-			'ORDER' => [
-				'name' => 'ASC'
-			]
-		]);
-
-		if (Permissions::user(['view_branches']) == true)
-		{
-			foreach ($query as $key => $value)
-			{
-				if (Permissions::branch($value['id']) == false)
-					unset($query[$key]);
-			}
-
-			$query = array_values($query);
-		}
-
-		return $query;
-	}
-
-	public function read_branch($id)
-	{
-		$query = $this->database->select('branches', [
-			'id',
-			'name'
-		], [
-			'id' => $id
-		]);
-
-		return !empty($query) ? $query[0] : null;
-	}
-
 	public function read_products()
-	{
-		$query = $this->database->select('products', [
-			'id',
-			'avatar',
-			'name',
-			'type',
-			'token'
-		], [
-			'AND' => [
-				'account' => Session::get_value('vkye_account')['id'],
-				'type' => ['sale_menu','supply','work_material'],
-				'blocked' => false
-			],
-			'ORDER' => [
-				'type' => 'ASC',
-				'name' => 'ASC'
-			]
-		]);
-
-		return $query;
-	}
-
-	public function read_product($id)
 	{
 		$query = $this->database->select('products', [
 			'[>]products_unities' => [
@@ -130,49 +107,69 @@ class Inventories_model extends Model
 			'products.token',
 			'products_unities.name(unity)'
 		], [
-			'products.id' => $id
+			'AND' => [
+				'products.account' => Session::get_value('vkye_account')['id'],
+				'products.inventory' => true,
+				'products.blocked' => false
+			],
+			'ORDER' => [
+				'products.type' => 'ASC',
+				'products.name' => 'ASC'
+			]
 		]);
-
-		return !empty($query) ? $query[0] : null;
-	}
-
-	public function create_inventory_input($data)
-	{
-		// foreach ($variable as $key => $value)
-		// {
-		// 	$query = $this->database->insert('inventories', [
-		// 		'account' => Session::get_value('vkye_account')['id'],
-		// 		'branch' => Session::get_value('branch')['id'],
-		// 		'movement' => 'input',
-		// 		'type' => $data['type'],
-		// 		'product' => $data['product'],
-		// 		'quantity' => $data['quantity'],
-		// 	]);
-		// }
 
 		return $query;
 	}
 
-	public function read_inventories_types($slt = false, $movement = null)
+	public function create_inventory($data)
+	{
+		// foreach (Session::get_value('tmp')['products'] as $value)
+		// {
+		// 	$query = $this->database->insert('inventories', [
+		// 		'account' => Session::get_value('vkye_account')['id'],
+		// 		'branch' => Session::get_value('tmp')['branch']['id'],
+		// 		'movement' => 'input',
+		// 		'type' => $data['type'],
+		// 		'product' => $value['product'],
+		// 		'quantity' => $value['quantity'],
+		// 		'date' => $data['date'],
+		// 		'hour' => $data['hour'],
+		// 		'price' => $value['price'],
+		// 	]);
+		// }
+		//
+		// return $query;
+	}
+
+	public function read_inventories_types($to_use = false, $movement = '')
 	{
 		$and['OR'] = [
 			'account' => Session::get_value('vkye_account')['id'],
 			'system' => true
 		];
 
-		if ($slt == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name'
+			];
+
 			$and['movement'] = $movement;
 			$and['blocked'] = false;
 		}
+		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'movement',
+				'system',
+				'blocked'
+			];
+		}
 
-		$query = $this->database->select('inventories_types', [
-			'id',
-			'name',
-			'movement',
-			'system',
-			'blocked'
-		], [
+		$query = $this->database->select('inventories_types', $fields, [
 			'AND' => $and,
 			'ORDER' => [
 				'name' => 'ASC'
@@ -250,27 +247,36 @@ class Inventories_model extends Model
         return $query;
     }
 
-	public function read_inventories_locations($slt = false)
+	public function read_inventories_locations($to_use = false)
 	{
-		if ($slt == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name'
+			];
+
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
 				'blocked' => false
 			];
 		}
 		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'blocked'
+			];
+
 			$where['account'] = Session::get_value('vkye_account')['id'];
+		}
 
 		$where['ORDER'] = [
 			'name' => 'ASC'
 		];
 
-		$query = $this->database->select('inventories_locations', [
-			'id',
-			'name',
-			'blocked'
-		], $where);
+		$query = $this->database->select('inventories_locations', $fields, $where);
 
 		return $query;
 	}
@@ -339,64 +345,56 @@ class Inventories_model extends Model
         return $query;
     }
 
-	public function read_inventories_categories($cbx = false)
+	public function read_inventories_categories($to_use = false)
 	{
-		if ($cbx == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name',
+				'level'
+			];
+
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
 				'blocked' => false
 			];
 		}
 		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'level',
+				'blocked'
+			];
+
 			$where['account'] = Session::get_value('vkye_account')['id'];
+		}
 
 		$where['ORDER'] = [
 			'level' => 'ASC',
 			'name' => 'ASC'
 		];
 
-		$query = $this->database->select('inventories_categories', [
-			'id',
-			'name',
-			'level',
-			'blocked'
-		], $where);
+		$query = $this->database->select('inventories_categories', $fields, $where);
 
-		if ($cbx == true)
+		if ($to_use == true)
 		{
-			$cbx = [];
+			$return = [];
 
 			foreach ($query as $key => $value)
 			{
-				if (array_key_exists($value['level'], $cbx))
-					array_push($cbx[$value['level']], $value);
+				if (array_key_exists($value['level'], $return))
+					array_push($return[$value['level']], $value);
 				else
-					$cbx[$value['level']] = [$value];
+					$return[$value['level']] = [$value];
 			}
 
-			return $cbx;
+			return $return;
 		}
 		else
 			return $query;
-	}
-
-	public function read_inventories_categories_levels()
-	{
-		$query = $this->database->select('inventories_categories', [
-			'level'
-		], [
-			'account' => Session::get_value('vkye_account')['id'],
-			'ORDER' => [
-				'level' => 'ASC'
-			]
-		]);
-
-		$query = array_map('current', $query);
-		$query = array_unique($query);
-		$query = array_values($query);
-
-		return $query;
 	}
 
 	public function read_inventory_category($id)

@@ -29,17 +29,6 @@ $this->dependencies->add(['js', '{$path.js}Inventories/types.min.js']);
             <input type="text" data-search="inventories_types" placeholder="{$lang.search}">
         </div>
     </fieldset>
-    <span></span>
-    <fieldset class="fields-group">
-        <div class="compound st-4-left">
-            <span><i class="fas fa-bookmark"></i></span>
-            <select data-search="inventories_types">
-                <option value="" selected>{$lang.all_types}</option>
-                <option value="{$lang.input}">{$lang.input}</option>
-                <option value="{$lang.output}">{$lang.output}</option>
-            </select>
-        </div>
-    </fieldset>
 </header>
 <main>
     <table class="tbl-st-1" data-table="inventories_types">

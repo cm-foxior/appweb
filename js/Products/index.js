@@ -7,7 +7,7 @@ $(document).ready(function()
         search_in_table($(this).val(), $('[data-table="products"]').find(' > tbody > tr'));
     });
 
-    $('[data-random="token"]').on('click', function()
+    $('[data-action="generate_random_token"]').on('click', function()
     {
         generate_string(['uppercase','lowercase','int'], 8, $('[name="token"]'));
     });
@@ -32,6 +32,11 @@ $(document).ready(function()
         validate_string('float', $(this).val(), $(this));
     });
 
+    $('[data-search="categories"]').on('keyup', function()
+    {
+        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'));
+    });
+
     $('[data-search="supplies"]').on('keyup', function()
     {
         search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'), 'hidden');
@@ -40,11 +45,6 @@ $(document).ready(function()
     $('[data-search="recipes"]').on('keyup', function()
     {
         search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'), 'hidden');
-    });
-
-    $('[data-search="categories"]').on('keyup', function()
-    {
-        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'));
     });
 
     var create_action = 'create_product';
@@ -96,6 +96,11 @@ $(document).ready(function()
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_empty"]').val(data.weight.empty);
             }
 
+            $.each(data.categories, function (key, value)
+            {
+                $('[data-modal="' + create_action + '"]').find('[name="categories[]"][value="' + value + '"]').prop('checked', true);
+            });
+
             if (data.type == 'sale_menu' || data.type == 'recipe')
             {
                 $.each(data.supplies, function (key, value)
@@ -111,11 +116,6 @@ $(document).ready(function()
                     $('[data-modal="' + create_action + '"]').find('[name="recipes[]"][value="' + value + '"]').prop('checked', true);
                 });
             }
-
-            $.each(data.categories, function (key, value)
-            {
-                $('[data-modal="' + create_action + '"]').find('[name="categories[]"][value="' + value + '"]').prop('checked', true);
-            });
         });
     });
 

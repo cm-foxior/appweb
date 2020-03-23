@@ -587,7 +587,6 @@ class Inventories_controller extends Controller
 			global $data;
 
 			$data['inventories_categories'] = $this->model->read_inventories_categories();
-			$data['inventories_categories_levels'] = $this->model->read_inventories_categories_levels();
 
 			$template = $this->view->render($this, 'categories');
 

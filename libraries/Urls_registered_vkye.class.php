@@ -21,7 +21,7 @@ class Urls_registered_vkye
                 'controller' => 'Dashboard',
                 'method' => 'index'
             ],
-            '/inventories' => [
+            '/inventories/%param%' => [
                 'controller' => 'Inventories',
                 'method' => 'index'
             ],

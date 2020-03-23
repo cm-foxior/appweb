@@ -9,22 +9,33 @@ class Products_model extends Model
 		parent::__construct();
 	}
 
-	public function read_products($type, $cbx = false)
+	public function read_products($type, $to_use = false)
 	{
 		$and['account'] = Session::get_value('vkye_account')['id'];
 		$and['type'] = $type;
 
-		if ($cbx == true)
-			$and['blocked'] = false;
+		if ($to_use == true)
+		{
+			$fields = [
+				'id',
+				'name'
+			];
 
-		$query = System::decoded_json_array($this->database->select('products', [
-			'id',
-			'avatar',
-			'name',
-			'token',
-			'price',
-			'blocked'
-		], [
+			$and['blocked'] = false;
+		}
+		else
+		{
+			$fields = [
+				'id',
+				'avatar',
+				'name',
+				'token',
+				'price',
+				'blocked'
+			];
+		}
+
+		$query = System::decoded_json_array($this->database->select('products', $fields, [
 			'AND' => $and,
 			'ORDER' => [
 				'name' => 'ASC'
@@ -162,43 +173,53 @@ class Products_model extends Model
         return $query;
     }
 
-	public function read_products_categories($cbx = false)
+	public function read_products_categories($to_use = false)
 	{
-		if ($cbx == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name',
+				'level'
+			];
+
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
 				'blocked' => false
 			];
 		}
 		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'level',
+				'blocked'
+			];
+
 			$where['account'] = Session::get_value('vkye_account')['id'];
+		}
 
 		$where['ORDER'] = [
 			'level' => 'ASC',
 			'name' => 'ASC'
 		];
 
-		$query = $this->database->select('products_categories', [
-			'id',
-			'name',
-			'level',
-			'blocked'
-		], $where);
+		$query = $this->database->select('products_categories', $fields, $where);
 
-		if ($cbx == true)
+		if ($to_use == true)
 		{
-			$cbx = [];
+			$return = [];
 
 			foreach ($query as $key => $value)
 			{
-				if (array_key_exists($value['level'], $cbx))
-					array_push($cbx[$value['level']], $value);
+				if (array_key_exists($value['level'], $return))
+					array_push($return[$value['level']], $value);
 				else
-					$cbx[$value['level']] = [$value];
+					$return[$value['level']] = [$value];
 			}
 
-			return $cbx;
+			return $return;
 		}
 		else
 			return $query;
@@ -214,24 +235,6 @@ class Products_model extends Model
 		]);
 
 		return !empty($query) ? $query[0] : null;
-	}
-
-	public function read_products_categories_levels()
-	{
-		$query = $this->database->select('products_categories', [
-			'level'
-		], [
-			'account' => Session::get_value('vkye_account')['id'],
-			'ORDER' => [
-				'level' => 'ASC'
-			]
-		]);
-
-		$query = array_map('current', $query);
-		$query = array_unique($query);
-		$query = array_values($query);
-
-		return $query;
 	}
 
 	public function create_product_category($data)
@@ -289,27 +292,36 @@ class Products_model extends Model
         return $query;
     }
 
-	public function read_products_unities($slt = false)
+	public function read_products_unities($to_use = false)
 	{
-		if ($slt == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name'
+			];
+
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
 				'blocked' => false
 			];
 		}
 		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'blocked'
+			];
+
 			$where['account'] = Session::get_value('vkye_account')['id'];
+		}
 
 		$where['ORDER'] = [
 			'name' => 'ASC'
 		];
 
-		$query = $this->database->select('products_unities', [
-			'id',
-			'name',
-			'blocked'
-		], $where);
+		$query = $this->database->select('products_unities', $fields, $where);
 
 		return $query;
 	}
