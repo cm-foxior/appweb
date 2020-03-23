@@ -80,7 +80,7 @@ class System
     /**
     * @summary: Entrega un array json decodificados.
     *
-    * @param string-array $array: Array a decodificar.
+    * @param array-string $array: Array a decodificar.
     *
     * @return array
     */
@@ -103,6 +103,30 @@ class System
         }
         else
             return (is_array(json_decode($array, true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array, true) : $array;
+    }
+
+    /**
+    * @summary Crea una sumatoria de valores.
+    *
+    * @param array $data: Arreglo de valores que se van a sumar.
+    * @param string $key: Llave del $data donde se encuentra el valor a sumar.
+    *
+    * @return int
+    * @return float
+    */
+    public static function summation($data, $key)
+    {
+        $sum = 0;
+
+        foreach ($data as $value)
+        {
+            if (isset($key) AND !empty($key))
+                $sum += $value[$key];
+            else
+                $sum += $value;
+        }
+
+        return $sum;
     }
 
     /**

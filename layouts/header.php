@@ -59,9 +59,11 @@
             <li><a href="/dashboard"><i class="fas fa-home"></i><span>{$lang.dashboard}</span></a></li>
         </ul>
         <?php if (!empty(Session::get_value('vkye_account'))) : ?>
+            <?php if (Permissions::account(['inventories','selling_point']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-search"></i><span>{$lang.search}</span></a></li>
             </ul>
+            <?php endif; ?>
             <?php if (Permissions::account(['accounting']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-calculator"></i><span>{$lang.accounting}</span></a></li>

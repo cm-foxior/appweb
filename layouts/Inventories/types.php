@@ -49,10 +49,12 @@ $this->dependencies->add(['js', '{$path.js}Inventories/types.min.js']);
                 <td><?php echo $value['name']; ?></td>
                 <td class="smalltag"><span>{$lang.<?php echo $value['movement']; ?>}</span></td>
                 <td class="smalltag">
-                    <?php if ($value['blocked'] == true) : ?>
-                    <span class="busy">{$lang.blocked}</span>
-                    <?php elseif ($value['blocked'] == false) : ?>
-                    <span>{$lang.unblocked}</span>
+                    <?php if ($value['system'] == false) : ?>
+                        <?php if ($value['blocked'] == true) : ?>
+                        <span class="busy">{$lang.blocked}</span>
+                        <?php elseif ($value['blocked'] == false) : ?>
+                        <span>{$lang.unblocked}</span>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
                 <?php if (Permissions::user(['block_inventories_types','unblock_inventories_types']) == true) : ?>

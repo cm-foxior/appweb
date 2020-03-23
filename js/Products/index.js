@@ -34,17 +34,17 @@ $(document).ready(function()
 
     $('[data-search="supplies"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'), 'cbx', 'hidden');
+        search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'), 'hidden');
     });
 
     $('[data-search="recipes"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'), 'cbx', 'hidden');
+        search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'), 'hidden');
     });
 
     $('[data-search="categories"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'), 'cbx');
+        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'));
     });
 
     var create_action = 'create_product';
@@ -73,27 +73,30 @@ $(document).ready(function()
         {
             action = update_action;
 
-            if (data.type == 'sale')
+            if (data.type == 'sale_menu')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((data.avatar != null) ? '../uploads/' + data.avatar : '../images/empty.png'));
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
 
-            if (data.type == 'sale' || data.type == 'supply' || data.type == 'work_material')
+            if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
+                $('[data-modal="' + create_action + '"]').find('[name="inventory"]').prop('checked', ((data.inventory == true) ? true : false));
+
+            if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="token"]').val(data.token);
 
-            if (data.type == 'sale')
+            if (data.type == 'sale_menu')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="price"]').val(data.price);
 
-            if (data.type == 'sale' || data.type == 'supply' || data.type == 'work_material')
+            if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="unity"]').val(data.unity);
 
-            if (data.type == 'sale' || data.type == 'supply')
+            if (data.type == 'sale_menu' || data.type == 'supply')
             {
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_full"]').val(data.weight.full);
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="weight_empty"]').val(data.weight.empty);
             }
 
-            if (data.type == 'sale' || data.type == 'recipe')
+            if (data.type == 'sale_menu' || data.type == 'recipe')
             {
                 $.each(data.supplies, function (key, value)
                 {
@@ -101,7 +104,7 @@ $(document).ready(function()
                 });
             }
 
-            if (data.type == 'sale')
+            if (data.type == 'sale_menu')
             {
                 $.each(data.recipes, function (key, value)
                 {

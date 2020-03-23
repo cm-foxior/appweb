@@ -12,7 +12,7 @@ class Products_controller extends Controller
 	public function index($params)
 	{
 		if ($params[0] == 'salemenu')
-			$params[1] = 'sale';
+			$params[1] = 'sale_menu';
 		else if ($params[0] == 'supplies')
 			$params[1] = 'supply';
 		else if ($params[0] == 'recipes')
@@ -29,7 +29,7 @@ class Products_controller extends Controller
 				if (Validations::empty($_POST['name']) == false)
 					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				if ($params[1] == 'sale_menu' OR $params[1] == 'supply' OR $params[1] == 'work_material')
 				{
 					if (Validations::empty($_POST['token']) == false)
 						array_push($errors, ['token','{$lang.dont_leave_this_field_empty}']);
@@ -37,13 +37,13 @@ class Products_controller extends Controller
 						array_push($errors, ['token','{$lang.invalid_field}']);
 				}
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				if ($params[1] == 'sale_menu' OR $params[1] == 'supply' OR $params[1] == 'work_material')
 				{
 					if (Validations::empty($_POST['unity']) == false)
 						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
 				}
 
-				if ($params[1] == 'sale')
+				if ($params[1] == 'sale_menu')
 				{
 					if (Validations::empty($_POST['price']) == false)
 						array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
@@ -51,7 +51,7 @@ class Products_controller extends Controller
 						array_push($errors, ['price','{$lang.invalid_field}']);
 				}
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply')
+				if ($params[1] == 'sale_menu' OR $params[1] == 'supply')
 				{
 					if (Validations::number('float', $_POST['weight_full'], true) == false)
 						array_push($errors, ['weight_full','{$lang.invalid_field}']);
@@ -62,7 +62,7 @@ class Products_controller extends Controller
 
 				if (empty($errors))
 				{
-					if ($params[1] == 'sale')
+					if ($params[1] == 'sale_menu')
 						$_POST['avatar'] = $_FILES['avatar'];
 
 					$_POST['type'] = $params[1];

@@ -15,73 +15,106 @@ $(document).ready(function()
             'token': $(this).val()
         };
 
-        send_ajax('normal', vars, function(response)
+        send_ajax('normal', vars, null, function(response)
         {
             window.location.href = response.path;
         });
     });
 
-    // var create_action = 'create_inventory_location';
-    // var read_action = 'read_inventory_location';
-    // var update_action = 'update_inventory_location';
-    // var block_action = 'block_inventory_location';
-    // var unblock_action = 'unblock_inventory_location';
-    // var delete_action = 'delete_inventory_location';
-    //
-    // $(document).on('click', '[data-action="' + create_action + '"]', function()
-    // {
-    //     action = create_action;
-    //     id = null;
-    //
-    //     transform_form_modal('create', $('[data-modal="' + create_action + '"]'));
-    //     open_form_modal('create', $('[data-modal="' + create_action + '"]'));
-    // });
-    //
-    // $(document).on('click', '[data-action="' + update_action + '"]', function()
-    // {
-    //     action = read_action;
-    //     id = $(this).data('id');
-    //
-    //     transform_form_modal('update', $('[data-modal="' + create_action + '"]'));
-    //     open_form_modal('update', $('[data-modal="' + create_action + '"]'), function(data)
-    //     {
-    //         action = update_action;
-    //
-    //         $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
-    //     });
-    // });
-    //
-    // $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
-    // {
-    //     send_form_modal('create', $(this), event);
-    // });
-    //
-    // $(document).on('click', '[data-action="' + block_action + '"]', function()
-    // {
-    //     action = block_action;
-    //     id = $(this).data('id');
-    //
-    //     send_form_modal('block');
-    // });
-    //
-    // $(document).on('click', '[data-action="' + unblock_action + '"]', function()
-    // {
-    //     action = unblock_action;
-    //     id = $(this).data('id');
-    //
-    //     send_form_modal('unblock');
-    // });
-    //
-    // $(document).on('click', '[data-action="' + delete_action + '"]', function()
-    // {
-    //     action = delete_action;
-    //     id = $(this).data('id');
-    //
-    //     open_form_modal('delete', $('[data-modal="' + delete_action + '"]'));
-    // });
-    //
-    // $('[data-modal="' + delete_action + '"]').modal().onSuccess(function()
-    // {
-    //     send_form_modal('delete');
-    // });
+    $('[name="bill"]').on('keyup', function()
+    {
+        validate_string(['uppercase','lowercase','int'], $(this).val(), $(this));
+    });
+
+    $('[name="remission"]').on('keyup', function()
+    {
+        validate_string(['uppercase','lowercase','int'], $(this).val(), $(this));
+    });
+
+    $('[name="quantity"]').on('keyup', function()
+    {
+        validate_string('float', $(this).val(), $(this));
+    });
+
+    $('[name="price"]').on('keyup', function()
+    {
+        validate_string('float', $(this).val(), $(this));
+    });
+
+    $('[name="saved"]').on('change', function()
+    {
+        if ($(this).val() == 'normal')
+        {
+            $('[name="bill"]').parents('fieldset').addClass('hidden');
+            $('[name="remission"]').parents('fieldset').addClass('hidden');
+        }
+        else if ($(this).val() == 'bill')
+        {
+            $('[name="bill"]').parents('fieldset').removeClass('hidden');
+            $('[name="remission"]').parents('fieldset').addClass('hidden');
+        }
+        else if ($(this).val() == 'remission')
+        {
+            $('[name="bill"]').parents('fieldset').addClass('hidden');
+            $('[name="remission"]').parents('fieldset').removeClass('hidden');
+        }
+    });
+
+    $('[data-list-value]').on('click', function()
+    {
+        action = 'read_product';
+        id = $(this).data('list-value');
+
+        send_ajax('normal', null, null, function(response)
+        {
+            $('[name="quantity"]').parent().find('span').html(response.data.unity);
+        });
+    });
+
+    $('[data-action="add_product_to_table"]').on('click', function()
+    {
+        action = 'add_product_to_table';
+
+        var form = $(this).parents('form');
+
+        send_ajax('form', null, form, function(response)
+        {
+            $('[name="bill"]').parent().find('span').html(response.data.total);
+            $('[name="remission"]').parent().find('span').html(response.data.total);
+            $('[name="product"]').parent().find('[data-preview-value]').val('');
+            $('[name="product"]').val('');
+            $('[name="quantity"]').val('');
+            $('[name="price"]').val('');
+            $('[data-table="products"]').find(' > div').html('');
+            $('[data-table="products"]').find(' > div').html(response.data.html);
+        });
+    });
+
+    $('[data-action="remove_product_to_table"]').on('click', function()
+    {
+        action = 'remove_product_to_table';
+        id = $(this).data('id');
+
+        send_ajax('normal', null, null, function(response)
+        {
+            $('[name="bill"]').parent().find('span').html(response.data.total);
+            $('[name="remission"]').parent().find('span').html(response.data.total);
+            $('[data-table="products"]').find(' > div').html(response.data.html);
+        });
+    });
+
+    var create_inventory_input = 'create_inventory_input';
+
+    $(document).on('click', '[data-action="' + create_inventory_input + '"]', function()
+    {
+        action = create_inventory_input;
+        id = null;
+
+        open_form_modal('create', $('[data-modal="' + create_inventory_input + '"]'));
+    });
+
+    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
+    {
+        send_form_modal('create', $(this), event);
+    });
 });

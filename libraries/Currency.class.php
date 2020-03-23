@@ -54,6 +54,7 @@ class Currency
     *
     * @param int-float $number: Cantidad a dar formato.
     * @param string $currency: Moneda en la que retornará $number.
+    * @param int $decimals: El número de decimales con el que retornará el formato.
     *
     * @return string
     */

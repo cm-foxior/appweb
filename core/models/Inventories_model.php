@@ -59,8 +59,7 @@ class Inventories_model extends Model
 	{
 		$query = $this->database->select('branches', [
 			'id',
-			'name',
-			'token'
+			'name'
 		], [
 			'account' => Session::get_value('vkye_account')['id'],
 			'ORDER' => [
@@ -82,20 +81,79 @@ class Inventories_model extends Model
 		return $query;
 	}
 
-	public function read_branch($token)
+	public function read_branch($id)
 	{
 		$query = $this->database->select('branches', [
 			'id',
-			'name',
-			'token'
+			'name'
 		], [
-			'token' => strtoupper($token)
+			'id' => $id
 		]);
 
 		return !empty($query) ? $query[0] : null;
 	}
 
-	public function read_inventories_types($slt = false)
+	public function read_products()
+	{
+		$query = $this->database->select('products', [
+			'id',
+			'avatar',
+			'name',
+			'type',
+			'token'
+		], [
+			'AND' => [
+				'account' => Session::get_value('vkye_account')['id'],
+				'type' => ['sale_menu','supply','work_material'],
+				'blocked' => false
+			],
+			'ORDER' => [
+				'type' => 'ASC',
+				'name' => 'ASC'
+			]
+		]);
+
+		return $query;
+	}
+
+	public function read_product($id)
+	{
+		$query = $this->database->select('products', [
+			'[>]products_unities' => [
+				'unity' => 'id'
+			]
+		], [
+			'products.id',
+			'products.avatar',
+			'products.name',
+			'products.type',
+			'products.token',
+			'products_unities.name(unity)'
+		], [
+			'products.id' => $id
+		]);
+
+		return !empty($query) ? $query[0] : null;
+	}
+
+	public function create_inventory_input($data)
+	{
+		// foreach ($variable as $key => $value)
+		// {
+		// 	$query = $this->database->insert('inventories', [
+		// 		'account' => Session::get_value('vkye_account')['id'],
+		// 		'branch' => Session::get_value('branch')['id'],
+		// 		'movement' => 'input',
+		// 		'type' => $data['type'],
+		// 		'product' => $data['product'],
+		// 		'quantity' => $data['quantity'],
+		// 	]);
+		// }
+
+		return $query;
+	}
+
+	public function read_inventories_types($slt = false, $movement = null)
 	{
 		$and['OR'] = [
 			'account' => Session::get_value('vkye_account')['id'],
@@ -103,7 +161,10 @@ class Inventories_model extends Model
 		];
 
 		if ($slt == true)
+		{
+			$and['movement'] = $movement;
 			$and['blocked'] = false;
+		}
 
 		$query = $this->database->select('inventories_types', [
 			'id',

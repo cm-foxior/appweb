@@ -54,6 +54,44 @@ $(document).ready(function()
     {
         $(this).css('background-image', 'url("' + $(this).data('image-src') + '")');
     });
+
+    /**
+    * @summary Compound st 5
+    */
+    $('.compound.st-5').find('input[type="radio"]').on('click', function()
+    {
+        $(this).parents('.compound.st-5').find('span').removeClass('checked');
+        $(this).parents('label').find('span').addClass('checked');
+    });
+
+    /**
+    * @summary Compound st 6
+    */
+    $('.compound.st-6').find('[data-preview-value]').on('click', function()
+    {
+        $(this).parents('.compound.st-6').find('[data-search]').addClass('open');
+        $(this).parents('.compound.st-6').find('[data-search] > [data-search-value]').focus();
+    });
+
+    $('.compound.st-6').find('[data-search-value]').on('keyup', function()
+    {
+        if ($(this).val().length > 0)
+            $(this).parents('.compound.st-6').find('[data-list]').addClass('open');
+        else if ($(this).val().length <= 0)
+            $(this).parents('.compound.st-6').find('[data-list]').removeClass('open');
+
+        search_in_table($(this).val(), $(this).parents('.compound.st-6').find('[data-list] > div'), 'hidden');
+    });
+
+    $('.compound.st-6').find('[data-list-value]').on('click', function()
+    {
+        $(this).parents('.compound.st-6').find('[data-preview-value]').val($(this).parent().find('p').html());
+        $(this).parents('.compound.st-6').find('[data-preview-selected]').val($(this).data('list-value'));
+        $(this).parents('.compound.st-6').find('[data-search-value]').val('');
+        $(this).parents('.compound.st-6').find('[data-search]').removeClass('open');
+        $(this).parents('.compound.st-6').find('[data-list]').removeClass('open');
+        $(this).parents('.compound.st-6').find('[data-list] > div').addClass('hidden');
+    });
 });
 
 /**
@@ -62,13 +100,15 @@ $(document).ready(function()
 * @var string option: (norma, form) Tipo de envío.
 * @var Function callback: Acciones a realizar despues del envio exitoso.
 */
-function send_ajax(option, vars, callback)
+function send_ajax(option, variables, target, callback)
 {
+    variables = (variables == undefined || variables == null) ? {} : variables;
+
     if (option == 'normal')
     {
-        var data = 'action=' + action;
+        var data = 'action=' + action + '&id=' + id;
 
-        $.each(vars, function(key, value)
+        $.each(variables, function(key, value)
         {
             data = data + '&' + key + '=' + value;
         });
@@ -90,27 +130,31 @@ function send_ajax(option, vars, callback)
     }
     else if (option == 'form')
     {
-        // event.preventDefault();
-        //
-        // var data = new FormData(target[0]);
-        //
-        // data.append('action', action);
-        //
-        // $.ajax({
-        //     type: 'POST',
-        //     data: data,
-        //     contentType: false,
-        //     processData: false,
-        //     cache: false,
-        //     dataType: 'json',
-        //     success: function(response)
-        //     {
-        //         check_form_errors(target, response, function()
-        //         {
-        //
-        //         });
-        //     }
-        // });
+        var data = new FormData(target[0]);
+
+        data.append('action', action);
+        data.append('id', id);
+
+        $.each(variables, function(key, value)
+        {
+            data.append(key, value);
+        });
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response)
+            {
+                check_form_errors(target, response, function()
+                {
+                    callback(response);
+                });
+            }
+        });
     }
 }
 
@@ -122,9 +166,8 @@ function send_ajax(option, vars, callback)
 * @var string style: (tbl, cbx) Estilo de busqueda.
 * @var string type: (normal, hidden) Tipo de busqueda.
 */
-function search_in_table(data, target, style, type)
+function search_in_table(data, target, type)
 {
-    style = (style == undefined) ? 'tbl' : style;
     type = (type == undefined) ? 'normal' : 'hidden';
 
     $.each(target, function(key, value)

@@ -37,7 +37,6 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
             <?php else : ?>
             <span>{$lang.not_fiscal_id}</span>
             <?php endif; ?>
-            <span><?php echo $value['token']; ?></span>
             <div class="button">
                 <?php if (Permissions::user(['block_branches','unblock_branches']) == true) : ?>
                     <?php if ($value['blocked'] == true) : ?>
@@ -76,17 +75,8 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <div class="row">
-                        <div class="span8">
-                            <div class="text">
-                                <input type="text" name="name" placeholder="{$lang.name}">
-                            </div>
-                        </div>
-                        <div class="span4">
-                            <div class="text">
-                                <input type="text" name="token" placeholder="{$lang.token_auto}" disabled>
-                            </div>
-                        </div>
+                    <div class="text">
+                        <input type="text" name="name" placeholder="{$lang.name}">
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
