@@ -11,7 +11,7 @@ class Providers_model extends Model
 
 	public function read_providers()
 	{
-		$query = System::decoded_json_array($this->database->select('providers', [
+		$query = System::decode_json_to_array($this->database->select('providers', [
 			'id',
 			'avatar',
 			'name',
@@ -29,7 +29,7 @@ class Providers_model extends Model
 
 	public function read_provider($id)
 	{
-		$query = System::decoded_json_array($this->database->select('providers', [
+		$query = System::decode_json_to_array($this->database->select('providers', [
             'avatar',
 			'name',
 			'email',
@@ -48,20 +48,20 @@ class Providers_model extends Model
 	{
 		$query = $this->database->insert('providers', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
+			'avatar' => Fileloader::up($data['avatar']),
 			'name' => $data['name'],
-			'email' => !empty($data['email']) ? $data['email'] : null,
+			'email' => $data['email'],
 			'phone' => json_encode([
-                'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
-                'number' => !empty($data['phone_number']) ? $data['phone_number'] : ''
+                'country' => $data['phone_country'],
+                'number' => $data['phone_number']
             ]),
-			'country' => !empty($data['country']) ? $data['country']: null,
-			'address' => !empty($data['address']) ? $data['address']: null,
+			'country' => $data['country'],
+			'address' => $data['address'],
 			'fiscal' => json_encode([
-                'id' => !empty($data['fiscal_id']) ? strtoupper($data['fiscal_id']) : '',
-                'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : '',
-                'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : '',
-                'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : ''
+                'id' => $data['fiscal_id'],
+                'name' => $data['fiscal_name'],
+                'country' => $data['fiscal_country'],
+                'address' => $data['fiscal_address']
             ]),
 			'blocked' => false
 		]);
@@ -82,21 +82,21 @@ class Providers_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('providers', [
-    			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
-    			'name' => $data['name'],
-    			'email' => !empty($data['email']) ? $data['email'] : null,
-    			'phone' => json_encode([
-                    'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
-                    'number' => !empty($data['phone_number']) ? $data['phone_number'] : ''
-                ]),
-    			'country' => !empty($data['country']) ? $data['country'] : null,
-    			'address' => !empty($data['address']) ? $data['address'] : null,
-    			'fiscal' => json_encode([
-                    'id' => !empty($data['fiscal_id']) ? strtoupper($data['fiscal_id']) : '',
-                    'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : '',
-                    'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : '',
-                    'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : ''
-                ])
+				'avatar' => Fileloader::up($data['avatar']),
+				'name' => $data['name'],
+				'email' => $data['email'],
+				'phone' => json_encode([
+	                'country' => $data['phone_country'],
+	                'number' => $data['phone_number']
+	            ]),
+				'country' => $data['country'],
+				'address' => $data['address'],
+				'fiscal' => json_encode([
+	                'id' => $data['fiscal_id'],
+	                'name' => $data['fiscal_name'],
+	                'country' => $data['fiscal_country'],
+	                'address' => $data['fiscal_address']
+	            ])
             ], [
                 'id' => $data['id']
             ]);

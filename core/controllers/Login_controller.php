@@ -23,7 +23,7 @@ class Login_controller extends Controller
 
 			if (empty($errors))
 			{
-				$query = $this->model->get_login($_POST['email']);
+				$query = $this->model->get_session($_POST['email']);
 
 				if (!empty($query))
 				{
@@ -37,6 +37,7 @@ class Login_controller extends Controller
 						Session::set_value('vkye_account', $query['account']);
 						Session::set_value('vkye_user', $query['user']);
 						Session::set_value('vkye_lang', $query['user']['language']);
+						Session::set_value('vkye_temporal', []);
 
 						echo json_encode([
 							'status' => 'success',
@@ -73,7 +74,7 @@ class Login_controller extends Controller
 		}
 		else
 		{
-			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '}');
+			define('_title', Configuration::$web_page . ' | {$lang.login}');
 
 			$template = $this->view->render($this, 'index');
 

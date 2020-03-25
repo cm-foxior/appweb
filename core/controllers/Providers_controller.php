@@ -117,7 +117,7 @@ class Providers_controller extends Controller
 		}
 		else
 		{
-			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '}');
+			define('_title', Configuration::$web_page . ' | {$lang.providers}');
 
 			global $data;
 

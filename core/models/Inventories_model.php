@@ -47,7 +47,7 @@ class Inventories_model extends Model
 		return !empty($query) ? $query[0] : null;
 	}
 
-	public function read_inventories($branch)
+	public function read_inventories()
 	{
 		$query = $this->database->select('inventories', [
 			'[>]inventories_types' => [
@@ -82,7 +82,7 @@ class Inventories_model extends Model
 		], [
 			'AND' => [
 				'inventories.account' => Session::get_value('vkye_account')['id'],
-				'inventories.branch' => $branch
+				'inventories.branch' => Session::get_value('vkye_temporal')['inventories']['branch']['id']
 			],
 			'ORDER' => [
 				'inventories.date' => 'DESC',
@@ -93,53 +93,85 @@ class Inventories_model extends Model
 		return $query;
 	}
 
-	public function read_products()
+	public function read_providers()
 	{
-		$query = $this->database->select('products', [
-			'[>]products_unities' => [
-				'unity' => 'id'
-			]
-		], [
-			'products.id',
-			'products.avatar',
-			'products.name',
-			'products.type',
-			'products.token',
-			'products_unities.name(unity)'
+		$query = $this->database->select('providers', [
+			'id',
+			'name'
 		], [
 			'AND' => [
-				'products.account' => Session::get_value('vkye_account')['id'],
-				'products.inventory' => true,
-				'products.blocked' => false
+				'account' => Session::get_value('vkye_account')['id'],
+				'blocked' => false
 			],
 			'ORDER' => [
-				'products.type' => 'ASC',
-				'products.name' => 'ASC'
+				'name' => 'ASC'
 			]
 		]);
 
 		return $query;
 	}
 
-	public function create_inventory($data)
+	public function read_products()
 	{
-		// foreach (Session::get_value('tmp')['products'] as $value)
-		// {
-		// 	$query = $this->database->insert('inventories', [
-		// 		'account' => Session::get_value('vkye_account')['id'],
-		// 		'branch' => Session::get_value('tmp')['branch']['id'],
-		// 		'movement' => 'input',
-		// 		'type' => $data['type'],
-		// 		'product' => $value['product'],
-		// 		'quantity' => $value['quantity'],
-		// 		'date' => $data['date'],
-		// 		'hour' => $data['hour'],
-		// 		'price' => $value['price'],
-		// 	]);
-		// }
-		//
-		// return $query;
+		$query = $this->database->select('products', [
+			'id',
+			'avatar',
+			'name',
+			'type',
+			'token'
+		], [
+			'AND' => [
+				'account' => Session::get_value('vkye_account')['id'],
+				'inventory' => true,
+				'blocked' => false
+			],
+			'ORDER' => [
+				'type' => 'ASC',
+				'name' => 'ASC'
+			]
+		]);
+
+		return $query;
 	}
+
+	// public function read_product($id)
+	// {
+	// 	$query = $this->database->select('products', [
+	// 		'[>]products_unities' => [
+	// 			'unity' => 'id'
+	// 		]
+	// 	], [
+	// 		'products.id',
+	// 		'products.name',
+	// 		'products.type',
+	// 		'products.token',
+	// 		'products_unities.name(unity)'
+	// 	], [
+	// 		'products.id' => $id
+	// 	]);
+	//
+	// 	return !empty($query) ? $query[0] : null;
+	// }
+
+	// public function create_inventory($data)
+	// {
+	// 	// foreach (Session::get_value('tmp')['products'] as $value)
+	// 	// {
+	// 	// 	$query = $this->database->insert('inventories', [
+	// 	// 		'account' => Session::get_value('vkye_account')['id'],
+	// 	// 		'branch' => Session::get_value('tmp')['branch']['id'],
+	// 	// 		'movement' => 'input',
+	// 	// 		'type' => $data['type'],
+	// 	// 		'product' => $value['product'],
+	// 	// 		'quantity' => $value['quantity'],
+	// 	// 		'date' => $data['date'],
+	// 	// 		'hour' => $data['hour'],
+	// 	// 		'price' => $value['price'],
+	// 	// 	]);
+	// 	// }
+	// 	//
+	// 	// return $query;
+	// }
 
 	public function read_inventories_types($to_use = false, $movement = '')
 	{

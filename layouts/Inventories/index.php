@@ -21,6 +21,17 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
     <?php endif; ?>
     <?php if (!empty($data['branches'])) : ?>
     <span></span>
+    <fieldset class="fields-group">
+        <div class="compound st-4-left">
+            <span><i class="fas fa-store"></i></span>
+            <select data-action="switch_branch">
+                <?php foreach ($data['branches'] as $value) : ?>
+                <option value="<?php echo $value['id']; ?>" <?php echo ((Session::get_value('vkye_temporal')['inventories']['branch']['id'] == $value['id']) ? 'selected' : ''); ?>><?php echo $value['name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </fieldset>
+    <span></span>
     <?php if (Permissions::user(['create_inventories_input']) == true) : ?>
     <a data-action="create_inventory_input" class="success"><i class="fas fa-arrow-up"></i><span>{$lang.input}</span></a>
     <?php endif; ?>
@@ -36,17 +47,6 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
             <input type="text" data-search="inventories" placeholder="{$lang.search}">
         </div>
     </fieldset>
-    <span></span>
-    <fieldset class="fields-group">
-        <div class="compound st-4-left">
-            <span><i class="fas fa-store"></i></span>
-            <select data-action="switch_branch">
-                <?php foreach ($data['branches'] as $value) : ?>
-                <option value="<?php echo $value['token']; ?>" <?php echo (($data['branch']['token'] == $value['token']) ? 'selected' : ''); ?>><?php echo $value['name']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </fieldset>
     <?php endif; ?>
 </header>
 <?php if (!empty($data['branches'])) : ?>
@@ -55,7 +55,7 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
         <tbody>
             <?php foreach ($data['inventories'] as $value) : ?>
             <tr>
-                <td class="bigtag"><span><?php echo Dates::format_date($value['date'], 'd M, Y') . ' ' . Dates::format_hour($value['hour'], '12'); ?></span></td>
+                <td class="bigtag"><span><?php echo Dates::format_date($value['date'], 'short') . ' ' . Dates::format_hour($value['hour'], '12'); ?></span></td>
                 <td><?php echo $value['product_name']; ?></td>
                 <td class="smalltag"><span><?php echo $value['quantity'] . ' ' . $value['product_unity']; ?></span></td>
                 <td class="bigtag">
@@ -68,10 +68,8 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                 <td class="bigtag">
                     <?php if (!empty($value['bill'])) : ?>
                     <span>{$lang.bill} #<?php echo $value['bill']; ?></span>
-                    <?php elseif (!empty($value['remission'])) : ?>
-                    <span>{$lang.remission} #<?php echo $value['remission']; ?></span>
                     <?php else : ?>
-                    <span>{$lang.not_bill_remission}</span>
+                    <span>{$lang.not_bill}</span>
                     <?php endif; ?>
                 </td>
                 <?php if ($value['movement'] == 'input') : ?>
@@ -90,24 +88,19 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
     </table>
 </main>
 <?php if (Permissions::user(['create_inventories_input']) == true) : ?>
-<section class="modal" data-modal="create_inventory_input">
+<section class="modal view" data-modal="create_inventory_input">
     <div class="content">
         <main>
             <form>
+                <?php if (!empty($data['products'])) : ?>
                 <fieldset class="fields-group">
                     <div class="row">
-                        <div class="span6">
-                            <div class="compound st-5">
+                        <div class="span4">
+                            <div class="compound st-5-double">
                                 <div>
                                     <label>
-                                        <input type="radio" name="control" value="unity" checked>
-                                        <span class="checked">{$lang.unity}</span>
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        <input type="radio" name="control" value="weight" disabled>
-                                        <span class="disabled">{$lang.weight}</span>
+                                        <input type="radio" name="control" value="manual" checked>
+                                        <span class="checked">{$lang.manual}</span>
                                     </label>
                                 </div>
                                 <div>
@@ -118,12 +111,28 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                 </div>
                             </div>
                         </div>
-                        <div class="span6">
-                            <div class="compound st-5">
+                        <div class="span4">
+                            <div class="compound st-5-double">
                                 <div>
                                     <label>
-                                        <input type="radio" name="saved" value="normal">
-                                        <span>{$lang.normal}</span>
+                                        <input type="radio" name="measure" value="unity" checked>
+                                        <span class="checked">{$lang.unity}</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input type="radio" name="measure" value="weight" disabled>
+                                        <span class="disabled">{$lang.weight}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="compound st-5-double">
+                                <div>
+                                    <label>
+                                        <input type="radio" name="saved" value="free">
+                                        <span>{$lang.free}</span>
                                     </label>
                                 </div>
                                 <div>
@@ -132,26 +141,27 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                         <span class="checked">{$lang.bill}</span>
                                     </label>
                                 </div>
-                                <div>
-                                    <label>
-                                        <input type="radio" name="saved" value="remission">
-                                        <span>{$lang.remission}</span>
-                                    </label>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <div class="compound st-7">
-                        <input type="text" name="bill" placeholder="{$lang.folio_bill}">
-                        <span><?php echo Currency::format(Functions::summation('products', Session::get_value('products'), 'total'), Session::get_value('vkye_account')['currency']); ?></span>
-                    </div>
-                </fieldset>
-                <fieldset class="fields-group hidden">
-                    <div class="compound st-7">
-                        <input type="text" name="remission" placeholder="{$lang.folio_remission}">
-                        <span><?php echo Currency::format(Functions::summation('products', Session::get_value('products'), 'total'), Session::get_value('vkye_account')['currency']); ?></span>
+                    <div class="row">
+                        <div class="span8">
+                            <div class="text">
+                                <input type="text" name="bill_folio" placeholder="{$lang.folio}">
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="text">
+                                <select name="bill_payment_method">
+                                    <option value="" selected hidden>{$lang.payment_method}</option>
+                                    <option value="cash">{$lang.cash}</option>
+                                    <option value="check">{$lang.check}</option>
+                                    <option value="transfer">{$lang.transfer}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
@@ -166,20 +176,6 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                 </select>
                             </div>
                         </div>
-                        <div class="span8">
-                            <div class="text">
-                                <select name="provider">
-                                    <option value="" selected hidden>{$lang.not_provider}</option>
-                                    <?php foreach ($data['providers'] as $value) : ?>
-                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset class="fields-group">
-                    <div class="row">
                         <div class="span4">
                             <div class="text">
                                 <input type="date" name="date" value="<?php echo Dates::current_date(); ?>">
@@ -190,82 +186,20 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                 <input type="time" name="hour" value="<?php echo Dates::current_hour(); ?>">
                             </div>
                         </div>
-                        <div class="span4">
-                            <div class="text">
-                                <select name="location">
-                                    <option value="" selected>{$lang.not_location}</option>
-                                    <?php foreach ($data['inventories_locations'] as $value) : ?>
-                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <?php if (!empty($data['inventories_categories'])) : ?>
-                    <div class="title">
-                        <h6>{$lang.categories}</h6>
-                    </div>
-                    <div class="compound st-4-left">
-                        <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="categories" placeholder="{$lang.search_categories}">
-                    </div>
-                    <div class="checkbox st-1" data-cbx="categories">
-                        <?php foreach ($data['inventories_categories'] as $key => $value) : ?>
-                        <h6>{$lang.level} <?php echo $key; ?></h6>
-                        <?php foreach ($value as $subkey => $subvalue) : ?>
-                        <label>
-                            <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
-                            <span><?php echo $subvalue['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php else : ?>
-                    <div class="button">
-                        <a href="/inventories/categories"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_categories}</p>
-                    </div>
-                    <?php endif; ?>
-                </fieldset>
-                <div class="tbl-st-4" data-table="products">
-                    <div>
-                        <?php foreach (Session::get_value('products') as $value) : ?>
-                        <div>
-                            <figure>
-                                <?php if (!empty($value['product']['avatar'])) : ?>
-                                <img src="{$path.uploads}<?php echo $value['product']['avatar']; ?>">
-                                <?php endif; ?>
-                                <img src="{$path.images}empty.png">
-                            </figure>
-                            <div>
-                                <h4><?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}'; ?></h4>
-                                <span><?php echo $value['quantity'] . ' ' . $value['product']['unity'] . ' x ' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' = ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']); ?></span>
-                            </div>
-                            <a data-action="remove_product_to_table" data-id="<?php echo $value['product']['id']; ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.delete}</span></a>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <fieldset class="fields-group">
-                    <?php if (!empty($data['products'])) : ?>
-                    <div class="title">
-                        <h6>{$lang.product}</h6>
-                    </div>
                     <div class="compound st-6">
                         <div data-preview>
-                            <input type="text" placeholder="{$lang.not_product}" data-preview-value>
+                            <input type="text" placeholder="{$lang.product}" data-preview-value>
                             <input type="text" name="product" readonly data-preview-selected>
                         </div>
                         <div data-search>
                             <span><i class="fas fa-search"></i></span>
-                            <input type="text" placeholder="{$lang.search_product}" data-search-value>
+                            <input type="text" placeholder="{$lang.search}" data-search-value>
                         </div>
                         <div data-list>
-                            <?php foreach ($data['products'] as $value): ?>
+                            <?php foreach ($data['products'] as $value) : ?>
                             <div class="hidden">
                                 <figure>
                                     <?php if (!empty($value['avatar'])) : ?>
@@ -280,21 +214,11 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                             <?php endforeach; ?>
                         </div>
                     </div>
-                    <?php else : ?>
-                    <div class="button">
-                        <a href="/products/salemenu"><i class="fas fa-dollar-sign"></i><span>{$lang.sale_menu}</span></a>
-                        <a href="/products/supplies"><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
-                        <a href="/products/workmaterial"><i class="fas fa-mail-bulk"></i><span>{$lang.work_material}</span></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_products}</p>
-                    </div>
-                    <?php endif; ?>
                 </fieldset>
                 <fieldset class="fields-group">
                     <div class="row">
                         <div class="span6">
-                            <div class="compound st-7">
+                            <div class="compound st-7-right">
                                 <input type="text" name="quantity" placeholder="{$lang.quantity}">
                                 <span>{$lang.unity}</span>
                             </div>
@@ -309,13 +233,116 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <div class="button">
-                        <a data-action="add_product_to_table" class="success"><i class="fas fa-check"></i><span>{$lang.add_product_to_table}</span></a>
+                    <div class="row">
+                        <div class="span6">
+                            <div class="text">
+                                <select name="provider">
+                                    <option value="" selected>{$lang.not_provider}</option>
+                                    <?php foreach ($data['providers'] as $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="span6">
+                            <div class="text">
+                                <select name="location">
+                                    <option value="" selected>{$lang.not_location}</option>
+                                    <?php foreach ($data['inventories_locations'] as $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
+                <?php if (!empty($data['inventories_categories'])) : ?>
+                <fieldset class="fields-group">
+                    <div class="title">
+                        <h6>{$lang.categories}</h6>
+                    </div>
+                    <div class="compound st-4-left">
+                        <span><i class="fas fa-search"></i></span>
+                        <input type="text" data-search="inventories_categories" placeholder="{$lang.search}">
+                    </div>
+                    <div class="checkbox st-1" data-table="inventories_categories">
+                        <?php foreach ($data['inventories_categories'] as $key => $value) : ?>
+                        <h6>{$lang.level} <?php echo $key; ?></h6>
+                        <?php foreach ($value as $subvalue) : ?>
+                        <label>
+                            <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
+                            <span><?php echo $subvalue['name']; ?></span>
+                        </label>
+                        <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </fieldset>
+                <?php endif; ?>
                 <fieldset class="fields-group">
                     <div class="button">
+                        <a data-action="add_product_to_input_table" class="success"><i class="fas fa-check"></i><span>{$lang.add_to_table}</span></a>
+                    </div>
+                </fieldset>
+                <table class="tbl-st-1" data-table="inputs">
+                    <tbody>
+                        <?php if (!empty(Functions::temporal('get', 'inventories', 'inputs'))) : ?>
+                            <?php foreach (Functions::temporal('get', 'inventories', 'inputs') as $value) : ?>
+                            <tr>
+                                <td class="avatar">
+                                    <figure>
+                                        <?php if (!empty($value['product']['avatar'])): ?>
+                                        <img src="{$path.uploads}<?php echo $value['product']['avatar'] ?>">
+                                        <?php else: ?>
+                                        <img src="{$path.images}empty.png">
+                                        <?php endif; ?>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}' ?>
+                                    <br>
+                                    <?php echo $value['quantity'] . ' ' . $value['product']['unity'] . ' (' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . '): ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) ?>
+                                    <br>
+                                    <?php if (!empty($value['location'])) : ?>
+                                    <?php echo $value['location']['name'] ?>
+                                    <?php else : ?>
+                                    {$lang.not_location}
+                                    <?php endif; ?>
+                                    <br>
+                                    <?php if (!empty($value['location'])) : ?>
+                                    <?php echo $value['categories'][1] ?>
+                                    <?php else : ?>
+                                    {$lang.not_categories}
+                                    <?php endif; ?>
+                                </td>
+                                <td class="button">
+                                    <a data-action="remove_product_to_input_table" data-id="<?php echo $value['product']['id'] ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                        <tr>
+                            <td class="message">{$lang.not_records_in_the_table}</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+                <?php else : ?>
+                <fieldset class="fields-group">
+                    <div class="button">
+                        <a href="/products/salemenu"><i class="fas fa-dollar-sign"></i><span>{$lang.sale_menu}</span></a>
+                        <a href="/products/supplies"><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
+                        <a href="/products/workmaterial"><i class="fas fa-mail-bulk"></i><span>{$lang.work_material}</span></a>
+                    </div>
+                    <div class="message">
+                        <p>{$lang.to_select_products}</p>
+                    </div>
+                </fieldset>
+                <?php endif; ?>
+                <fieldset class="fields-group">
+                    <div class="button">
+                        <?php if (!empty($data['products'])) : ?>
                         <button type="submit" class="success"><i class="fas fa-plus"></i></button>
+                        <?php endif; ?>
                         <a class="alert" button-close><i class="fas fa-times"></i></a>
                     </div>
                 </fieldset>
@@ -327,6 +354,6 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
 <?php else : ?>
 <main class="to-use">
     <a href="/branches" class="success"><i class="fas fa-plus"></i></a>
-    <p>{$lang.to_use_inventories_create_branch}</p>
+    <p>{$lang.to_use_inventories}</p>
 </main>
 <?php endif; ?>

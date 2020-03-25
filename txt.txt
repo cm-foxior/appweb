@@ -43,7 +43,7 @@ public function xlsx($opt)
                 'avatar' => null,
                 'name' => $value[0],
                 'type' => $opt,
-                'token' => strtoupper(System::random_string('allcase', 8)),
+                'token' => strtoupper(System::generate_random_string('allcase', 8)),
                 'price' => $value[1],
                 'unity' => 1,
                 'weight' => json_encode([
@@ -63,7 +63,7 @@ public function xlsx($opt)
                 'avatar' => null,
                 'name' => $value[0],
                 'type' => $opt,
-                'token' => strtoupper(System::random_string('allcase', 8)),
+                'token' => strtoupper(System::generate_random_string('allcase', 8)),
                 'price' => null,
                 'unity' => 1,
                 'weight' => json_encode([
@@ -83,7 +83,7 @@ public function xlsx($opt)
                 'avatar' => null,
                 'name' => $value[0],
                 'type' => $opt,
-                'token' => strtoupper(System::random_string('allcase', 8)),
+                'token' => strtoupper(System::generate_random_string('allcase', 8)),
                 'price' => null,
                 'unity' => 1,
                 'weight' => null,

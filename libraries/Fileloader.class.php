@@ -75,13 +75,13 @@ class Fileloader
                 if ($file['status'] == 'success')
                     $file = $file['file'];
                 else
-                    $file = null;
+                    $file = '';
             }
 
             return $file;
         }
         else
-            return null;
+            return '';
 	}
 
     /**

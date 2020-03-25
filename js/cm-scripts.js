@@ -56,16 +56,22 @@ $(document).ready(function()
     });
 
     /**
-    * @summary Compound st 5
+    * @summary Compound st-5
     */
-    $('.compound.st-5').find('input[type="radio"]').on('click', function()
+    $('.compound.st-5-double').find('input[type="radio"]').on('click', function()
     {
-        $(this).parents('.compound.st-5').find('span').removeClass('checked');
+        $(this).parents('.compound.st-5-double').find('span').removeClass('checked');
+        $(this).parents('label').find('span').addClass('checked');
+    });
+
+    $('.compound.st-5-triple').find('input[type="radio"]').on('click', function()
+    {
+        $(this).parents('.compound.st-5-triple').find('span').removeClass('checked');
         $(this).parents('label').find('span').addClass('checked');
     });
 
     /**
-    * @summary Compound st 6
+    * @summary Compound st-6
     */
     $('.compound.st-6').find('[data-preview-value]').on('click', function()
     {
@@ -93,70 +99,6 @@ $(document).ready(function()
         $(this).parents('.compound.st-6').find('[data-list] > div').addClass('hidden');
     });
 });
-
-/**
-* @summary Envía un ajax al controlador.
-*
-* @var string option: (norma, form) Tipo de envío.
-* @var Function callback: Acciones a realizar despues del envio exitoso.
-*/
-function send_ajax(option, variables, target, callback)
-{
-    variables = (variables == undefined || variables == null) ? {} : variables;
-
-    if (option == 'normal')
-    {
-        var data = 'action=' + action + '&id=' + id;
-
-        $.each(variables, function(key, value)
-        {
-            data = data + '&' + key + '=' + value;
-        });
-
-        $.ajax({
-            type: 'POST',
-            data: data,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                if (response.status == 'success')
-                    callback(response);
-                else if (response.status == 'error')
-                    open_notification_modal('alert', response.message);
-            }
-        });
-    }
-    else if (option == 'form')
-    {
-        var data = new FormData(target[0]);
-
-        data.append('action', action);
-        data.append('id', id);
-
-        $.each(variables, function(key, value)
-        {
-            data.append(key, value);
-        });
-
-        $.ajax({
-            type: 'POST',
-            data: data,
-            contentType: false,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function(response)
-            {
-                check_form_errors(target, response, function()
-                {
-                    callback(response);
-                });
-            }
-        });
-    }
-}
 
 /**
 * @summary Busca una cadena de texto en una tabla.
@@ -197,50 +139,55 @@ function search_in_table(data, target, type)
 /**
 * @summary Valida los valores de una cadena de texto en una etiqueta HTML <input>.
 *
-* @param string option: (uppercase, lowercase, int, float) Tipo de cadena de texto permitida.
+* @param string option: (empty, uppercase, lowercase, int, float) Tipo de cadena de texto permitida.
 * @param string data: Cadena de texto a validar.
 * @param <input> target: Etiqueta HTML donde retornará la validación.
 */
 function validate_string(option, data, target)
 {
-    var filter = '';
-    var uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-    var lowercase = 'abcdefghijklmnñopqrstuvwxyz';
-    var numbet_int = '0123456789';
-    var number_float = '.';
-
-    if (Array.isArray(option))
+    if (option == 'empty')
+        return (data == undefined || data == null || data == '') ? true : false;
+    else if (option == 'uppercase' || option == 'lowercase' || option == 'int' || option == 'float')
     {
-        $.each(option, function(key, value)
+        var filter = '';
+        var uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+        var lowercase = 'abcdefghijklmnñopqrstuvwxyz';
+        var numbet_int = '0123456789';
+        var number_float = '.';
+
+        if (Array.isArray(option))
         {
-            if (value == 'uppercase')
-                filter = filter + uppercase;
-            else if (value == 'lowercase')
-                filter = filter + lowercase;
-            else if (value == 'int')
-                filter = filter + numbet_int;
-            else if (value == 'float')
-                filter = filter + number_float + numbet_int;
-        });
+            $.each(option, function(key, value)
+            {
+                if (value == 'uppercase')
+                    filter = filter + uppercase;
+                else if (value == 'lowercase')
+                    filter = filter + lowercase;
+                else if (value == 'int')
+                    filter = filter + numbet_int;
+                else if (value == 'float')
+                    filter = filter + number_float + numbet_int;
+            });
+        }
+        else if (option == 'uppercase')
+            filter = uppercase;
+        else if (option == 'lowercase')
+            filter = lowercase;
+        else if (option == 'int')
+            filter = numbet_int;
+        else if (option == 'float')
+            filter = number_float + numbet_int;
+
+        var out = '';
+
+        for (var i = 0; i < data.length; i++)
+        {
+            if (filter.indexOf(data.charAt(i)) != -1)
+                out += data.charAt(i);
+        }
+
+        target.val(out);
     }
-    else if (option == 'uppercase')
-        filter = uppercase;
-    else if (option == 'lowercase')
-        filter = lowercase;
-    else if (option == 'int')
-        filter = numbet_int;
-    else if (option == 'float')
-        filter = number_float + numbet_int;
-
-    var out = '';
-
-    for (var i = 0; i < data.length; i++)
-    {
-        if (filter.indexOf(data.charAt(i)) != -1)
-            out += data.charAt(i);
-    }
-
-    target.val(out);
 }
 
 /**

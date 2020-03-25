@@ -26,7 +26,7 @@ class System
     *
     * @return string
     */
-    public static function random_string($option = 'allcase', $length = 8)
+    public static function generate_random_string($option = 'allcase', $length = 8)
     {
         $security = new Security;
 
@@ -45,7 +45,7 @@ class System
     *
     * @return string
     */
-    public static function encrypted_string($string)
+    public static function encrypt_string($string)
     {
         $security = new Security;
 
@@ -60,7 +60,7 @@ class System
     *
     * @return string
     */
-    public static function shortened_string($string, $length = 400)
+    public static function shorten_string($string, $length = 400)
 	{
 		return (strlen(strip_tags($string)) > $length) ? substr(strip_tags($string), 0, $length) . '...' : substr(strip_tags($string), 0, $length);
     }
@@ -72,7 +72,7 @@ class System
     *
     * @return string
     */
-    public static function cleaned_url($string)
+    public static function clean_string_to_url($string)
 	{
 		return strtolower(str_replace(' ', '-', $string));
     }
@@ -84,7 +84,7 @@ class System
     *
     * @return array
     */
-    public static function decoded_json_array($array)
+    public static function decode_json_to_array($array)
     {
         if (is_array($array))
         {
@@ -98,108 +98,55 @@ class System
                 else
                     $array[$key] = (is_array(json_decode($array[$key], true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array[$key], true) : $array[$key];
             }
-
-            return $array;
         }
         else
-            return (is_array(json_decode($array, true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array, true) : $array;
+            $array = (is_array(json_decode($array, true)) AND (json_last_error() == JSON_ERROR_NONE)) ? json_decode($array, true) : $array;
+
+        return $array;
     }
 
     /**
-    * @summary Crea una sumatoria de valores.
+    * @summary Entrega la configuraciones generales del sistema.
     *
-    * @param array $data: Arreglo de valores que se van a sumar.
-    * @param string $key: Llave del $data donde se encuentra el valor a sumar.
+    * @param string $option: Tipo de configuración a regresar.
+    * @param string $key: Llave del tipo de configuración a regresar.
+    * @param string $key: Llave del tipo de configuración a regresar.
     *
-    * @return int
-    * @return float
+    * @return string
     */
-    public static function summation($data, $key)
+    static public function settings($option, $key, $subkey = null, $lang = false)
     {
-        $sum = 0;
+        $data = [
+            'seo' => [
+                'title' => [
+                    'index' => [
+                        'es' => 'Inicio',
+                        'en' => 'Home'
+                    ]
+                ],
+                'keywords' => [
+                    'index' => [
+                        'es' => 'Lorem, ipsum, dolor, sit, amet.',
+                        'en' => 'Lorem, ipsum, dolor, sit, amet.'
+                    ]
+                ],
+                'description' => [
+                    'index' => [
+                        'es' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commo.',
+                        'en' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commo.'
+                    ]
+                ]
+            ]
+        ];
 
-        foreach ($data as $value)
+        if (!empty($subkey))
         {
-            if (isset($key) AND !empty($key))
-                $sum += $value[$key];
+            if (array_key_exists($subkey, $data[$option][$key]))
+                return ($lang == true) ? $data[$option][$key][$subkey][Session::get_value('vkye_lang')] : $data[$option][$key][$subkey];
             else
-                $sum += $value;
+                return '';
         }
-
-        return $sum;
-    }
-
-    /**
-    * @summary Entrega los países desde la base de datos.
-    *
-    * @return array
-    */
-    static public function countries()
-    {
-        $database = new Medoo();
-
-        return System::decoded_json_array($database->select('system_countries', [
-            'name',
-            'code',
-            'lada'
-        ]));
-    }
-
-    /**
-    * @summary Entrega la información de contacto.
-    *
-    * @param string $key: Opción a regresar en el primer nivel del array.
-    * @param string $subkey: Opción a regresar en el segundo nivel del array.
-    *
-    * @return string
-    */
-    static public function contact($key, $subkey, $lang = false)
-    {
-        $data = [
-            'emails' => [
-
-            ],
-            'phones' => [
-
-            ],
-            'social_media' => [
-
-            ]
-        ];
-
-        return ($lang == true) ? $data[$key][$subkey][Session::get_value('vkye_lang')] : $data[$key][$subkey];
-    }
-
-    /**
-    * @summary Entrega la configuración SEO.
-    *
-    * @param string $key: Opción a regresar en el primer nivel del array.
-    *
-    * @return string
-    */
-    static public function seo($key)
-    {
-        $data = [
-            'title' => [
-                'index' => [
-                    'es' => 'Inicio',
-                    'en' => 'Home'
-                ]
-            ],
-            'keywords' => [
-                'index' => [
-                    'es' => 'Lorem, ipsum, dolor, sit, amet.',
-                    'en' => 'Lorem, ipsum, dolor, sit, amet.'
-                ]
-            ],
-            'description' => [
-                'index' => [
-                    'es' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commo.',
-                    'en' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commo.'
-                ]
-            ]
-        ];
-
-        return array_key_exists($GLOBALS['_vkye_module'], $data[$key]) ? $data[$key][$GLOBALS['_vkye_module']][Session::get_value('vkye_lang')] : '';
+        else
+            return ($lang == true) ? $data[$option][$key][Session::get_value('vkye_lang')] : $data[$option][$key];
     }
 }

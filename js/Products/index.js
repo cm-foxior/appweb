@@ -34,17 +34,17 @@ $(document).ready(function()
 
     $('[data-search="categories"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="categories"]').find(' > label'));
+        search_in_table($(this).val(), $('[data-table="categories"]').find(' > label'));
     });
 
     $('[data-search="supplies"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="supplies"]').find(' > label'), 'hidden');
+        search_in_table($(this).val(), $('[data-table="supplies"]').find(' > label'), 'hidden');
     });
 
     $('[data-search="recipes"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-cbx="recipes"]').find(' > label'), 'hidden');
+        search_in_table($(this).val(), $('[data-table="recipes"]').find(' > label'), 'hidden');
     });
 
     var create_action = 'create_product';
@@ -74,7 +74,7 @@ $(document).ready(function()
             action = update_action;
 
             if (data.type == 'sale_menu')
-                $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((data.avatar != null) ? '../uploads/' + data.avatar : '../images/empty.png'));
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((validate_string('empty', data.avatar) == false) ? '../uploads/' + data.avatar : '../images/empty.png'));
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
 

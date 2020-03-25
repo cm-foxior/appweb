@@ -122,7 +122,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                                 <div class="checkbox st-3">
                                     <label>
                                         <input type="checkbox" name="inventory" checked>
-                                        <span>{$lang.product_subject_to_inventory}</span>
+                                        <span>{$lang.subject_to_inventory}</span>
                                     </label>
                                 </div>
                                 <?php endif; ?>
@@ -183,19 +183,19 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     </div>
                 </fieldset>
                 <?php endif; ?>
+                <?php if (!empty($data['products_categories'])) : ?>
                 <fieldset class="fields-group">
-                    <?php if (!empty($data['products_categories'])) : ?>
                     <div class="title">
                         <h6>{$lang.categories}</h6>
                     </div>
                     <div class="compound st-4-left">
                         <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="categories" placeholder="{$lang.search_categories}">
+                        <input type="text" data-search="categories" placeholder="{$lang.search}">
                     </div>
-                    <div class="checkbox st-1" data-cbx="categories">
+                    <div class="checkbox st-1" data-table="categories">
                         <?php foreach ($data['products_categories'] as $key => $value) : ?>
                         <h6>{$lang.level} <?php echo $key; ?></h6>
-                        <?php foreach ($value as $subkey => $subvalue) : ?>
+                        <?php foreach ($value as $subvalue) : ?>
                         <label>
                             <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
                             <span><?php echo $subvalue['name']; ?></span>
@@ -203,70 +203,49 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         <?php endforeach; ?>
                         <?php endforeach; ?>
                     </div>
-                    <?php else : ?>
-                    <div class="button">
-                        <a href="/products/categories"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_categories}</p>
-                    </div>
-                    <?php endif; ?>
-                </fieldset>
-                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') : ?>
-                <fieldset class="fields-group">
-                    <?php if (!empty($data['products_supplies'])) : ?>
-                    <div class="title">
-                        <h6>{$lang.supplies}</h6>
-                    </div>
-                    <div class="compound st-4-left">
-                        <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="supplies" placeholder="{$lang.search_supplies}">
-                    </div>
-                    <div class="checkbox st-1" data-cbx="supplies">
-                        <?php foreach ($data['products_supplies'] as $value) : ?>
-                        <label class="hidden">
-                            <input type="checkbox" name="supplies[]" value="<?php echo $value['id']; ?>">
-                            <span><?php echo $value['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php else : ?>
-                    <div class="button">
-                        <a href="/products/supplies"><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_supplies}</p>
-                    </div>
-                    <?php endif; ?>
                 </fieldset>
                 <?php endif; ?>
-                <?php if ($data['type'] == 'sale_menu') : ?>
-                <fieldset class="fields-group">
-                    <?php if (!empty($data['products_recipes'])) : ?>
-                    <div class="title">
-                        <h6>{$lang.recipes}</h6>
-                    </div>
-                    <div class="compound st-4-left">
-                        <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="recipes" placeholder="{$lang.search_recipes}">
-                    </div>
-                    <div class="checkbox st-2" data-cbx="recipes">
-                        <?php foreach ($data['products_recipes'] as $value) : ?>
-                        <label class="hidden">
-                            <input type="checkbox" name="recipes[]" value="<?php echo $value['id']; ?>">
-                            <span><?php echo $value['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php else : ?>
-                    <div class="button">
-                        <a href="/products/recipes"><i class="fas fa-receipt"></i><span>{$lang.recipes}</span></a>
-                    </div>
-                    <div class="message">
-                        <p>{$lang.to_select_recipes}</p>
-                    </div>
+                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') : ?>
+                    <?php if (!empty($data['products_supplies'])) : ?>
+                    <fieldset class="fields-group">
+                        <div class="title">
+                            <h6>{$lang.supplies}</h6>
+                        </div>
+                        <div class="compound st-4-left">
+                            <span><i class="fas fa-search"></i></span>
+                            <input type="text" data-search="supplies" placeholder="{$lang.search}">
+                        </div>
+                        <div class="checkbox st-1" data-table="supplies">
+                            <?php foreach ($data['products_supplies'] as $value) : ?>
+                            <label class="hidden">
+                                <input type="checkbox" name="supplies[]" value="<?php echo $value['id']; ?>">
+                                <span><?php echo $value['name']; ?></span>
+                            </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </fieldset>
                     <?php endif; ?>
-                </fieldset>
+                <?php endif; ?>
+                <?php if ($data['type'] == 'sale_menu') : ?>
+                    <?php if (!empty($data['products_recipes'])) : ?>
+                    <fieldset class="fields-group">
+                        <div class="title">
+                            <h6>{$lang.recipes}</h6>
+                        </div>
+                        <div class="compound st-4-left">
+                            <span><i class="fas fa-search"></i></span>
+                            <input type="text" data-search="recipes" placeholder="{$lang.search}">
+                        </div>
+                        <div class="checkbox st-2" data-table="recipes">
+                            <?php foreach ($data['products_recipes'] as $value) : ?>
+                            <label class="hidden">
+                                <input type="checkbox" name="recipes[]" value="<?php echo $value['id']; ?>">
+                                <span><?php echo $value['name']; ?></span>
+                            </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </fieldset>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <fieldset class="fields-group">
                     <div class="button">

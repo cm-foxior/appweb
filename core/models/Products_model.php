@@ -35,7 +35,7 @@ class Products_model extends Model
 			];
 		}
 
-		$query = System::decoded_json_array($this->database->select('products', $fields, [
+		$query = System::decode_json_to_array($this->database->select('products', $fields, [
 			'AND' => $and,
 			'ORDER' => [
 				'name' => 'ASC'
@@ -47,7 +47,7 @@ class Products_model extends Model
 
 	public function read_product($id)
 	{
-		$query = System::decoded_json_array($this->database->select('products', [
+		$query = System::decode_json_to_array($this->database->select('products', [
 			'avatar',
 			'name',
 			'type',
@@ -71,18 +71,18 @@ class Products_model extends Model
 	{
 		$query = $this->database->insert('products', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => ($data['type'] == 'sale_menu' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : null,
+			'avatar' => ($data['type'] == 'sale_menu') ? Fileloader::up($data['avatar']) : '',
 			'name' => $data['name'],
 			'type' => $data['type'],
-			'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
-			'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
-			'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
+			'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : '',
+			'price' => ($data['type'] == 'sale_menu') ? $data['price'] : '',
+			'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : '',
 			'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
-				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
-				'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
-			]) : null,
-			'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
-			'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
+				'empty' => $data['weight_empty'],
+				'full' => $data['weight_full']
+			]) : '',
+			'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : '',
+			'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : '',
 			'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
 			'inventory' => ($data['type'] == 'sale_menu' OR $data['type'] = 'supply' OR $data['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false,
 			'blocked' => false
@@ -95,34 +95,35 @@ class Products_model extends Model
 	{
 		$query = null;
 
-        $edited = $this->database->select('products', [
-            'avatar'
-        ], [
-            'id' => $data['id']
-        ]);
+		$edited = $this->database->select('products', [
+			'avatar',
+			'type'
+		], [
+			'id' => $data['id']
+		]);
 
         if (!empty($edited))
         {
             $query = $this->database->update('products', [
-				'avatar' => ($data['type'] == 'sale_menu' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : $edited[0]['avatar'],
+				'avatar' => ($edited[0]['type'] == 'sale_menu') ? Fileloader::up($data['avatar']) : '',
 				'name' => $data['name'],
-				'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
-				'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
-				'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
-				'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
-					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
-					'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
-				]) : null,
-				'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
-				'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
+				'token' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'supply' OR $edited[0]['type'] == 'work_material') ? $data['token'] : '',
+				'price' => ($edited[0]['type'] == 'sale_menu') ? $data['price'] : '',
+				'unity' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'supply' OR $edited[0]['type'] == 'work_material') ? $data['unity'] : '',
+				'weight' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'supply') ? json_encode([
+					'empty' => $data['weight_empty'],
+					'full' => $data['weight_full']
+				]) : '',
+				'supplies' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : '',
+				'recipes' => ($edited[0]['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : '',
 				'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
-				'inventory' => ($data['type'] == 'sale_menu' OR $data['type'] = 'supply' OR $data['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false
+				'inventory' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] = 'supply' OR $edited[0]['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false
             ], [
                 'id' => $data['id']
             ]);
 
-            if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Fileloader::down($edited[0]['avatar']);
+			if (!empty($query) AND $edited[0]['type'] == 'sale_menu' AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
+				Fileloader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -155,7 +156,8 @@ class Products_model extends Model
         $query = null;
 
         $deleted = $this->database->select('products', [
-            'avatar'
+            'avatar',
+			'type'
         ], [
             'id' => $id
         ]);
@@ -166,7 +168,7 @@ class Products_model extends Model
                 'id' => $id
             ]);
 
-            if (!empty($query) AND !empty($deleted[0]['avatar']))
+			if (!empty($query) AND $deleted[0]['type'] == 'sale_menu' AND !empty($deleted[0]['avatar']))
                 Fileloader::down($deleted[0]['avatar']);
         }
 

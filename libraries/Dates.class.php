@@ -90,7 +90,7 @@ class Dates
     {
         if ($format == 'long' OR $format == 'short')
         {
-            $date = date('Y-m-d');
+            $date = date('Y-m-d', strtotime($date));
             $date = explode('-', $date);
 
             $months = [
@@ -125,9 +125,9 @@ class Dates
             ];
 
             if ($format == 'long')
-                return $date[2] . ' {$lang.of} ' . $months[$language][$date[1]] . ' {$lang.of_the} ' . $date[1];
+                return $date[2] . ' ' . $months[$language][$date[1]] . ' ' . $date[0];
             else if ($format == 'short')
-                return $date[2] . ' ' . $months[$language][$date[1]] . ', ' . $date[1];
+                return $date[2] . ' ' . substr($months[$language][$date[1]], -strlen($months[$language][$date[1]]), 3) . ', ' . substr($date[0], -2);
         }
         else
             return date($format, strtotime($date));
@@ -236,7 +236,7 @@ class Dates
     static public function diff_date_hour($date_hour1, $date_hour2, $lapse = 'all', $format = true)
     {
         Dates::set_default_timezone();
-        
+
         $date_hour1 = new DateTime($date_hour1);
         $date_hour2 = new DateTime($date_hour2);
 
