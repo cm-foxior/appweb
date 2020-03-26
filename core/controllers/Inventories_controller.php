@@ -13,193 +13,205 @@ class Inventories_controller extends Controller
 	{
 		if (Format::exist_ajax_request() == true)
 		{
-			// if ($_POST['action'] == 'switch_branch')
-			// {
-			// 	$query = $this->model->read_branch($_POST['id']);
-			//
-			// 	if (!empty($query))
-			// 	{
-			// 		Functions::temporal('set_forced', 'inventories', 'branch', $query);
-			//
-			// 		echo json_encode([
-			// 			'status' => 'success',
-			// 			'path' => '/inventories/' . System::clean_string_to_url($query['name'])
-			// 		]);
-			// 	}
-			// 	else
-			// 	{
-			// 		echo json_encode([
-			// 			'status' => 'error',
-			// 			'message' => '{$lang.operation_error}'
-			// 		]);
-			// 	}
-			// }
-			//
-			// if ($_POST['action'] == 'read_product')
-			// {
-			// 	$query = $this->model->read_product($_POST['id']);
-			//
-			// 	if (!empty($query))
-			// 	{
-			// 		echo json_encode([
-			// 			'status' => 'success',
-			// 			'data' => $query
-			// 		]);
-			// 	}
-			// 	else
-			// 	{
-			// 		echo json_encode([
-			// 			'status' => 'error',
-			// 			'message' => '{$lang.operation_error}'
-			// 		]);
-			// 	}
-			// }
-			//
-			// if ($_POST['action'] == 'add_product_to_table')
-			// {
-			// 	$errors = [];
-			//
-			// 	if (Validations::empty($_POST['product']) == false)
-			// 		array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty($_POST['quantity']) == false)
-			// 		array_push($errors, ['quantity','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::equals($_POST['saved'], ['bill','remission']) == true AND Validations::empty($_POST['price']) == false)
-			// 		array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (empty($errors))
-			// 	{
-			// 		$query = $this->model->read_product($_POST['product']);
-			//
-			// 		if (!empty($query))
-			// 		{
-			// 			$tmp = Functions::temporal_session('get', 'products');
-			//
-			// 			if (array_key_exists($query['id'], $tmp))
-			// 			{
-			// 				$tmp[$query['id']]['location'] = (Validations::empty($_POST['location']) == true) ? $this->model->read_inventory_location($_POST['location']) : [];
-			// 				$tmp[$query['id']]['categories'][0] = (Validations::empty($_POST['categories']) == true) ? $_POST['categories'] : [];
-			// 				$tmp[$query['id']]['categories'][1] = (Validations::empty($_POST['categories']) == true) ? $this->model->read_inventories_categories($_POST['categories']) : '';
-			// 				$tmp[$query['id']]['quantity'] += $_POST['quantity'];
-			// 				$tmp[$query['id']]['price'] = $_POST['price'];
-			// 				$tmp[$query['id']]['total'] = ($tmp[$query['id']]['quantity'] * $_POST['price']);
-			// 			}
-			// 			else
-			// 			{
-			// 				$tmp[$query['id']] = [
-			// 					'location' => (Validations::empty($_POST['location']) == true) ? $this->model->read_inventory_location($_POST['location']) : [],
-			// 					'categories' => [
-			// 						[0] => (Validations::empty($_POST['categories']) == true) ? $_POST['categories'] : [],
-			// 						[1] => (Validations::empty($_POST['categories']) == true) ? $this->model->read_inventories_categories($_POST['categories']) : ''
-			// 					],
-			// 					'product' => $query,
-			// 					'quantity' => $_POST['quantity'],
-			// 					'price' => $_POST['price'],
-			// 					'total' => ($_POST['quantity'] * $_POST['price'])
-			// 				];
-			// 			}
-			//
-			// 			Functions::temporal_session('set', 'products', $tmp);
-			//
-			// 			$table = '';
-			//
-			// 			foreach ($tmp as $value)
-			// 			{
-			// 				$table .=
-			// 				'<tr>
-			// 					<td class="avatar">
-			// 						<figure>
-			// 							<img src="' . (!empty($value['product']['avatar']) ? '{$path.uploads}' . $value['product']['avatar'] : '{$path.images}empty.png') . '">
-			// 						</figure>
-			// 					</td>
-			// 					<td>
-			// 						' . $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}
-			// 						<br>
-			// 						' . $value['quantity'] . ' ' . $value['product']['unity'] .
-			// 						' (' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ')' .
-			// 						' = ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . '
-			// 						<br>
-			// 						' . (!empty($value['location']) ? $value['location']['name'] ; '{$lang.not_location}') . '
-			// 						<br>
-			// 						' . (!empty($value['categories'][1]) ? $value['categories'][1] ; '{$lang.not_categories}') . '
-			// 					</td>
-			// 					<td class="button">
-			// 						<a data-action="remove_product_to_table" data-id="' . $value['product']['id'] . '" class="alert"><i class="fas fa-trash"></i><span>{$lang.delete}</span></a>
-			// 					</td>
-			// 				</tr>';
-			// 			}
-			//
-			// 			echo json_encode([
-			// 				'status' => 'success',
-			// 				'data' => [
-			// 					'total' => Currency::format(System::summation(Functions::temporal_session('get', 'products'), 'total'), Session::get_value('vkye_account')['currency']),
-			// 					'table' => $table
-			// 				]
-			// 			]);
-			// 		}
-			// 		else
-			// 		{
-			// 			echo json_encode([
-			// 				'status' => 'error',
-			// 				'message' => '{$lang.operation_error}'
-			// 			]);
-			// 		}
-			// 	}
-			// 	else
-			// 	{
-			// 		echo json_encode([
-			// 			'status' => 'error',
-			// 			'errors' => $errors
-			// 		]);
-			// 	}
-			// }
-			//
-			// if ($_POST['action'] == 'remove_product_to_table')
-			// {
-			// 	$tmp = Functions::temporal_session('get', 'products');
-			//
-			// 	unset($tmp[$_POST['id']]);
-			//
-			// 	Functions::temporal_session('set', 'products', $tmp);
-			//
-			// 	$table = '';
-			//
-			// 	foreach ($tmp as $value)
-			// 	{
-			// 		$table .=
-			// 		'<tr>
-			// 			<td class="avatar">
-			// 				<figure>
-			// 					<img src="' . (!empty($value['product']['avatar']) ? '{$path.uploads}' . $value['product']['avatar'] : '{$path.images}empty.png') . '">
-			// 				</figure>
-			// 			</td>
-			// 			<td>
-			// 				' . $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}
-			// 				<br>
-			// 				' . $value['quantity'] . ' ' . $value['product']['unity'] .
-			// 				' (' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ')' .
-			// 				' = ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . '
-			// 				<br>
-			// 				' . (!empty($value['location']) ? $value['location']['name'] ; '{$lang.not_location}') . '
-			// 				<br>
-			// 				' . (!empty($value['categories'][1]) ? $value['categories'][1] ; '{$lang.not_categories}') . '
-			// 			</td>
-			// 			<td class="button">
-			// 				<a data-action="remove_product_to_table" data-id="' . $value['product']['id'] . '" class="alert"><i class="fas fa-trash"></i><span>{$lang.delete}</span></a>
-			// 			</td>
-			// 		</tr>';
-			// 	}
-			//
-			// 	echo json_encode([
-			// 		'status' => 'success',
-			// 		'data' => [
-			// 			'total' => Currency::format(System::summation(Functions::temporal_session('get', 'products'), 'total'), Session::get_value('vkye_account')['currency']),
-			// 			'table' => $table
-			// 		]
-			// 	]);
-			// }
-			//
+			if ($_POST['action'] == 'switch_branch')
+			{
+				$query = $this->model->read_branch($_POST['id']);
+
+				if (!empty($query))
+				{
+					Functions::temporal('set_forced', 'inventories', 'branch', $query);
+
+					echo json_encode([
+						'status' => 'success',
+						'path' => '/inventories/' . System::clean_string_to_url($query['name'])
+					]);
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'message' => '{$lang.operation_error}'
+					]);
+				}
+			}
+
+			if ($_POST['action'] == 'read_product')
+			{
+				$query = $this->model->read_product($_POST['id']);
+
+				if (!empty($query))
+				{
+					echo json_encode([
+						'status' => 'success',
+						'data' => $query
+					]);
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'message' => '{$lang.operation_error}'
+					]);
+				}
+			}
+
+			if ($_POST['action'] == 'add_product_to_input_table')
+			{
+				$errors = [];
+
+				if (Validations::empty($_POST['product']) == false)
+					array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty($_POST['quantity']) == false)
+					array_push($errors, ['quantity','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['price']) == false)
+					array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
+
+				if (empty($errors))
+				{
+					$_POST['product'] = $this->model->read_product($_POST['product']);
+					$_POST['location'] = !empty($_POST['location']) ? $this->model->read_inventory_location($_POST['location']) : [];
+					$_POST['categories'] = !empty($_POST['categories']) ? $this->model->read_inventories_categories($_POST['categories']) : [];
+
+					$temporal = Functions::temporal('get', 'inventories', 'inputs');
+
+					$key = $_POST['product']['id'];
+
+					if (array_key_exists($key, $temporal))
+					{
+						$temporal[$key]['quantity'] += $_POST['quantity'];
+						$temporal[$key]['price'] = $_POST['price'];
+						$temporal[$key]['total'] = ($temporal[$key]['quantity'] * $_POST['price']);
+						$temporal[$key]['location'] = $_POST['location'];
+						$temporal[$key]['categories'] = $_POST['categories'];
+					}
+					else
+					{
+						$temporal[$key] = [
+							'product' => $_POST['product'],
+							'quantity' => $_POST['quantity'],
+							'price' => $_POST['price'],
+							'total' => ($_POST['quantity'] * $_POST['price']),
+							'location' => $_POST['location'],
+							'categories' => $_POST['categories']
+						];
+					}
+
+					Functions::temporal('set_forced', 'inventories', 'inputs', $temporal);
+
+					$table = '';
+
+					foreach (Functions::temporal('get', 'inventories', 'inputs') as $value)
+					{
+						$table .=
+						'<tr>
+							<td class="avatar">
+								<figure>
+									<img src="' . (!empty($value['product']['avatar']) ? '{$path.uploads}' . $value['product']['avatar'] : '{$path.images}empty.png') . '">
+								</figure>
+							</td>
+							<td>
+								' . $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}
+								<br>
+								' . $value['quantity'] . ' ' . $value['product']['unity'] . '
+								<br>
+								' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')
+								<br>
+								' . (!empty($value['location']) ? $value['location']['name'] : '{$lang.not_location}') . '
+								<br>
+								' . (!empty($value['categories']) ? Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
+							</td>
+							<td class="button">
+								<a data-action="remove_product_to_input_table" data-id="' . $value['product']['id'] . '" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
+							</td>
+						</tr>';
+					}
+
+					$table .=
+					'<tr>
+						<td></td>
+						<td class="message">' . Currency::format(Functions::summation('math', Functions::temporal('get', 'inventories', 'inputs'), 'total'), Session::get_value('vkye_account')['currency']) . '</td>
+						<td></td>
+					</tr>';
+
+					echo json_encode([
+						'status' => 'success',
+						'data' => [
+							'table' => $table
+						]
+					]);
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'errors' => $errors
+					]);
+				}
+			}
+
+			if ($_POST['action'] == 'remove_product_to_input_table')
+			{
+				$temporal = Functions::temporal('get', 'inventories', 'inputs');
+
+				unset($temporal[$_POST['id']]);
+
+				Functions::temporal('set_forced', 'inventories', 'inputs', $temporal);
+
+				$table = '';
+
+				if (!empty(Functions::temporal('get', 'inventories', 'inputs')))
+				{
+					foreach (Functions::temporal('get', 'inventories', 'inputs') as $value)
+					{
+						$table .=
+						'<tr>
+							<td class="avatar">
+								<figure>
+									<img src="' . (!empty($value['product']['avatar']) ? '{$path.uploads}' . $value['product']['avatar'] : '{$path.images}empty.png') . '">
+								</figure>
+							</td>
+							<td>
+								' . $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}
+								<br>
+								' . $value['quantity'] . ' ' . $value['product']['unity'] . '
+								<br>
+								' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')
+								<br>
+								' . (!empty($value['location']) ? $value['location']['name'] : '{$lang.not_location}') . '
+								<br>
+								' . (!empty($value['categories']) ? Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
+							</td>
+							<td class="button">
+								<a data-action="remove_product_to_input_table" data-id="' . $value['product']['id'] . '" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
+							</td>
+						</tr>';
+					}
+
+					$table .=
+					'<tr>
+						<td></td>
+						<td class="message">' . Currency::format(Functions::summation('math', Functions::temporal('get', 'inventories', 'inputs'), 'total'), Session::get_value('vkye_account')['currency']) . '</td>
+						<td></td>
+					</tr>';
+				}
+				else
+				{
+					$table .=
+					'<tr>
+						<td class="message">{$lang.not_records_in_the_table}</td>
+					</tr>';
+				}
+
+				echo json_encode([
+					'status' => 'success',
+					'data' => [
+						'table' => $table
+					]
+				]);
+			}
+
 			// if ($_POST['action'] == 'create_inventory_input')
 			// {
 			// 	$errors = [];
@@ -272,7 +284,7 @@ class Inventories_controller extends Controller
 				Functions::temporal('set_if_not_exist', 'inventories', 'branch', $data['branches'][0]);
 
 				if (!isset($params[0]) OR empty($params[0]))
-					header('Location: /inventories/' . System::clean_string_to_url(Session::get_value('vkye_temporal')['inventories']['branch']['name']));
+					header('Location: /inventories/' . System::clean_string_to_url(Functions::temporal('get', 'inventories', 'branch')['name']));
 				else
 				{
 					$data['inventories'] = $this->model->read_inventories();

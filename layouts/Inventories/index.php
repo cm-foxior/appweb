@@ -26,7 +26,7 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
             <span><i class="fas fa-store"></i></span>
             <select data-action="switch_branch">
                 <?php foreach ($data['branches'] as $value) : ?>
-                <option value="<?php echo $value['id']; ?>" <?php echo ((Session::get_value('vkye_temporal')['inventories']['branch']['id'] == $value['id']) ? 'selected' : ''); ?>><?php echo $value['name']; ?></option>
+                <option value="<?php echo $value['id']; ?>" <?php echo ((Functions::temporal('get', 'inventories', 'branch')['id'] == $value['id']) ? 'selected' : ''); ?>><?php echo $value['name']; ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -88,7 +88,7 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
     </table>
 </main>
 <?php if (Permissions::user(['create_inventories_input']) == true) : ?>
-<section class="modal view" data-modal="create_inventory_input">
+<section class="modal" data-modal="create_inventory_input">
     <div class="content">
         <main>
             <form>
@@ -263,9 +263,9 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                     </div>
                     <div class="compound st-4-left">
                         <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="inventories_categories" placeholder="{$lang.search}">
+                        <input type="text" data-search="categories" placeholder="{$lang.search}">
                     </div>
-                    <div class="checkbox st-1" data-table="inventories_categories">
+                    <div class="checkbox st-1" data-table="categories">
                         <?php foreach ($data['inventories_categories'] as $key => $value) : ?>
                         <h6>{$lang.level} <?php echo $key; ?></h6>
                         <?php foreach ($value as $subvalue) : ?>
@@ -291,16 +291,18 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                 <td class="avatar">
                                     <figure>
                                         <?php if (!empty($value['product']['avatar'])): ?>
-                                        <img src="{$path.uploads}<?php echo $value['product']['avatar'] ?>">
+                                        <img src="{$path.uploads}<?php echo $value['product']['avatar']; ?>">
                                         <?php else: ?>
                                         <img src="{$path.images}empty.png">
                                         <?php endif; ?>
                                     </figure>
                                 </td>
                                 <td>
-                                    <?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}' ?>
+                                    <?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}'; ?>
                                     <br>
-                                    <?php echo $value['quantity'] . ' ' . $value['product']['unity'] . ' (' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . '): ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) ?>
+                                    <?php echo $value['quantity'] . ' ' . $value['product']['unity']; ?>
+                                    <br>
+                                    <?php echo Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')'; ?>
                                     <br>
                                     <?php if (!empty($value['location'])) : ?>
                                     <?php echo $value['location']['name'] ?>
@@ -308,8 +310,8 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                     {$lang.not_location}
                                     <?php endif; ?>
                                     <br>
-                                    <?php if (!empty($value['location'])) : ?>
-                                    <?php echo $value['categories'][1] ?>
+                                    <?php if (!empty($value['categories'])) : ?>
+                                    <?php echo Functions::summation('string', $value['categories'], 'name'); ?>
                                     <?php else : ?>
                                     {$lang.not_categories}
                                     <?php endif; ?>
@@ -319,6 +321,11 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                 </td>
                             </tr>
                             <?php endforeach; ?>
+                            <tr>
+                                <td></td>
+                                <td class="message"><?php echo Currency::format(Functions::summation('math', Functions::temporal('get', 'inventories', 'inputs'), 'total'), Session::get_value('vkye_account')['currency']); ?></td>
+                                <td></td>
+                            </tr>
                         <?php else : ?>
                         <tr>
                             <td class="message">{$lang.not_records_in_the_table}</td>

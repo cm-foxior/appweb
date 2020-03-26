@@ -35,8 +35,8 @@ $this->dependencies->add(['js', '{$path.js}Inventories/types.min.js']);
         <tbody>
             <?php foreach ($data['inventories_types'] as $value) : ?>
             <tr>
-                <td><?php echo $value['name']; ?></td>
                 <td class="smalltag"><span>{$lang.<?php echo $value['movement']; ?>}</span></td>
+                <td><?php echo $value['name']; ?></td>
                 <td class="smalltag">
                     <?php if ($value['system'] == false) : ?>
                         <?php if ($value['blocked'] == true) : ?>

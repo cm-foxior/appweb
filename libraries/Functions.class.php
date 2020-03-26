@@ -6,37 +6,53 @@ class Functions
 {
     public static function temporal($option, $module, $key, $value = null)
     {
-        $tmp = (Session::exists_var('vkye_temporal') == true) ? Session::get_value('vkye_temporal') : [];
+        $temporal = Session::get_value('vkye_temporal');
 
         if ($option == 'set_forced' OR $option == 'set_if_not_exist')
         {
             if ($option == 'set_forced')
-                $tmp[$module][$key] = $value;
+                $temporal[$module][$key] = $value;
             else if ($option == 'set_if_not_exist')
             {
-                if (!array_key_exists($key, $tmp[$module]) OR empty($tmp[$module][$key]))
-                    $tmp[$module][$key] = $value;
+                if (!array_key_exists($key, $temporal[$module]) OR empty($temporal[$module][$key]))
+                    $temporal[$module][$key] = $value;
             }
 
-            Session::set_value('vkye_temporal', $tmp);
+            Session::set_value('vkye_temporal', $temporal);
         }
         else if ($option == 'get')
-            return array_key_exists($key, $tmp[$module]) ? $tmp[$module][$key] : [];
+            return array_key_exists($key, $temporal[$module]) ? $temporal[$module][$key] : [];
     }
 
-    public static function summation($data, $key)
+    public static function summation($option, $data, $key)
     {
-        $sum = 0;
+        if ($option == 'math')
+            $sum = 0;
+        else if ($option == 'string')
+            $sum = '';
 
         foreach ($data as $value)
         {
             if (isset($key) AND !empty($key))
-                $sum += $value[$key];
+            {
+                if ($option == 'math')
+                    $sum += $value[$key];
+                else if ($option == 'string')
+                    $sum .= $value[$key] . ', ';
+            }
             else
-                $sum += $value;
+            {
+                if ($option == 'math')
+                    $sum += $value;
+                else if ($option == 'string')
+                    $sum .= $value . ', ';
+            }
         }
 
-        return $sum;
+        if ($option == 'math')
+            return $sum;
+        else if ($option == 'string')
+            return substr($sum, 0, -2);
     }
 
     static public function countries()

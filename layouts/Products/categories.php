@@ -38,8 +38,8 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
         <tbody>
             <?php foreach ($data['products_categories'] as $value) : ?>
             <tr>
-                <td><?php echo $value['name']; ?></td>
                 <td class="smalltag"><span>{$lang.level} <?php echo $value['level']; ?></span></td>
+                <td><?php echo $value['name']; ?></td>
                 <td class="smalltag">
                     <?php if ($value['blocked'] == true) : ?>
                     <span class="busy">{$lang.blocked}</span>

@@ -82,7 +82,7 @@ class Inventories_model extends Model
 		], [
 			'AND' => [
 				'inventories.account' => Session::get_value('vkye_account')['id'],
-				'inventories.branch' => Session::get_value('vkye_temporal')['inventories']['branch']['id']
+				'inventories.branch' => Functions::temporal('get', 'inventories', 'branch')['id']
 			],
 			'ORDER' => [
 				'inventories.date' => 'DESC',
@@ -134,44 +134,49 @@ class Inventories_model extends Model
 		return $query;
 	}
 
-	// public function read_product($id)
-	// {
-	// 	$query = $this->database->select('products', [
-	// 		'[>]products_unities' => [
-	// 			'unity' => 'id'
-	// 		]
-	// 	], [
-	// 		'products.id',
-	// 		'products.name',
-	// 		'products.type',
-	// 		'products.token',
-	// 		'products_unities.name(unity)'
-	// 	], [
-	// 		'products.id' => $id
-	// 	]);
-	//
-	// 	return !empty($query) ? $query[0] : null;
-	// }
+	public function read_product($id)
+	{
+		$query = $this->database->select('products', [
+			'[>]products_unities' => [
+				'unity' => 'id'
+			]
+		], [
+			'products.id',
+			'products.name',
+			'products.type',
+			'products.token',
+			'products_unities.name(unity)'
+		], [
+			'products.id' => $id
+		]);
 
-	// public function create_inventory($data)
-	// {
-	// 	// foreach (Session::get_value('tmp')['products'] as $value)
-	// 	// {
-	// 	// 	$query = $this->database->insert('inventories', [
-	// 	// 		'account' => Session::get_value('vkye_account')['id'],
-	// 	// 		'branch' => Session::get_value('tmp')['branch']['id'],
-	// 	// 		'movement' => 'input',
-	// 	// 		'type' => $data['type'],
-	// 	// 		'product' => $value['product'],
-	// 	// 		'quantity' => $value['quantity'],
-	// 	// 		'date' => $data['date'],
-	// 	// 		'hour' => $data['hour'],
-	// 	// 		'price' => $value['price'],
-	// 	// 	]);
-	// 	// }
-	// 	//
-	// 	// return $query;
-	// }
+		return !empty($query) ? $query[0] : null;
+	}
+
+	public function create_inventory_input($data)
+	{
+		print_r($data);
+		print_r(Functions::temporal('get', 'inventories', 'inputs'));
+
+		// foreach (Session::get_value('vkye_temporal')['inventories']['inputs'] as $value)
+		// {
+		// 	$query = $this->database->insert('inventories', [
+		// 		'account' => Session::get_value('vkye_account')['id'],
+		// 		'branch' => Session::get_value('vkye_temporal')['inventories']['branch']['id'],
+		// 		'movement' => 'input',
+		// 		'type' => $data['type'],
+		// 		'product' => $value['product']['id'],
+		// 		'quantity' => $value['quantity'],
+		// 		'date' => $data['date'],
+		// 		'hour' => $data['hour'],
+		// 		'price' => $value['price'],
+		// 		'weight' => null,
+		// 		''
+		// 	]);
+		// }
+		//
+		// return $query;
+	}
 
 	public function read_inventories_types($to_use = false, $movement = '')
 	{
@@ -316,6 +321,7 @@ class Inventories_model extends Model
 	public function read_inventory_location($id)
 	{
 		$query = $this->database->select('inventories_locations', [
+			'id',
 			'name'
 		], [
 			'id' => $id
@@ -379,7 +385,7 @@ class Inventories_model extends Model
 
 	public function read_inventories_categories($to_use = false)
 	{
-		if ($to_use == true)
+		if (is_array($to_use) OR $to_use == true)
 		{
 			$fields = [
 				'id',
@@ -387,10 +393,15 @@ class Inventories_model extends Model
 				'level'
 			];
 
-			$where['AND'] = [
-				'account' => Session::get_value('vkye_account')['id'],
-				'blocked' => false
-			];
+			if (is_array($to_use))
+				$where['id'] = $to_use;
+			else if ($to_use == true)
+			{
+				$where['AND'] = [
+					'account' => Session::get_value('vkye_account')['id'],
+					'blocked' => false
+				];
+			}
 		}
 		else
 		{
@@ -411,19 +422,24 @@ class Inventories_model extends Model
 
 		$query = $this->database->select('inventories_categories', $fields, $where);
 
-		if ($to_use == true)
+		if (is_array($to_use) OR $to_use == true)
 		{
-			$return = [];
-
-			foreach ($query as $key => $value)
+			if (is_array($to_use))
+				return $query;
+			else if ($to_use == true)
 			{
-				if (array_key_exists($value['level'], $return))
-					array_push($return[$value['level']], $value);
-				else
-					$return[$value['level']] = [$value];
-			}
+				$return = [];
 
-			return $return;
+				foreach ($query as $key => $value)
+				{
+					if (array_key_exists($value['level'], $return))
+						array_push($return[$value['level']], $value);
+					else
+						$return[$value['level']] = [$value];
+				}
+
+				return $return;
+			}
 		}
 		else
 			return $query;
