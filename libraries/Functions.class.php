@@ -26,7 +26,7 @@ class Functions
 
     public static function summation($option, $data, $key)
     {
-        if ($option == 'math')
+        if ($option == 'math' OR $option == 'count')
             $sum = 0;
         else if ($option == 'string')
             $sum = '';
@@ -37,6 +37,11 @@ class Functions
             {
                 if ($option == 'math')
                     $sum += $value[$key];
+                else if ($option == 'count')
+                {
+                    foreach ($value as $subvalue)
+                        $sum += 1;
+                }
                 else if ($option == 'string')
                     $sum .= $value[$key] . ', ';
             }
@@ -44,15 +49,31 @@ class Functions
             {
                 if ($option == 'math')
                     $sum += $value;
+                else if ($option == 'count')
+                    $sum += 1;
                 else if ($option == 'string')
                     $sum .= $value . ', ';
             }
         }
 
-        if ($option == 'math')
+        if ($option == 'math' OR $option == 'count')
             return $sum;
         else if ($option == 'string')
             return substr($sum, 0, -2);
+    }
+
+    static public function payments_ways()
+    {
+        $database = new Medoo();
+
+        return System::decode_json_to_array($database->select('system_payments_ways', [
+            'name',
+            'code'
+        ], [
+            'ORDER' => [
+                'name' => 'ASC'
+            ]
+        ]));
     }
 
     static public function countries()
@@ -63,6 +84,10 @@ class Functions
             'name',
             'code',
             'lada'
+        ], [
+            'ORDER' => [
+                'name' => 'ASC'
+            ]
         ]));
     }
 }

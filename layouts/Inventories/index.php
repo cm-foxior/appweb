@@ -81,7 +81,13 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                     <span class="busy">{$lang.output}<i class="fas fa-arrow-down"></i></span>
                 </td>
                 <?php endif; ?>
-                <td class="smalltag"><span><?php echo $value['type']; ?></span></td>
+                <td class="smalltag">
+                    <?php if ($value['type_system'] == true) : ?>
+                    <span><?php echo $value['type_name'][Session::get_value('vkye_account')['language']]; ?></span>
+                    <?php else: ?>
+                    <span><?php echo $value['type_name']; ?></span>
+                    <?php endif; ?>
+                </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -146,19 +152,24 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
+                    <div class="breaker">
+                        <span></span>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
                     <div class="row">
                         <div class="span8">
                             <div class="text">
-                                <input type="text" name="bill_folio" placeholder="{$lang.folio}">
+                                <input type="text" name="bill_token" placeholder="{$lang.folio}">
                             </div>
                         </div>
                         <div class="span4">
                             <div class="text">
-                                <select name="bill_payment_method">
-                                    <option value="" selected hidden>{$lang.payment_method}</option>
-                                    <option value="cash">{$lang.cash}</option>
-                                    <option value="check">{$lang.check}</option>
-                                    <option value="transfer">{$lang.transfer}</option>
+                                <select name="bill_payment_way">
+                                    <option value="" selected hidden>{$lang.payment_way}</option>
+                                    <?php foreach (Functions::payments_ways() as $value): ?>
+                                    <option value="<?php echo $value['code']; ?>"><?php echo $value['name'][Session::get_value('vkye_account')['language']]; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -166,22 +177,12 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                 </fieldset>
                 <fieldset class="fields-group">
                     <div class="row">
-                        <div class="span4">
-                            <div class="text">
-                                <select name="type">
-                                    <option value="" selected hidden>{$lang.type}</option>
-                                    <?php foreach ($data['inventories_types'] as $value) : ?>
-                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="span4">
+                        <div class="span6">
                             <div class="text">
                                 <input type="date" name="date" value="<?php echo Dates::current_date(); ?>">
                             </div>
                         </div>
-                        <div class="span4">
+                        <div class="span6">
                             <div class="text">
                                 <input type="time" name="hour" value="<?php echo Dates::current_hour(); ?>">
                             </div>
@@ -189,29 +190,124 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <div class="compound st-6">
-                        <div data-preview>
-                            <input type="text" placeholder="{$lang.product}" data-preview-value>
-                            <input type="text" name="product" readonly data-preview-selected>
-                        </div>
-                        <div data-search>
-                            <span><i class="fas fa-search"></i></span>
-                            <input type="text" placeholder="{$lang.search}" data-search-value>
-                        </div>
-                        <div data-list>
-                            <?php foreach ($data['products'] as $value) : ?>
-                            <div class="hidden">
-                                <figure>
-                                    <?php if (!empty($value['avatar'])) : ?>
-                                    <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
-                                    <?php else : ?>
-                                    <img src="{$path.images}empty.png">
-                                    <?php endif; ?>
-                                </figure>
-                                <p><?php echo $value['token'] . ' | ' .  $value['name'] . ' | {$lang.' . $value['type'] . '}'; ?></p>
-                                <a data-list-value="<?php echo $value['id']; ?>"></a>
+                    <div class="row">
+                        <div class="span6">
+                            <div class="text">
+                                <select name="type">
+                                    <option value="" selected hidden>{$lang.type}</option>
+                                    <?php foreach ($data['inventories_types'] as $value) : ?>
+                                        <?php if ($value['system'] == true) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name'][Session::get_value('vkye_account')['language']]; ?></option>
+                                        <?php else: ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
-                            <?php endforeach; ?>
+                        </div>
+                        <div class="span6">
+                            <div class="text">
+                                <select name="provider">
+                                    <option value="" selected>{$lang.not_provider}</option>
+                                    <?php foreach ($data['providers'] as $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <table class="tbl-st-1" data-table="inputs">
+                        <tbody>
+                            <?php if (!empty(Functions::temporal('get', 'inventories', 'inputs'))) : ?>
+                                <?php foreach (Functions::temporal('get', 'inventories', 'inputs') as $value) : ?>
+                                <tr>
+                                    <td class="avatar">
+                                        <figure>
+                                            <?php if (!empty($value['product']['avatar'])): ?>
+                                            <img src="{$path.uploads}<?php echo $value['product']['avatar']; ?>">
+                                            <?php else: ?>
+                                            <img src="{$path.images}empty.png">
+                                            <?php endif; ?>
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}'; ?>
+                                        <br>
+                                        <?php echo $value['quantity'] . ' ' . $value['product']['unity']; ?>
+                                        <br>
+                                        <?php echo Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')'; ?>
+                                        <br>
+                                        <?php echo $value['location']['name'] ?>
+                                        <br>
+                                        <?php if (!empty($value['categories'])) : ?>
+                                        <?php echo Functions::summation('string', $value['categories'], 'name'); ?>
+                                        <?php else : ?>
+                                        {$lang.not_categories}
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="button">
+                                        <a data-action="remove_product_to_input_table" data-id="<?php echo $value['product']['id'] ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <tr>
+                                    <td></td>
+                                    <td class="message"><?php echo Currency::format(Functions::summation('math', Functions::temporal('get', 'inventories', 'inputs'), 'total'), Session::get_value('vkye_account')['currency']); ?></td>
+                                    <td></td>
+                                </tr>
+                            <?php else : ?>
+                            <tr>
+                                <td class="message">{$lang.not_records_in_the_table}</td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <div class="breaker">
+                        <span></span>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <div class="row">
+                        <div class="span8">
+                            <div class="compound st-6">
+                                <div data-preview>
+                                    <input type="text" placeholder="{$lang.product}" data-preview-value>
+                                    <input type="text" name="product" readonly data-preview-selected>
+                                </div>
+                                <div data-search>
+                                    <span><i class="fas fa-search"></i></span>
+                                    <input type="text" placeholder="{$lang.search}" data-search-value>
+                                </div>
+                                <div data-list>
+                                    <?php foreach ($data['products'] as $value) : ?>
+                                    <div class="hidden">
+                                        <figure>
+                                            <?php if (!empty($value['avatar'])) : ?>
+                                            <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
+                                            <?php else : ?>
+                                            <img src="{$path.images}empty.png">
+                                            <?php endif; ?>
+                                        </figure>
+                                        <p><?php echo $value['token'] . ' | ' .  $value['name'] . ' | {$lang.' . $value['type'] . '}'; ?></p>
+                                        <a data-list-value="<?php echo $value['id']; ?>"></a>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="text">
+                                <select name="location">
+                                    <option value="" selected hidden>{$lang.location}</option>
+                                    <?php foreach ($data['inventories_locations'] as $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
@@ -232,48 +328,26 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                         </div>
                     </div>
                 </fieldset>
-                <fieldset class="fields-group">
-                    <div class="row">
-                        <div class="span6">
-                            <div class="text">
-                                <select name="provider">
-                                    <option value="" selected>{$lang.not_provider}</option>
-                                    <?php foreach ($data['providers'] as $value) : ?>
-                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="span6">
-                            <div class="text">
-                                <select name="location">
-                                    <option value="" selected>{$lang.not_location}</option>
-                                    <?php foreach ($data['inventories_locations'] as $value) : ?>
-                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
                 <?php if (!empty($data['inventories_categories'])) : ?>
                 <fieldset class="fields-group">
                     <div class="title">
                         <h6>{$lang.categories}</h6>
                     </div>
+                    <?php if (Functions::summation('count', $data['inventories_categories'], true) > 20) : ?>
                     <div class="compound st-4-left">
                         <span><i class="fas fa-search"></i></span>
                         <input type="text" data-search="categories" placeholder="{$lang.search}">
                     </div>
+                    <?php endif; ?>
                     <div class="checkbox st-1" data-table="categories">
-                        <?php foreach ($data['inventories_categories'] as $key => $value) : ?>
-                        <h6>{$lang.level} <?php echo $key; ?></h6>
-                        <?php foreach ($value as $subvalue) : ?>
-                        <label>
-                            <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
-                            <span><?php echo $subvalue['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
+                        <?php foreach ($data['inventories_categories'] as $value) : ?>
+                            <?php foreach ($value as $subvalue) : ?>
+                            <label>
+                                <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
+                                <span><?php echo $subvalue['name']; ?></span>
+                            </label>
+                            <?php endforeach; ?>
+                            <i class="fas fa-circle"></i>
                         <?php endforeach; ?>
                     </div>
                 </fieldset>
@@ -283,56 +357,6 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                         <a data-action="add_product_to_input_table" class="success"><i class="fas fa-check"></i><span>{$lang.add_to_table}</span></a>
                     </div>
                 </fieldset>
-                <table class="tbl-st-1" data-table="inputs">
-                    <tbody>
-                        <?php if (!empty(Functions::temporal('get', 'inventories', 'inputs'))) : ?>
-                            <?php foreach (Functions::temporal('get', 'inventories', 'inputs') as $value) : ?>
-                            <tr>
-                                <td class="avatar">
-                                    <figure>
-                                        <?php if (!empty($value['product']['avatar'])): ?>
-                                        <img src="{$path.uploads}<?php echo $value['product']['avatar']; ?>">
-                                        <?php else: ?>
-                                        <img src="{$path.images}empty.png">
-                                        <?php endif; ?>
-                                    </figure>
-                                </td>
-                                <td>
-                                    <?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}'; ?>
-                                    <br>
-                                    <?php echo $value['quantity'] . ' ' . $value['product']['unity']; ?>
-                                    <br>
-                                    <?php echo Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')'; ?>
-                                    <br>
-                                    <?php if (!empty($value['location'])) : ?>
-                                    <?php echo $value['location']['name'] ?>
-                                    <?php else : ?>
-                                    {$lang.not_location}
-                                    <?php endif; ?>
-                                    <br>
-                                    <?php if (!empty($value['categories'])) : ?>
-                                    <?php echo Functions::summation('string', $value['categories'], 'name'); ?>
-                                    <?php else : ?>
-                                    {$lang.not_categories}
-                                    <?php endif; ?>
-                                </td>
-                                <td class="button">
-                                    <a data-action="remove_product_to_input_table" data-id="<?php echo $value['product']['id'] ?>" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            <tr>
-                                <td></td>
-                                <td class="message"><?php echo Currency::format(Functions::summation('math', Functions::temporal('get', 'inventories', 'inputs'), 'total'), Session::get_value('vkye_account')['currency']); ?></td>
-                                <td></td>
-                            </tr>
-                        <?php else : ?>
-                        <tr>
-                            <td class="message">{$lang.not_records_in_the_table}</td>
-                        </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
                 <?php else : ?>
                 <fieldset class="fields-group">
                     <div class="button">

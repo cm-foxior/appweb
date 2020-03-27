@@ -28,12 +28,12 @@ $(document).ready(function()
     $('[name="saved"]').on('change', function()
     {
         if ($(this).val() == 'free')
-            $('[name="bill_folio"]').parents('fieldset').addClass('hidden');
+            $('[name="bill_token"]').parents('fieldset').addClass('hidden');
         else if ($(this).val() == 'bill')
-            $('[name="bill_folio"]').parents('fieldset').removeClass('hidden');
+            $('[name="bill_token"]').parents('fieldset').removeClass('hidden');
     });
 
-    $('[name="bill_folio"]').on('keyup', function()
+    $('[name="bill_token"]').on('keyup', function()
     {
         validate_string(['uppercase','lowercase','int'], $(this).val(), $(this));
     });

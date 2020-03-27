@@ -62,16 +62,19 @@ class Inventories_controller extends Controller
 				if (Validations::empty($_POST['product']) == false)
 					array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);
 
+				if (Validations::empty($_POST['location']) == false)
+					array_push($errors, ['location','{$lang.dont_leave_this_field_empty}']);
+
 				if (Validations::empty($_POST['quantity']) == false)
 					array_push($errors, ['quantity','{$lang.dont_leave_this_field_empty}']);
 
-				if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['price']) == false)
+				if (Validations::equals($_POST['type'], 1) == true AND Validations::empty($_POST['price']) == false)
 					array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
 
 				if (empty($errors))
 				{
 					$_POST['product'] = $this->model->read_product($_POST['product']);
-					$_POST['location'] = !empty($_POST['location']) ? $this->model->read_inventory_location($_POST['location']) : [];
+					$_POST['location'] = $this->model->read_inventory_location($_POST['location']);
 					$_POST['categories'] = !empty($_POST['categories']) ? $this->model->read_inventories_categories($_POST['categories']) : [];
 
 					$temporal = Functions::temporal('get', 'inventories', 'inputs');
@@ -102,7 +105,7 @@ class Inventories_controller extends Controller
 
 					$table = '';
 
-					foreach (Functions::temporal('get', 'inventories', 'inputs') as $value)
+					foreach ($temporal as $value)
 					{
 						$table .=
 						'<tr>
@@ -118,7 +121,7 @@ class Inventories_controller extends Controller
 								<br>
 								' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')
 								<br>
-								' . (!empty($value['location']) ? $value['location']['name'] : '{$lang.not_location}') . '
+								' . $value['location']['name'] . '
 								<br>
 								' . (!empty($value['categories']) ? Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
 							</td>
@@ -161,9 +164,9 @@ class Inventories_controller extends Controller
 
 				$table = '';
 
-				if (!empty(Functions::temporal('get', 'inventories', 'inputs')))
+				if (!empty($temporal))
 				{
-					foreach (Functions::temporal('get', 'inventories', 'inputs') as $value)
+					foreach ($temporal as $value)
 					{
 						$table .=
 						'<tr>
@@ -179,7 +182,7 @@ class Inventories_controller extends Controller
 								<br>
 								' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')
 								<br>
-								' . (!empty($value['location']) ? $value['location']['name'] : '{$lang.not_location}') . '
+								' . $value['location']['name'] . '
 								<br>
 								' . (!empty($value['categories']) ? Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
 							</td>
@@ -212,64 +215,69 @@ class Inventories_controller extends Controller
 				]);
 			}
 
-			// if ($_POST['action'] == 'create_inventory_input')
-			// {
-			// 	$errors = [];
-			//
-			// 	if (Validations::empty($_POST['input']) == false)
-			// 		array_push($errors, ['input','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty($_POST['control']) == false)
-			// 		array_push($errors, ['control','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty($_POST['saved']) == false)
-			// 		array_push($errors, ['saved','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['bill']) == false)
-			// 		array_push($errors, ['bill','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::equals($_POST['saved'], 'remission') == true AND Validations::empty($_POST['remission']) == false)
-			// 		array_push($errors, ['remission','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty($_POST['type']) == false)
-			// 		array_push($errors, ['type','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty($_POST['date']) == false)
-			// 		array_push($errors, ['date','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty($_POST['hour']) == false)
-			// 		array_push($errors, ['hour','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (Validations::empty(Functions::temporal_session('get', 'products')) == false)
-			// 		array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);
-			//
-			// 	if (empty($errors))
-			// 	{
-			// 		$query = $this->model->create_inventory_input($_POST);
-			//
-			// 		if (!empty($query))
-			// 		{
-			// 			echo json_encode([
-			// 				'status' => 'success',
-			// 				'message' => '{$lang.operation_success}'
-			// 			]);
-			// 		}
-			// 		else
-			// 		{
-			// 			echo json_encode([
-			// 				'status' => 'error',
-			// 				'message' => '{$lang.operation_error}'
-			// 			]);
-			// 		}
-			// 	}
-			// 	else
-			// 	{
-			// 		echo json_encode([
-			// 			'status' => 'error',
-			// 			'errors' => $errors
-			// 		]);
-			// 	}
-			// }
+			if ($_POST['action'] == 'create_inventory_input')
+			{
+				$errors = [];
+
+				if (Validations::empty($_POST['control']) == false)
+					array_push($errors, ['control','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty($_POST['measure']) == false)
+					array_push($errors, ['measure','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty($_POST['saved']) == false)
+					array_push($errors, ['saved','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['bill_token']) == false)
+					array_push($errors, ['bill_token','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['bill_payment_way']) == false)
+					array_push($errors, ['bill_payment_way','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty($_POST['date']) == false)
+					array_push($errors, ['date','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty($_POST['hour']) == false)
+					array_push($errors, ['hour','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty($_POST['type']) == false)
+					array_push($errors, ['type','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['provider']) == false)
+					array_push($errors, ['provider','{$lang.dont_leave_this_field_empty}']);
+
+				if (Validations::empty(Functions::temporal('get', 'inventories', 'inputs')) == false)
+					array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);
+
+				if (empty($errors))
+				{
+					$query = $this->model->create_inventory_input($_POST);
+
+					if (!empty($query))
+					{
+						Functions::temporal('set_forced', 'inventories', 'inputs', []);
+
+						echo json_encode([
+							'status' => 'success',
+							'message' => '{$lang.operation_success}'
+						]);
+					}
+					else
+					{
+						echo json_encode([
+							'status' => 'error',
+							'message' => '{$lang.operation_error}'
+						]);
+					}
+				}
+				else
+				{
+					echo json_encode([
+						'status' => 'error',
+						'errors' => $errors
+					]);
+				}
+			}
 		}
 		else
 		{
@@ -289,8 +297,8 @@ class Inventories_controller extends Controller
 				{
 					$data['inventories'] = $this->model->read_inventories();
 					$data['inventories_types'] = $this->model->read_inventories_types(true, 'input');
-					$data['products'] = $this->model->read_products();
 					$data['providers'] = $this->model->read_providers();
+					$data['products'] = $this->model->read_products();
 					$data['inventories_locations'] = $this->model->read_inventories_locations(true);
 					$data['inventories_categories'] = $this->model->read_inventories_categories(true);
 				}

@@ -36,7 +36,11 @@ $this->dependencies->add(['js', '{$path.js}Inventories/types.min.js']);
             <?php foreach ($data['inventories_types'] as $value) : ?>
             <tr>
                 <td class="smalltag"><span>{$lang.<?php echo $value['movement']; ?>}</span></td>
+                <?php if ($value['system'] == true) : ?>
+                <td><?php echo $value['name'][Session::get_value('vkye_account')['language']]; ?></td>
+                <?php else : ?>
                 <td><?php echo $value['name']; ?></td>
+                <?php endif; ?>
                 <td class="smalltag">
                     <?php if ($value['system'] == false) : ?>
                         <?php if ($value['blocked'] == true) : ?>

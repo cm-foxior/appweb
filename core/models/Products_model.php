@@ -71,18 +71,18 @@ class Products_model extends Model
 	{
 		$query = $this->database->insert('products', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => ($data['type'] == 'sale_menu') ? Fileloader::up($data['avatar']) : '',
+			'avatar' => ($data['type'] == 'sale_menu') ? (!empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null) : null,
 			'name' => $data['name'],
 			'type' => $data['type'],
-			'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : '',
-			'price' => ($data['type'] == 'sale_menu') ? $data['price'] : '',
-			'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : '',
+			'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
+			'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
+			'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
 			'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
-				'empty' => $data['weight_empty'],
-				'full' => $data['weight_full']
-			]) : '',
-			'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : '',
-			'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : '',
+				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : null,
+				'full' => !empty($data['weight_full']) ? $data['weight_full'] : null
+			]) : null,
+			'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
+			'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
 			'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
 			'inventory' => ($data['type'] == 'sale_menu' OR $data['type'] = 'supply' OR $data['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false,
 			'blocked' => false
@@ -105,19 +105,19 @@ class Products_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('products', [
-				'avatar' => ($edited[0]['type'] == 'sale_menu') ? Fileloader::up($data['avatar']) : '',
+				'avatar' => ($data['type'] == 'sale_menu') ? (!empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null) : null,
 				'name' => $data['name'],
-				'token' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'supply' OR $edited[0]['type'] == 'work_material') ? $data['token'] : '',
-				'price' => ($edited[0]['type'] == 'sale_menu') ? $data['price'] : '',
-				'unity' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'supply' OR $edited[0]['type'] == 'work_material') ? $data['unity'] : '',
-				'weight' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'supply') ? json_encode([
-					'empty' => $data['weight_empty'],
-					'full' => $data['weight_full']
-				]) : '',
-				'supplies' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : '',
-				'recipes' => ($edited[0]['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : '',
+				'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
+				'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
+				'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
+				'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
+					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : null,
+					'full' => !empty($data['weight_full']) ? $data['weight_full'] : null
+				]) : null,
+				'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
+				'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
 				'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
-				'inventory' => ($edited[0]['type'] == 'sale_menu' OR $edited[0]['type'] = 'supply' OR $edited[0]['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false
+				'inventory' => ($data['type'] == 'sale_menu' OR $data['type'] = 'supply' OR $data['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false
             ], [
                 'id' => $data['id']
             ]);

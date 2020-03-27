@@ -49,7 +49,7 @@ class Inventories_model extends Model
 
 	public function read_inventories()
 	{
-		$query = $this->database->select('inventories', [
+		$query = System::decode_json_to_array($this->database->select('inventories', [
 			'[>]inventories_types' => [
 				'type' => 'id'
 			],
@@ -62,22 +62,19 @@ class Inventories_model extends Model
 			'[>]bills' => [
 				'bill' => 'id'
 			],
-			'[>]remissions' => [
-				'remission' => 'id'
-			],
 			'[>]inventories_locations' => [
 				'location' => 'id'
 			]
 		], [
 			'inventories.movement',
-			'inventories_types.name(type)',
+			'inventories_types.name(type_name)',
+			'inventories_types.system(type_system)',
 			'products.name(product_name)',
 			'products_unities.name(product_unity)',
 			'inventories.quantity',
 			'inventories.date',
 			'inventories.hour',
 			'bills.token(bill)',
-			'remissions.token(remission)',
 			'inventories_locations.name(location)'
 		], [
 			'AND' => [
@@ -88,7 +85,7 @@ class Inventories_model extends Model
 				'inventories.date' => 'DESC',
 				'inventories.hour' => 'DESC'
 			]
-		]);
+		]));
 
 		return $query;
 	}
@@ -155,27 +152,65 @@ class Inventories_model extends Model
 
 	public function create_inventory_input($data)
 	{
-		print_r($data);
-		print_r(Functions::temporal('get', 'inventories', 'inputs'));
+		$go = false;
 
-		// foreach (Session::get_value('vkye_temporal')['inventories']['inputs'] as $value)
-		// {
-		// 	$query = $this->database->insert('inventories', [
-		// 		'account' => Session::get_value('vkye_account')['id'],
-		// 		'branch' => Session::get_value('vkye_temporal')['inventories']['branch']['id'],
-		// 		'movement' => 'input',
-		// 		'type' => $data['type'],
-		// 		'product' => $value['product']['id'],
-		// 		'quantity' => $value['quantity'],
-		// 		'date' => $data['date'],
-		// 		'hour' => $data['hour'],
-		// 		'price' => $value['price'],
-		// 		'weight' => null,
-		// 		''
-		// 	]);
-		// }
-		//
-		// return $query;
+		if ($data['saved'] == 'bill')
+		{
+			$bill = $this->database->select('bills', [
+				'id'
+			], [
+				'token' => $data['bill_token']
+			]);
+
+			if (!empty($bill))
+			{
+				$bill = $bill['id'];
+				$go = true;
+			}
+			else
+			{
+				$bill = $this->database->insert('bills', [
+					'token' => $data['bill_token'],
+					'payment' => json_encode([
+						'way' => $data['bill_payment_way'],
+						'method' => ''
+					])
+				]);
+
+				if (!empty($bill))
+				{
+					$bill = $this->database->id();
+					$go = true;
+				}
+			}
+		}
+		else if ($data['saved'] == 'free')
+			$go = true;
+
+
+		if ($go == true)
+		{
+			foreach (Functions::temporal('get', 'inventories', 'inputs') as $value)
+			{
+				$query = $this->database->insert('inventories', [
+					'account' => Session::get_value('vkye_account')['id'],
+					'branch' => Functions::temporal('get', 'inventories', 'branch')['id'],
+					'movement' => 'input',
+					'type' => $data['type'],
+					'product' => $value['product']['id'],
+					'quantity' => $value['quantity'],
+					'date' => $data['date'],
+					'hour' => $data['hour'],
+					'price' => !empty($value['price']) ? $value['price'] : null,
+					'bill' => ($data['saved'] == 'bill') ? $bill : null,
+					'provider' => !empty($data['provider']) ? $data['provider'] : null,
+					'location' => $value['location']['id'],
+					'categories' => json_encode((!empty($value['categories']) ? array_map('current', $value['categories']) : []))
+				]);
+			}
+		}
+
+		return $go;
 	}
 
 	public function read_inventories_types($to_use = false, $movement = '')
@@ -189,7 +224,8 @@ class Inventories_model extends Model
 		{
 			$fields = [
 				'id',
-				'name'
+				'name',
+				'system'
 			];
 
 			$and['movement'] = $movement;
@@ -206,12 +242,12 @@ class Inventories_model extends Model
 			];
 		}
 
-		$query = $this->database->select('inventories_types', $fields, [
+		$query = System::decode_json_to_array($this->database->select('inventories_types', $fields, [
 			'AND' => $and,
 			'ORDER' => [
 				'name' => 'ASC'
 			]
-		]);
+		]));
 
 		return $query;
 	}

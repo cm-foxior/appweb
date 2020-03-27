@@ -188,19 +188,21 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                     <div class="title">
                         <h6>{$lang.categories}</h6>
                     </div>
+                    <?php if (Functions::summation('count', $data['products_categories'], true) > 20) : ?>
                     <div class="compound st-4-left">
                         <span><i class="fas fa-search"></i></span>
                         <input type="text" data-search="categories" placeholder="{$lang.search}">
                     </div>
+                    <?php endif; ?>
                     <div class="checkbox st-1" data-table="categories">
-                        <?php foreach ($data['products_categories'] as $key => $value) : ?>
-                        <h6>{$lang.level} <?php echo $key; ?></h6>
-                        <?php foreach ($value as $subvalue) : ?>
-                        <label>
-                            <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
-                            <span><?php echo $subvalue['name']; ?></span>
-                        </label>
-                        <?php endforeach; ?>
+                        <?php foreach ($data['products_categories'] as $value) : ?>
+                            <?php foreach ($value as $subvalue) : ?>
+                            <label>
+                                <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
+                                <span><?php echo $subvalue['name']; ?></span>
+                            </label>
+                            <?php endforeach; ?>
+                            <i class="fas fa-circle"></i>
                         <?php endforeach; ?>
                     </div>
                 </fieldset>

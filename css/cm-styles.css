@@ -759,22 +759,17 @@ fieldset.fields-group div.checkbox.st-3 {
 }
 
 /*  */
-fieldset.fields-group div.checkbox.st-1 > h6 {
-    width: 100%;
-    padding: 15px 10px 0px 10px;
-    box-sizing: border-box;
-    font-size: 14px;
-    font-weight: 400;
-    text-overflow: ellipsis;
-    letter-spacing: 0px;
-    white-space: nowrap;
-    color: #757575;
+fieldset.fields-group div.checkbox.st-1 > i {
+    margin-right: 5px;
+    font-size: 6px;
+    color: #bdbdbd;
 }
 
-fieldset.fields-group div.checkbox.st-1 > h6:first-child {
-    padding-top: 20px;
+fieldset.fields-group div.checkbox.st-1 > i:last-child {
+    display: none;
 }
 
+/*  */
 fieldset.fields-group div.checkbox.st-1 > label,
 fieldset.fields-group div.checkbox.st-2 > label {
     padding: 5px;
@@ -928,8 +923,8 @@ fieldset.fields-group div.compound.st-1-left > select,
 fieldset.fields-group div.compound.st-1-right > select {
     width: 100px;
     position: absolute;
-    top: 1px;
-    bottom: 1px;
+    top: 0px;
+    bottom: 0px;
     border: none;
     border-radius: 50px 0px 0px 50px;
     box-sizing: border-box;
@@ -940,12 +935,12 @@ fieldset.fields-group div.compound.st-1-right > select {
 }
 
 fieldset.fields-group div.compound.st-1-left > select {
-    left: 1px;
+    left: 2.5px;
     padding-left: 20px;
 }
 
 fieldset.fields-group div.compound.st-1-right > select {
-    right: 1px;
+    right: 2.5px;
     padding-right: 20px;
 }
 
@@ -964,8 +959,8 @@ fieldset.fields-group div.compound.st-2-left > a,
 fieldset.fields-group div.compound.st-2-right > a {
     width: 50px;
     position: absolute;
-    top: 1px;
-    bottom: 1px;
+    top: 0px;
+    bottom: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -977,11 +972,11 @@ fieldset.fields-group div.compound.st-2-right > a {
 }
 
 fieldset.fields-group div.compound.st-2-left > a {
-    left: 1px;
+    left: 2.5px;
 }
 
 fieldset.fields-group div.compound.st-2-right > a {
-    right: 1px;
+    right: 2.5px;
 }
 
 /*  */
@@ -1000,8 +995,8 @@ fieldset.fields-group div.compound.st-3-left > span.last,
 fieldset.fields-group div.compound.st-3-right > span.first,
 fieldset.fields-group div.compound.st-3-right > span.last {
     position: absolute;
-    top: 1px;
-    bottom: 1px;
+    top: 0px;
+    bottom: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1012,13 +1007,13 @@ fieldset.fields-group div.compound.st-3-right > span.last {
 
 fieldset.fields-group div.compound.st-3-left > span.first,
 fieldset.fields-group div.compound.st-3-right > span.first {
-    left: 1px;
+    left: 2.5px;
     border-radius: 50px 0px 0px 50px;
 }
 
 fieldset.fields-group div.compound.st-3-left > span.last,
 fieldset.fields-group div.compound.st-3-right > span.last {
-    right: 1px;
+    right: 2.5px;
     border-radius: 0px 50px 50px 0px;
 }
 
@@ -1064,11 +1059,11 @@ fieldset.fields-group div.compound.st-4-right > span {
 }
 
 fieldset.fields-group div.compound.st-4-left > span {
-    left: 1px;
+    left: 3.5px;
 }
 
 fieldset.fields-group div.compound.st-4-right > span {
-    right: 1px;
+    right: 3.5px;
 }
 
 /*  */
@@ -1197,9 +1192,9 @@ fieldset.fields-group div.compound.st-6 > div[data-list].open {
 fieldset.fields-group div.compound.st-6 > div[data-search] > span {
     width: 50px;
     position: absolute;
-    top: 1px;
-    bottom: 1px;
-    left: 1px;
+    top: 0px;
+    bottom: 0px;
+    left: 2.5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1279,8 +1274,8 @@ fieldset.fields-group div.compound.st-7-right > span {
     width: auto;
     min-width: 100px;
     position: absolute;
-    top: 1px;
-    bottom: 1px;
+    top: 0px;
+    bottom: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1292,12 +1287,12 @@ fieldset.fields-group div.compound.st-7-right > span {
 }
 
 fieldset.fields-group div.compound.st-7-left > span {
-    left: 1px;
+    left: 2.5px;
     border-radius: 50px 0px 0px 50px;
 }
 
 fieldset.fields-group div.compound.st-7-right > span {
-    right: 1px;
+    right: 2.5px;
     border-radius: 0px 50px 50px 0px;
 }
 
@@ -1478,13 +1473,13 @@ fieldset.fields-group div.uploader[data-multiple-uploader] > input[data-select] 
 /* Title */
 fieldset.fields-group div.title {
     width: 100%;
-    padding: 20px;
+    padding-bottom: 5px;
     box-sizing: border-box;
 }
 
 fieldset.fields-group div.title > h6 {
     width: 100%;
-    padding: 0px 10px;
+    padding: 0px 5px;
     box-sizing: border-box;
     font-size: 14px;
     font-weight: 400;
@@ -1497,8 +1492,6 @@ fieldset.fields-group div.button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
 }
 
 fieldset.fields-group div.button > a,
@@ -1573,7 +1566,7 @@ fieldset.fields-group div.warning > a {
 /* Messages */
 fieldset.fields-group div.message {
     width: 100%;
-    padding: 20px;
+    padding: 40px 0px;
     box-sizing: border-box;
 }
 
@@ -1583,6 +1576,20 @@ fieldset.fields-group div.message > p {
     font-weight: 400;
     text-align: center;
     color: #bdbdbd;
+}
+
+/* Line break */
+fieldset.fields-group div.breaker {
+    width: 100%;
+    padding: 15px 0px;
+    box-sizing: border-box;
+}
+
+fieldset.fields-group div.breaker > span {
+    width: 100%;
+    height: 1px;
+    display: block;
+    background-color: #e0e0e0;
 }
 
 /* Errors */
