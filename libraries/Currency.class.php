@@ -34,7 +34,7 @@ class Currency
         curl_setopt($a1, CURLOPT_URL, 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF63528/datos/oportuno?token=ac32cf33a053bab54c26b061f4ebda76c4b21fa2d772a354779d121641c580f9');
         curl_setopt($a1, CURLOPT_RETURNTRANSFER, true);
 
-        $a2 = System::decoded_json_array(curl_exec($a1));
+        $a2 = System::decode_json_to_array(curl_exec($a1));
         $a2 = $a2['bmx']['series'][0]['datos'][0]['dato'];
 
         curl_close($a1);
@@ -54,6 +54,7 @@ class Currency
     *
     * @param int-float $number: Cantidad a dar formato.
     * @param string $currency: Moneda en la que retornará $number.
+    * @param int $decimals: El número de decimales con el que retornará el formato.
     *
     * @return string
     */

@@ -2,22 +2,17 @@
 
 $(document).ready(function()
 {
-    $('[data-search="products_categories"]').on('keyup', function()
+    $('[data-search="inventories_locations"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="products_categories"]').find(' > tbody > tr'));
+        search_in_table($(this).val(), $('[data-table="inventories_locations"]').find(' > tbody > tr'));
     });
 
-    $('[name="level"]').on('keyup', function()
-    {
-        validate_string('int', $(this).val(), $(this));
-    });
-
-    var create_action = 'create_product_category';
-    var read_action = 'read_product_category';
-    var update_action = 'update_product_category';
-    var block_action = 'block_product_category';
-    var unblock_action = 'unblock_product_category';
-    var delete_action = 'delete_product_category';
+    var create_action = 'create_inventory_location';
+    var read_action = 'read_inventory_location';
+    var update_action = 'update_inventory_location';
+    var block_action = 'block_inventory_location';
+    var unblock_action = 'unblock_inventory_location';
+    var delete_action = 'delete_inventory_location';
 
     $(document).on('click', '[data-action="' + create_action + '"]', function()
     {
@@ -39,7 +34,6 @@ $(document).ready(function()
             action = update_action;
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="level"]').val(data.level);
         });
     });
 

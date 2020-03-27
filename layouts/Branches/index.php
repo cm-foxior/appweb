@@ -37,7 +37,6 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
             <?php else : ?>
             <span>{$lang.not_fiscal_id}</span>
             <?php endif; ?>
-            <span><?php echo $value['token']; ?></span>
             <div class="button">
                 <?php if (Permissions::user(['block_branches','unblock_branches']) == true) : ?>
                     <?php if ($value['blocked'] == true) : ?>
@@ -76,17 +75,8 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
-                    <div class="row">
-                        <div class="span8">
-                            <div class="text">
-                                <input type="text" name="name" placeholder="{$lang.name}">
-                            </div>
-                        </div>
-                        <div class="span4">
-                            <div class="text">
-                                <input type="text" name="token" placeholder="{$lang.token_auto}" disabled>
-                            </div>
-                        </div>
+                    <div class="text">
+                        <input type="text" name="name" placeholder="{$lang.name}">
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
@@ -100,7 +90,7 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                             <div class="compound st-1-left">
                                 <select name="phone_country">
                                     <option value="" selected hidden>{$lang.country}</option>
-                                    <?php foreach (System::countries() as $value) : ?>
+                                    <?php foreach (Functions::countries() as $value) : ?>
                                     <option value="<?php echo $value['lada']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -113,7 +103,7 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                     <div class="compound st-1-left">
                         <select name="country">
                             <option value="" selected hidden>{$lang.country}</option>
-                            <?php foreach (System::countries() as $value) : ?>
+                            <?php foreach (Functions::countries() as $value) : ?>
                             <option value="<?php echo $value['lada']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
                             <?php endforeach; ?>
                         </select>
@@ -138,7 +128,7 @@ $this->dependencies->add(['js', '{$path.js}Branches/index.min.js']);
                     <div class="compound st-1-left">
                         <select name="fiscal_country">
                             <option value="" selected hidden>{$lang.country}</option>
-                            <?php foreach (System::countries() as $value) : ?>
+                            <?php foreach (Functions::countries() as $value) : ?>
                             <option value="<?php echo $value['code']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
                             <?php endforeach; ?>
                         </select>

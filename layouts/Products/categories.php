@@ -12,10 +12,10 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
     <a href="/products/salemenu" class="unfocus"><i class="fas fa-dollar-sign"></i><span>{$lang.sale_menu}</span></a>
     <a href="/products/supplies" class="unfocus"><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
     <a href="/products/recipes" class="unfocus"><i class="fas fa-receipt"></i><span>{$lang.recipes}</span></a>
-    <a href="/products/workmaterials" class="unfocus"><i class="fas fa-mail-bulk"></i><span>{$lang.work_materials}</span></a>
+    <a href="/products/workmaterial" class="unfocus"><i class="fas fa-mail-bulk"></i><span>{$lang.work_material}</span></a>
     <span></span>
     <?php endif; ?>
-    <a href="/products/categories"><i class="fas fa-tags"></i><span>{$lang.categories}</span></a>
+    <a href="/products/categories"><i class="fas fa-tag"></i><span>{$lang.categories}</span></a>
     <?php if (Permissions::user(['products_unities'], true) == true) : ?>
     <a href="/products/unities" class="unfocus"><i class="fas fa-balance-scale-left"></i><span>{$lang.unities}</span></a>
     <?php endif; ?>
@@ -32,25 +32,14 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
             <input type="text" data-search="products_categories" placeholder="{$lang.search}">
         </div>
     </fieldset>
-    <fieldset class="fields-group">
-        <div class="compound st-4-left">
-            <span><i class="fas fa-angle-double-down"></i></span>
-            <select name="level" data-search="products_categories">
-                <option value="" selected>{$lang.all_levels}</option>
-                <?php foreach ($data['products_categories_levels'] as $value) : ?>
-                <option value="{$lang.level} <?php echo $value; ?>">{$lang.level} <?php echo $value; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </fieldset>
 </header>
 <main>
     <table class="tbl-st-1" data-table="products_categories">
         <tbody>
             <?php foreach ($data['products_categories'] as $value) : ?>
             <tr>
-                <td><?php echo $value['name']; ?></td>
                 <td class="smalltag"><span>{$lang.level} <?php echo $value['level']; ?></span></td>
+                <td><?php echo $value['name']; ?></td>
                 <td class="smalltag">
                     <?php if ($value['blocked'] == true) : ?>
                     <span class="busy">{$lang.blocked}</span>

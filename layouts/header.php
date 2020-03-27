@@ -59,17 +59,19 @@
             <li><a href="/dashboard"><i class="fas fa-home"></i><span>{$lang.dashboard}</span></a></li>
         </ul>
         <?php if (!empty(Session::get_value('vkye_account'))) : ?>
+            <?php if (Permissions::account(['inventories','selling_point']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-search"></i><span>{$lang.search}</span></a></li>
             </ul>
+            <?php endif; ?>
             <?php if (Permissions::account(['accounting']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-calculator"></i><span>{$lang.accounting}</span></a></li>
             </ul>
             <?php endif; ?>
-            <?php if (Permissions::account(['billing']) == true) : ?>
+            <?php if (Permissions::account(['ebilling']) == true) : ?>
             <ul>
-                <li><a><i class="fas fa-file-invoice"></i><span>{$lang.electronic_billing}</span></a></li>
+                <li><a><i class="fas fa-file-invoice"></i><span>{$lang.ebilling}</span></a></li>
             </ul>
             <?php endif; ?>
             <?php if (Permissions::account(['inventories']) == true) : ?>
@@ -77,14 +79,14 @@
                 <li><a href="/inventories"><i class="fas fa-box-open"></i><span>{$lang.inventories}</span></a></li>
             </ul>
             <?php endif; ?>
-            <?php if (Permissions::account(['sales']) == true) : ?>
+            <?php if (Permissions::account(['selling_point']) == true) : ?>
             <ul>
                 <li><a><i class="fas fa-cash-register"></i><span>{$lang.selling_point}</span></a></li>
             </ul>
             <?php endif; ?>
             <?php if (Permissions::account(['ecommerce']) == true) : ?>
             <ul>
-                <li><a><i class="fas fa-laptop"></i><span>{$lang.online_shop}</span></a></li>
+                <li><a><i class="fas fa-laptop"></i><span>{$lang.ecommerce}</span></a></li>
             </ul>
             <?php endif; ?>
         <?php endif; ?>
@@ -127,17 +129,17 @@
         </div>
         <nav>
             <?php if (!empty(Session::get_value('vkye_account'))) : ?>
-                <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['inventories_categories','inventories_locations','inventories_types'], true) == true) : ?>
+                <?php if (Permissions::account(['inventories']) == true AND Permissions::user(['inventories_types','inventories_locations','inventories_categories'], true) == true) : ?>
                 <ul>
                     <li><h4>{$lang.inventories}</h4></li>
-                    <?php if (Permissions::user(['inventories_categories'], true) == true) : ?>
-                    <li><a href="/inventories/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
+                    <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
+                    <li><a href="/inventories/types"><i class="fas fa-bookmark"></i>{$lang.types}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['inventories_locations'], true) == true) : ?>
                     <li><a href="/inventories/locations"><i class="fas fa-map-marker-alt"></i>{$lang.locations}</a></li>
                     <?php endif; ?>
-                    <?php if (Permissions::user(['inventories_types'], true) == true) : ?>
-                    <li><a href="/inventories/types"><i class="fas fa-bookmark"></i>{$lang.types}</a></li>
+                    <?php if (Permissions::user(['inventories_categories'], true) == true) : ?>
+                    <li><a href="/inventories/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>
                     <?php endif; ?>
                 </ul>
                 <?php endif; ?>
@@ -148,7 +150,7 @@
                     <li><a href="/products/salemenu"><i class="fas fa-dollar-sign"></i>{$lang.sale_menu}</a></li>
                     <li><a href="/products/supplies"><i class="fas fa-layer-group"></i>{$lang.supplies}</a></li>
                     <li><a href="/products/recipes"><i class="fas fa-receipt"></i>{$lang.recipes}</a></li>
-                    <li><a href="/products/workmaterials"><i class="fas fa-mail-bulk"></i>{$lang.work_materials}</a></li>
+                    <li><a href="/products/workmaterial"><i class="fas fa-mail-bulk"></i>{$lang.work_material}</a></li>
                     <?php endif; ?>
                     <?php if (Permissions::user(['products_categories'], true) == true) : ?>
                     <li><a href="/products/categories"><i class="fas fa-tag"></i>{$lang.categories}</a></li>

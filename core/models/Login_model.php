@@ -9,9 +9,9 @@ class Login_model extends Model
 		parent::__construct();
 	}
 
-	public function get_login($email)
+	public function get_session($email)
 	{
-		$login['user'] = System::decoded_json_array($this->database->select('users', [
+		$session['user'] = System::decode_json_to_array($this->database->select('users', [
 			'id',
 			'avatar',
 			'firstname',
@@ -24,11 +24,11 @@ class Login_model extends Model
 			'email' => $email
 		]));
 
-		if (!empty($login['user']))
+		if (!empty($session['user']))
 		{
-			foreach ($login['user'][0]['accounts'] as $key => $value)
+			foreach ($session['user'][0]['accounts'] as $key => $value)
 			{
-				$value['account'] = System::decoded_json_array($this->database->select('accounts', [
+				$value['account'] = System::decode_json_to_array($this->database->select('accounts', [
 					'id',
 					'avatar',
 					'name',
@@ -91,33 +91,33 @@ class Login_model extends Model
 							unset($value['account'][0]['permissions'][$subkey]);
 					}
 
-					$login['user'][0]['accounts'][$key] = $value['account'][0];
+					$session['user'][0]['accounts'][$key] = $value['account'][0];
 				}
 				else
-					unset($login['user'][0]['accounts'][$key]);
+					unset($session['user'][0]['accounts'][$key]);
 			}
 
-			$login['user'][0]['accounts'] = array_values($login['user'][0]['accounts']);
+			$session['user'][0]['accounts'] = array_values($session['user'][0]['accounts']);
 
-			if (!empty($login['user'][0]['accounts']))
+			if (!empty($session['user'][0]['accounts']))
 			{
-				if ($login['user'][0]['accounts'][0]['type'] == 'business')
+				if ($session['user'][0]['accounts'][0]['type'] == 'business')
 				{
-					$login['user'][0]['permissions'] = $login['user'][0]['accounts'][0]['user']['permissions'];
-					$login['user'][0]['branches'] = $login['user'][0]['accounts'][0]['user']['branches'];
+					$session['user'][0]['permissions'] = $session['user'][0]['accounts'][0]['user']['permissions'];
+					$session['user'][0]['branches'] = $session['user'][0]['accounts'][0]['user']['branches'];
 				}
 
-				foreach ($login['user'][0]['accounts'] as $key => $value)
-					unset($login['user'][0]['accounts'][$key]['user']);
+				foreach ($session['user'][0]['accounts'] as $key => $value)
+					unset($session['user'][0]['accounts'][$key]['user']);
 
-				$login['account'] = $login['user'][0]['accounts'][0];
+				$session['account'] = $session['user'][0]['accounts'][0];
 			}
 			else
-				$login['account'] = null;
-			
-			$login['user'] = $login['user'][0];
+				$session['account'] = null;
 
-			return $login;
+			$session['user'] = $session['user'][0];
+
+			return $session;
 		}
 		else
 			return null;

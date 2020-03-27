@@ -29,9 +29,9 @@ class Placeholders_vkye
     private function replace_placeholders()
     {
         $replace = [
-            '{$_vkye_seo_title}' => System::seo('title'),
-            '{$_vkye_seo_keywords}' => System::seo('keywords'),
-            '{$_vkye_seo_description}' => System::seo('description')
+            '{$_vkye_seo_title}' => System::settings('seo', 'title', $GLOBALS['_vkye_module'], true),
+            '{$_vkye_seo_keywords}' => System::settings('seo', 'keywords', $GLOBALS['_vkye_module'], true),
+            '{$_vkye_seo_description}' => System::settings('seo', 'description', $GLOBALS['_vkye_module'], true)
         ];
 
         return $this->format->replace($replace, $this->buffer);

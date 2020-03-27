@@ -11,14 +11,16 @@ class Products_controller extends Controller
 
 	public function index($params)
 	{
+		global $data;
+
 		if ($params[0] == 'salemenu')
-			$params[1] = 'sale';
+			$data['type'] = 'sale_menu';
 		else if ($params[0] == 'supplies')
-			$params[1] = 'supply';
+			$data['type'] = 'supply';
 		else if ($params[0] == 'recipes')
-			$params[1] = 'recipe';
-		else if ($params[0] == 'workmaterials')
-			$params[1] = 'work_material';
+			$data['type'] = 'recipe';
+		else if ($params[0] == 'workmaterial')
+			$data['type'] = 'work_material';
 
 		if (Format::exist_ajax_request() == true)
 		{
@@ -29,7 +31,7 @@ class Products_controller extends Controller
 				if (Validations::empty($_POST['name']) == false)
 					array_push($errors, ['name','{$lang.dont_leave_this_field_empty}']);
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material')
 				{
 					if (Validations::empty($_POST['token']) == false)
 						array_push($errors, ['token','{$lang.dont_leave_this_field_empty}']);
@@ -37,13 +39,13 @@ class Products_controller extends Controller
 						array_push($errors, ['token','{$lang.invalid_field}']);
 				}
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply' OR $params[1] == 'work_material')
+				if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material')
 				{
 					if (Validations::empty($_POST['unity']) == false)
 						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
 				}
 
-				if ($params[1] == 'sale')
+				if ($data['type'] == 'sale_menu')
 				{
 					if (Validations::empty($_POST['price']) == false)
 						array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
@@ -51,7 +53,7 @@ class Products_controller extends Controller
 						array_push($errors, ['price','{$lang.invalid_field}']);
 				}
 
-				if ($params[1] == 'sale' OR $params[1] == 'supply')
+				if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply')
 				{
 					if (Validations::number('float', $_POST['weight_full'], true) == false)
 						array_push($errors, ['weight_full','{$lang.invalid_field}']);
@@ -62,10 +64,10 @@ class Products_controller extends Controller
 
 				if (empty($errors))
 				{
-					if ($params[1] == 'sale')
+					if ($data['type'] == 'sale_menu')
 						$_POST['avatar'] = $_FILES['avatar'];
 
-					$_POST['type'] = $params[1];
+					$_POST['type'] = $data['type'];
 
 					if ($_POST['action'] == 'create_product')
 						$query = $this->model->create_product($_POST);
@@ -143,12 +145,9 @@ class Products_controller extends Controller
 		}
 		else
 		{
-			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '} | {$lang.' . $params[0] . '}');
+			define('_title', Configuration::$web_page . ' | {$lang.products} | {$lang.' . $params[0] . '}');
 
-			global $data;
-
-			$data['type'] = $params[1];
-			$data['products'] = $this->model->read_products($params[1]);
+			$data['products'] = $this->model->read_products($data['type']);
 			$data['products_unities'] = $this->model->read_products_unities(true);
 			$data['products_supplies'] = $this->model->read_products('supply', true);
 			$data['products_recipes'] = $this->model->read_products('recipe', true);
@@ -254,12 +253,11 @@ class Products_controller extends Controller
 		}
 		else
 		{
-			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '} | {$lang.categories}');
+			define('_title', Configuration::$web_page . ' | {$lang.products} | {$lang.categories}');
 
 			global $data;
 
 			$data['products_categories'] = $this->model->read_products_categories();
-			$data['products_categories_levels'] = $this->model->read_products_categories_levels();
 
 			$template = $this->view->render($this, 'categories');
 
@@ -356,7 +354,7 @@ class Products_controller extends Controller
 		}
 		else
 		{
-			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '} | {$lang.unities}');
+			define('_title', Configuration::$web_page . ' | {$lang.products} | {$lang.unities}');
 
 			global $data;
 

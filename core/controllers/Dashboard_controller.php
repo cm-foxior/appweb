@@ -21,6 +21,8 @@ class Dashboard_controller extends Controller
 				{
 					Session::set_value('vkye_account', $query['account']);
 					Session::set_value('vkye_user', $query['user']);
+					Session::set_value('vkye_lang', $query['user']['language']);
+					Session::set_value('vkye_temporal', []);
 
 					echo json_encode([
 						'status' => 'success'
@@ -46,7 +48,7 @@ class Dashboard_controller extends Controller
 		}
 		else
 		{
-			define('_title', Configuration::$web_page . ' | {$lang.' . $GLOBALS['_vkye_module'] . '}');
+			define('_title', Configuration::$web_page . ' | {$lang.dashboard}');
 
 			$template = $this->view->render($this, 'index');
 

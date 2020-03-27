@@ -596,6 +596,10 @@ header.modbar > a.unfocus {
     background-color: #fff;
 }
 
+header.modbar > a.success {
+    border-color: inherit !important;
+}
+
 header.modbar > a > span {
     width: auto;
     height: 20px;
@@ -646,7 +650,7 @@ header.modbar fieldset.fields-group div.compound.st-4-left > select {
 }
 
 header.modbar fieldset.fields-group div.compound.st-4-left > span {
-    width: 40px !important;
+    width: 38px !important;
     font-size: 16px !important;
 }
 
@@ -661,4 +665,30 @@ body > main {
     padding: 140px 20px 20px 60px;
     box-sizing: border-box;
     background-color: #fff;
+}
+
+/*  */
+body > main.to-use {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+body > main.to-use > a {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    border-radius: 50%;
+    font-size: 40px;
+    font-weight: 400;
+}
+
+body > main.to-use > p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #757575;
 }

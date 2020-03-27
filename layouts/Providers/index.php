@@ -90,7 +90,7 @@ $this->dependencies->add(['js', '{$path.js}Providers/index.min.js']);
                             <div class="compound st-1-left">
                                 <select name="phone_country">
                                     <option value="" selected hidden>{$lang.country}</option>
-                                    <?php foreach (System::countries() as $value) : ?>
+                                    <?php foreach (Functions::countries() as $value) : ?>
                                     <option value="<?php echo $value['lada']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -103,7 +103,7 @@ $this->dependencies->add(['js', '{$path.js}Providers/index.min.js']);
                     <div class="compound st-1-left">
                         <select name="country">
                             <option value="" selected hidden>{$lang.country}</option>
-                            <?php foreach (System::countries() as $value) : ?>
+                            <?php foreach (Functions::countries() as $value) : ?>
                             <option value="<?php echo $value['lada']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
                             <?php endforeach; ?>
                         </select>
@@ -128,7 +128,7 @@ $this->dependencies->add(['js', '{$path.js}Providers/index.min.js']);
                     <div class="compound st-1-left">
                         <select name="fiscal_country">
                             <option value="" selected hidden>{$lang.country}</option>
-                            <?php foreach (System::countries() as $value) : ?>
+                            <?php foreach (Functions::countries() as $value) : ?>
                             <option value="<?php echo $value['code']; ?>"><?php echo $value['name'][Session::get_value('vkye_lang')]; ?></option>
                             <?php endforeach; ?>
                         </select>

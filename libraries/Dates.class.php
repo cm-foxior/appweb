@@ -18,14 +18,27 @@ defined('_EXEC') or die;
 class Dates
 {
     /**
+    * @summary Establece la zona horaria por defecto.
+    */
+    static public function set_default_timezone()
+    {
+        if (Session::exists_var('session') == true)
+            date_default_timezone_set(Session::get_value('vkye_account')['time_zone']);
+        else
+            date_default_timezone_set(Configuration::$time_zone);
+    }
+
+    /**
     * @summary Entrega la fecha actual.
     *
-    * @param string $format: Formato en el que retornará la fecha.
+    * @param string $format: (<Formato de fecha de PHP>) Formato en el que retornará la fecha.
     *
     * @return date
     */
     static public function current_date($format = 'Y-m-d')
     {
+        Dates::set_default_timezone();
+
 		return date($format);
     }
 
@@ -35,12 +48,14 @@ class Dates
     * @param date $date: Fecha a restar.
     * @param int $number: Numero de $lapse que se va a restar a $date.
     * @param string $lapse: (year, month, week, days) Lapso de tiempo que se va a restar a $date.
-    * @param string $format: Formato en el que retornará la fecha.
+    * @param string $format: (<Formato de fecha de PHP>) Formato en el que retornará la fecha.
     *
     * @return date
     */
     static public function past_date($date, $number, $lapse, $format = 'Y-m-d')
     {
+        Dates::set_default_timezone();
+
         return date($format, strtotime(date('d-m-Y', strtotime($date)) . ' - ' . $number . ' ' . $lapse));
     }
 
@@ -50,12 +65,14 @@ class Dates
     * @param date $date: Fecha a sumar.
     * @param int $number: Numero de $lapse que se va a sumar a $date.
     * @param string $lapse: (year, month, week, days) Lapso de tiempo que se va a sumar a $date.
-    * @param string $format: Formato en el que retornará la fecha.
+    * @param string $format: (<Formato de fecha de PHP>) Formato en el que retornará la fecha.
     *
     * @return date
     */
     static public function future_date($date, $number, $lapse, $format = 'Y-m-d')
     {
+        Dates::set_default_timezone();
+
         return date($format, strtotime(date('d-m-Y', strtotime($date)) . ' + ' . $number . ' ' . $lapse));
     }
 
@@ -63,24 +80,70 @@ class Dates
     * @summary Entrega una fecha con formato.
     *
     * @param date $date: Fecha a dar formato.
-    * @param string $format: Formato en el que retornará la fecha.
+    * @param string $format: (long, short, <Formato de fecha de PHP>) Formato en el que retornará la fecha.
+    * @param string $language: (es, en) Lenguage en el que retornará la fecha en caso de que el $format sea long o short.
     *
+    * @return string
     * @return date
     */
-    static public function format_date($date, $format = 'Y-m-d')
+    static public function format_date($date, $format = 'Y-m-d', $language = 'es')
     {
-        return date($format, strtotime($date));
+        if ($format == 'long' OR $format == 'short')
+        {
+            $date = date('Y-m-d', strtotime($date));
+            $date = explode('-', $date);
+
+            $months = [
+                'es' => [
+                    '01' => 'Enero',
+                    '02' => 'Febrero',
+                    '03' => 'Marzo',
+                    '04' => 'Abril',
+                    '05' => 'Mayo',
+                    '06' => 'Junio',
+                    '07' => 'Julio',
+                    '08' => 'Agosto',
+                    '09' => 'Septiembre',
+                    '10' => 'Octubre',
+                    '11' => 'Noviembre',
+                    '12' => 'Diciembre'
+                ],
+                'en' => [
+                    '01' => 'January',
+                    '02' => 'February',
+                    '03' => 'March',
+                    '04' => 'April',
+                    '05' => 'May',
+                    '06' => 'June',
+                    '07' => 'July',
+                    '08' => 'August',
+                    '09' => 'September',
+                    '10' => 'October',
+                    '11' => 'November',
+                    '12' => 'December'
+                ]
+            ];
+
+            if ($format == 'long')
+                return $date[2] . ' ' . $months[$language][$date[1]] . ' ' . $date[0];
+            else if ($format == 'short')
+                return $date[2] . ' ' . substr($months[$language][$date[1]], -strlen($months[$language][$date[1]]), 3) . ', ' . substr($date[0], -2);
+        }
+        else
+            return date($format, strtotime($date));
     }
 
     /**
     * @summary Entrega la hora actual.
     *
-    * @param string $format: Formato en el que retornará la hora.
+    * @param string $format: (<Formato de hora de PHP>) Formato en el que retornará la hora.
     *
     * @return date
     */
     static public function current_hour($format = 'H:i:s')
     {
+        Dates::set_default_timezone();
+
 		return date($format, time());
     }
 
@@ -90,12 +153,14 @@ class Dates
     * @param time $hour: Hora a restar.
     * @param int $number: Numero de $lapse que se va a restar a $hour.
     * @param string $lapse: (hour, minute, second) Lapso de tiempo que se va a restar a $hour.
-    * @param string $format: Formato en el que retornará la hora.
+    * @param string $format: (<Formato de hora de PHP>) Formato en el que retornará la hora.
     *
     * @return date
     */
     static public function past_hour($hour, $number, $lapse, $format = 'H:i:s')
     {
+        Dates::set_default_timezone();
+
         return date($format, strtotime('-' . $number . ' ' . $lapse, strtotime(date('H:i:s', strtotime($hour)))));
     }
 
@@ -105,12 +170,14 @@ class Dates
     * @param time $hour: Hora a sumar.
     * @param int $number: Numero de $lapse que se va a sumar a $hour.
     * @param string $lapse: (hour, minute, second) Lapso de tiempo que se va a sumar a $hour.
-    * @param string $format: Formato en el que retornará la hora.
+    * @param string $format: (<Formato de hora de PHP>) Formato en el que retornará la hora.
     *
     * @return date
     */
     static public function future_hour($hour, $number, $lapse, $format = 'H:i:s')
     {
+        Dates::set_default_timezone();
+
         return date($format, strtotime('+' . $number . ' ' . $lapse, strtotime(date('H:i:s', strtotime($hour)))));
     }
 
@@ -118,14 +185,24 @@ class Dates
     * @summary Entrega una hora con formato.
     *
     * @param time $hour: Hora a dar formato.
-    * @param string $format: Formato en el que retornará la hora.
+    * @param string $format: (12, 24, <Formato de hora de PHP>) Formato en el que retornará la hora.
     *
-    * @return date
     * @return string
+    * @return date
     */
     static public function format_hour($hour, $format = 'H:i:s')
     {
-        if ($format == 'hrs')
+        if ($format == '12')
+        {
+            $hour = explode(':', $hour);
+            $hour[3] = ($hour[0] < 12) ? 'am' : 'pm';
+            $hour[0] = ($hour[0] > 12) ? $hour[0] - 12 : $hour[0];
+            $hour[0] = ($hour[0] <= 9 AND $hour[3] == 'pm') ? '0' . $hour[0] : $hour[0];
+            $hour = $hour[0] . (array_key_exists(1, $hour) ? ':' . $hour[1] : '') . (array_key_exists(2, $hour) ? ':' . $hour[2] : '') . ' ' . $hour[3];
+
+            return $hour;
+        }
+        else if ($format == '24')
             return $hour . ' Hrs';
         else
             return date($format, strtotime($hour));
@@ -134,12 +211,14 @@ class Dates
     /**
     * @summary Entrega la fecha y hora actual.
     *
-    * @param string $format: Formato en el que retornará la fecha y hora.
+    * @param string $format: (<Formato de fecha y hora de PHP>) Formato en el que retornará la fecha y hora.
     *
     * @return date
     */
     static public function current_date_hour($format = 'Y-m-d H:i:s')
     {
+        Dates::set_default_timezone();
+
 		return date($format, time());
     }
 
@@ -149,13 +228,15 @@ class Dates
     * @param date-time-datetime $date_hour1: Fecha inicial.
     * @param date-time-datetime $date_hour2: Fecha final.
     * @param string $lapse: (year, month, days, hours, minutes, seconds, all) Lapso de tiempo en el que retornara la función.
-    * @param boolean $format: Logflag si retornará la función con su formato string.
+    * @param boolean $format: Identificador para saber si retornará la función con su formato en cadena de texto.
     *
     * @return string
     * @return array
     */
     static public function diff_date_hour($date_hour1, $date_hour2, $lapse = 'all', $format = true)
     {
+        Dates::set_default_timezone();
+
         $date_hour1 = new DateTime($date_hour1);
         $date_hour2 = new DateTime($date_hour2);
 

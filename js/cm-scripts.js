@@ -54,6 +54,50 @@ $(document).ready(function()
     {
         $(this).css('background-image', 'url("' + $(this).data('image-src') + '")');
     });
+
+    /**
+    * @summary Compound st-5
+    */
+    $('.compound.st-5-double').find('input[type="radio"]').on('click', function()
+    {
+        $(this).parents('.compound.st-5-double').find('span').removeClass('checked');
+        $(this).parents('label').find('span').addClass('checked');
+    });
+
+    $('.compound.st-5-triple').find('input[type="radio"]').on('click', function()
+    {
+        $(this).parents('.compound.st-5-triple').find('span').removeClass('checked');
+        $(this).parents('label').find('span').addClass('checked');
+    });
+
+    /**
+    * @summary Compound st-6
+    */
+    $('.compound.st-6').find('[data-preview-value]').on('click', function()
+    {
+        $(this).parents('.compound.st-6').find('[data-search]').addClass('open');
+        $(this).parents('.compound.st-6').find('[data-search] > [data-search-value]').focus();
+    });
+
+    $('.compound.st-6').find('[data-search-value]').on('keyup', function()
+    {
+        if ($(this).val().length > 0)
+            $(this).parents('.compound.st-6').find('[data-list]').addClass('open');
+        else if ($(this).val().length <= 0)
+            $(this).parents('.compound.st-6').find('[data-list]').removeClass('open');
+
+        search_in_table($(this).val(), $(this).parents('.compound.st-6').find('[data-list] > div'), 'hidden');
+    });
+
+    $('.compound.st-6').find('[data-list-value]').on('click', function()
+    {
+        $(this).parents('.compound.st-6').find('[data-preview-value]').val($(this).parent().find('p').html());
+        $(this).parents('.compound.st-6').find('[data-preview-selected]').val($(this).data('list-value'));
+        $(this).parents('.compound.st-6').find('[data-search-value]').val('');
+        $(this).parents('.compound.st-6').find('[data-search]').removeClass('open');
+        $(this).parents('.compound.st-6').find('[data-list]').removeClass('open');
+        $(this).parents('.compound.st-6').find('[data-list] > div').addClass('hidden');
+    });
 });
 
 /**
@@ -64,9 +108,8 @@ $(document).ready(function()
 * @var string style: (tbl, cbx) Estilo de busqueda.
 * @var string type: (normal, hidden) Tipo de busqueda.
 */
-function search_in_table(data, target, style, type)
+function search_in_table(data, target, type)
 {
-    style = (style == undefined) ? 'tbl' : style;
     type = (type == undefined) ? 'normal' : 'hidden';
 
     $.each(target, function(key, value)
@@ -82,6 +125,8 @@ function search_in_table(data, target, style, type)
             else if (result <= 0)
                 value.className = 'hidden';
         }
+        else if (data.length <= 0 && type == 'normal')
+            value.className = '';
         else if (data.length <= 0 && type == 'hidden')
             value.className = 'hidden';
     });
@@ -94,50 +139,55 @@ function search_in_table(data, target, style, type)
 /**
 * @summary Valida los valores de una cadena de texto en una etiqueta HTML <input>.
 *
-* @param string option: (uppercase, lowercase, int, float) Tipo de cadena de texto permitida.
+* @param string option: (empty, uppercase, lowercase, int, float) Tipo de cadena de texto permitida.
 * @param string data: Cadena de texto a validar.
 * @param <input> target: Etiqueta HTML donde retornará la validación.
 */
 function validate_string(option, data, target)
 {
-    var filter = '';
-    var uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-    var lowercase = 'abcdefghijklmnñopqrstuvwxyz';
-    var numbet_int = '0123456789';
-    var number_float = '.';
-
-    if (Array.isArray(option))
+    if (option == 'empty')
+        return (data == undefined || data == null || data == '') ? true : false;
+    else if (option == 'uppercase' || option == 'lowercase' || option == 'int' || option == 'float')
     {
-        $.each(option, function(key, value)
+        var filter = '';
+        var uppercase = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+        var lowercase = 'abcdefghijklmnñopqrstuvwxyz';
+        var numbet_int = '0123456789';
+        var number_float = '.';
+
+        if (Array.isArray(option))
         {
-            if (value == 'uppercase')
-                filter = filter + uppercase;
-            else if (value == 'lowercase')
-                filter = filter + lowercase;
-            else if (value == 'int')
-                filter = filter + numbet_int;
-            else if (value == 'float')
-                filter = filter + number_float + numbet_int;
-        });
+            $.each(option, function(key, value)
+            {
+                if (value == 'uppercase')
+                    filter = filter + uppercase;
+                else if (value == 'lowercase')
+                    filter = filter + lowercase;
+                else if (value == 'int')
+                    filter = filter + numbet_int;
+                else if (value == 'float')
+                    filter = filter + number_float + numbet_int;
+            });
+        }
+        else if (option == 'uppercase')
+            filter = uppercase;
+        else if (option == 'lowercase')
+            filter = lowercase;
+        else if (option == 'int')
+            filter = numbet_int;
+        else if (option == 'float')
+            filter = number_float + numbet_int;
+
+        var out = '';
+
+        for (var i = 0; i < data.length; i++)
+        {
+            if (filter.indexOf(data.charAt(i)) != -1)
+                out += data.charAt(i);
+        }
+
+        target.val(out);
     }
-    else if (option == 'uppercase')
-        filter = uppercase;
-    else if (option == 'lowercase')
-        filter = lowercase;
-    else if (option == 'int')
-        filter = numbet_int;
-    else if (option == 'float')
-        filter = number_float + numbet_int;
-
-    var out = '';
-
-    for (var i = 0; i < data.length; i++)
-    {
-        if (filter.indexOf(data.charAt(i)) != -1)
-            out += data.charAt(i);
-    }
-
-    target.val(out);
 }
 
 /**

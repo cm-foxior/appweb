@@ -9,22 +9,33 @@ class Products_model extends Model
 		parent::__construct();
 	}
 
-	public function read_products($type, $cbx = false)
+	public function read_products($type, $to_use = false)
 	{
 		$and['account'] = Session::get_value('vkye_account')['id'];
 		$and['type'] = $type;
 
-		if ($cbx == true)
-			$and['blocked'] = false;
+		if ($to_use == true)
+		{
+			$fields = [
+				'id',
+				'name'
+			];
 
-		$query = System::decoded_json_array($this->database->select('products', [
-			'id',
-			'avatar',
-			'name',
-			'token',
-			'price',
-			'blocked'
-		], [
+			$and['blocked'] = false;
+		}
+		else
+		{
+			$fields = [
+				'id',
+				'avatar',
+				'name',
+				'token',
+				'price',
+				'blocked'
+			];
+		}
+
+		$query = System::decode_json_to_array($this->database->select('products', $fields, [
 			'AND' => $and,
 			'ORDER' => [
 				'name' => 'ASC'
@@ -36,7 +47,7 @@ class Products_model extends Model
 
 	public function read_product($id)
 	{
-		$query = System::decoded_json_array($this->database->select('products', [
+		$query = System::decode_json_to_array($this->database->select('products', [
 			'avatar',
 			'name',
 			'type',
@@ -47,6 +58,7 @@ class Products_model extends Model
 			'recipes',
 			'supplies',
 			'categories',
+			'inventory',
 			'blocked'
 		], [
 			'id' => $id
@@ -59,19 +71,20 @@ class Products_model extends Model
 	{
 		$query = $this->database->insert('products', [
 			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : null,
+			'avatar' => ($data['type'] == 'sale_menu') ? (!empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null) : null,
 			'name' => $data['name'],
 			'type' => $data['type'],
-			'token' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
-			'price' => ($data['type'] == 'sale') ? $data['price'] : null,
-			'unity' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
-			'weight' => ($data['type'] == 'sale' OR $data['type'] == 'supply') ? json_encode([
-				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
-				'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
+			'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
+			'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
+			'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
+			'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
+				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : null,
+				'full' => !empty($data['weight_full']) ? $data['weight_full'] : null
 			]) : null,
-			'supplies' => ($data['type'] == 'sale' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
-			'recipes' => ($data['type'] == 'sale') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
+			'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
+			'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
 			'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
+			'inventory' => ($data['type'] == 'sale_menu' OR $data['type'] = 'supply' OR $data['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false,
 			'blocked' => false
 		]);
 
@@ -82,33 +95,35 @@ class Products_model extends Model
 	{
 		$query = null;
 
-        $edited = $this->database->select('products', [
-            'avatar'
-        ], [
-            'id' => $data['id']
-        ]);
+		$edited = $this->database->select('products', [
+			'avatar',
+			'type'
+		], [
+			'id' => $data['id']
+		]);
 
         if (!empty($edited))
         {
             $query = $this->database->update('products', [
-				'avatar' => ($data['type'] == 'sale' AND !empty($data['avatar']['name'])) ? Fileloader::up($data['avatar']) : $edited[0]['avatar'],
+				'avatar' => ($data['type'] == 'sale_menu') ? (!empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null) : null,
 				'name' => $data['name'],
-				'token' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
-				'price' => ($data['type'] == 'sale') ? $data['price'] : null,
-				'unity' => ($data['type'] == 'sale' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
-				'weight' => ($data['type'] == 'sale' OR $data['type'] == 'supply') ? json_encode([
-					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : '',
-					'full' => !empty($data['weight_full']) ? $data['weight_full'] : ''
+				'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
+				'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
+				'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
+				'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
+					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : null,
+					'full' => !empty($data['weight_full']) ? $data['weight_full'] : null
 				]) : null,
-				'supplies' => ($data['type'] == 'sale' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
-				'recipes' => ($data['type'] == 'sale') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
-				'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : []))
+				'supplies' => ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') ? json_encode((!empty($data['supplies']) ? $data['supplies'] : [])) : null,
+				'recipes' => ($data['type'] == 'sale_menu') ? json_encode((!empty($data['recipes']) ? $data['recipes'] : [])) : null,
+				'categories' => json_encode((!empty($data['categories']) ? $data['categories'] : [])),
+				'inventory' => ($data['type'] == 'sale_menu' OR $data['type'] = 'supply' OR $data['type'] == 'work_material') ? (!empty($data['inventory']) ? true : false) : false
             ], [
                 'id' => $data['id']
             ]);
 
-            if (!empty($query) AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
-                Fileloader::down($edited[0]['avatar']);
+			if (!empty($query) AND $edited[0]['type'] == 'sale_menu' AND !empty($data['avatar']['name']) AND !empty($edited[0]['avatar']))
+				Fileloader::down($edited[0]['avatar']);
         }
 
         return $query;
@@ -141,7 +156,8 @@ class Products_model extends Model
         $query = null;
 
         $deleted = $this->database->select('products', [
-            'avatar'
+            'avatar',
+			'type'
         ], [
             'id' => $id
         ]);
@@ -152,50 +168,60 @@ class Products_model extends Model
                 'id' => $id
             ]);
 
-            if (!empty($query) AND !empty($deleted[0]['avatar']))
+			if (!empty($query) AND $deleted[0]['type'] == 'sale_menu' AND !empty($deleted[0]['avatar']))
                 Fileloader::down($deleted[0]['avatar']);
         }
 
         return $query;
     }
 
-	public function read_products_categories($cbx = false)
+	public function read_products_categories($to_use = false)
 	{
-		if ($cbx == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name',
+				'level'
+			];
+
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
 				'blocked' => false
 			];
 		}
 		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'level',
+				'blocked'
+			];
+
 			$where['account'] = Session::get_value('vkye_account')['id'];
+		}
 
 		$where['ORDER'] = [
 			'level' => 'ASC',
 			'name' => 'ASC'
 		];
 
-		$query = $this->database->select('products_categories', [
-			'id',
-			'name',
-			'level',
-			'blocked'
-		], $where);
+		$query = $this->database->select('products_categories', $fields, $where);
 
-		if ($cbx == true)
+		if ($to_use == true)
 		{
-			$cbx = [];
+			$return = [];
 
 			foreach ($query as $key => $value)
 			{
-				if (array_key_exists($value['level'], $cbx))
-					array_push($cbx[$value['level']], $value);
+				if (array_key_exists($value['level'], $return))
+					array_push($return[$value['level']], $value);
 				else
-					$cbx[$value['level']] = [$value];
+					$return[$value['level']] = [$value];
 			}
 
-			return $cbx;
+			return $return;
 		}
 		else
 			return $query;
@@ -211,24 +237,6 @@ class Products_model extends Model
 		]);
 
 		return !empty($query) ? $query[0] : null;
-	}
-
-	public function read_products_categories_levels()
-	{
-		$query = $this->database->select('products_categories', [
-			'level'
-		], [
-			'account' => Session::get_value('vkye_account')['id'],
-			'ORDER' => [
-				'level' => 'ASC'
-			]
-		]);
-
-		$query = array_map('current', $query);
-		$query = array_unique($query);
-		$query = array_values($query);
-
-		return $query;
 	}
 
 	public function create_product_category($data)
@@ -286,27 +294,36 @@ class Products_model extends Model
         return $query;
     }
 
-	public function read_products_unities($slt = false)
+	public function read_products_unities($to_use = false)
 	{
-		if ($slt == true)
+		if ($to_use == true)
 		{
+			$fields = [
+				'id',
+				'name'
+			];
+
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
 				'blocked' => false
 			];
 		}
 		else
+		{
+			$fields = [
+				'id',
+				'name',
+				'blocked'
+			];
+
 			$where['account'] = Session::get_value('vkye_account')['id'];
+		}
 
 		$where['ORDER'] = [
 			'name' => 'ASC'
 		];
 
-		$query = $this->database->select('products_unities', [
-			'id',
-			'name',
-			'blocked'
-		], $where);
+		$query = $this->database->select('products_unities', $fields, $where);
 
 		return $query;
 	}

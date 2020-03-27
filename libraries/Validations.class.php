@@ -50,6 +50,35 @@ class Validations
     }
 
     /**
+    * @summary: Valida que un valor este establecido y no vacío.
+    *
+    * @param string $data: Variable a validar.
+    * @param boolean $group: Grupo de valores permitidos.
+    *
+    * @return boolean
+    */
+    public static function equals($data, $group)
+    {
+        $check = false;
+
+        if (is_array($group))
+        {
+            foreach ($group as $value)
+            {
+                if ($data == $value)
+                    $check = true;
+            }
+        }
+        else
+        {
+            if ($data == $group)
+                $check = true;
+        }
+
+        return $check;
+    }
+
+    /**
     * @summary: Valida que una cadena de texto no contenga caracteres no permitidos.
     *
     * @param string-array $option: (uppercase, lowercase, int, float) Tipo de opcion(es) permitidas.

@@ -11,7 +11,7 @@ class Dashboard_model extends Model
 
 	public function get_session($account)
 	{
-		$session['user'] = System::decoded_json_array($this->database->select('users', [
+		$session['user'] = System::decode_json_to_array($this->database->select('users', [
 			'id',
 			'avatar',
 			'firstname',
@@ -26,7 +26,7 @@ class Dashboard_model extends Model
 
 		foreach ($session['user'][0]['accounts'] as $key => $value)
 		{
-			$value['account'] = System::decoded_json_array($this->database->select('accounts', [
+			$value['account'] = System::decode_json_to_array($this->database->select('accounts', [
 				'id',
 				'avatar',
 				'name',
