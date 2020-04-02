@@ -55,16 +55,10 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
         <tbody>
             <?php foreach ($data['inventories'] as $value) : ?>
             <tr>
-                <td class="bigtag"><span><?php echo Dates::format_date($value['date'], 'short') . ' ' . Dates::format_hour($value['hour'], '12'); ?></span></td>
+                <td class="bigtag"><span><?php echo Dates::format_date($value['date'], 'short') . ' ' . Dates::format_hour($value['hour'], '12-short'); ?></span></td>
                 <td><?php echo $value['product_name']; ?></td>
-                <td class="smalltag"><span><?php echo $value['quantity'] . ' ' . $value['product_unity']; ?></span></td>
-                <td class="bigtag">
-                    <?php if (!empty($value['location'])) : ?>
-                    <span><?php echo $value['location']; ?></span>
-                    <?php else : ?>
-                    <span>{$lang.not_location}</span>
-                    <?php endif; ?>
-                </td>
+                <td class="smalltag"><span><?php echo $value['storage_quantity'] . ' ' . $value['product_storage_unity']; ?></span></td>
+                <td class="smalltag"><span><?php echo $value['location']; ?></span></td>
                 <td class="bigtag">
                     <?php if (!empty($value['bill'])) : ?>
                     <span>{$lang.bill} #<?php echo $value['bill']; ?></span>
@@ -225,24 +219,34 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                 <tr>
                                     <td class="avatar">
                                         <figure>
-                                            <?php if (!empty($value['product']['avatar'])): ?>
+                                            <?php if (!empty($value['product']['avatar'])) : ?>
                                             <img src="{$path.uploads}<?php echo $value['product']['avatar']; ?>">
-                                            <?php else: ?>
+                                            <?php else : ?>
                                             <img src="{$path.images}empty.png">
                                             <?php endif; ?>
                                         </figure>
                                     </td>
                                     <td>
-                                        <?php echo $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}'; ?>
+                                        {$lang.product} (<?php echo '{$lang.' . $value['product']['type'] . '}'; ?>): <?php echo $value['product']['name']; ?> (<?php echo $value['product']['token']; ?>)
                                         <br>
-                                        <?php echo $value['quantity'] . ' ' . $value['product']['unity']; ?>
+                                        <?php if (!empty($value['product']['input_unity'])) : ?>
+                                            <?php echo '{$lang.storage}: ' . $value['input_quantity'] . ' ' . $value['product']['input_unity'] . ' {$lang.of} ' . $value['transform_quantity'] . ' ' . $value['product']['storage_unity'] . ' {$lang.abb_each_one} (' . $value['storage_quantity'] . ' ' . $value['product']['storage_unity'] . ')'; ?>
+                                        <?php else : ?>
+                                            <?php echo '{$lang.storage}: ' . $value['storage_quantity'] . ' ' . $value['product']['storage_unity']; ?>
+                                        <?php endif; ?>
                                         <br>
-                                        <?php echo Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')'; ?>
+                                        <?php if (!empty($value['product']['input_unity'])) : ?>
+                                            <?php echo '{$lang.unitary_price} (' . $value['product']['input_unity'] . '): ' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']); ?>
+                                        <?php else : ?>
+                                            <?php echo '{$lang.unitary_price} (' . $value['product']['storage_unity'] . '): ' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']); ?>
+                                        <?php endif; ?>
                                         <br>
-                                        <?php echo $value['location']['name'] ?>
+                                        {$lang.total}: <?php echo Currency::format($value['total'], Session::get_value('vkye_account')['currency']); ?>
+                                        <br>
+                                        <?php echo $value['location']['name']; ?>
                                         <br>
                                         <?php if (!empty($value['categories'])) : ?>
-                                        <?php echo Functions::summation('string', $value['categories'], 'name'); ?>
+                                        <?php echo '{$lang.categories}: ' . Functions::summation('string', $value['categories'], 'name'); ?>
                                         <?php else : ?>
                                         {$lang.not_categories}
                                         <?php endif; ?>
@@ -271,42 +275,44 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
+                    <div class="compound st-6">
+                        <div data-preview>
+                            <input type="text" placeholder="{$lang.product}" data-preview-value>
+                            <input type="text" name="product" readonly data-preview-selected>
+                        </div>
+                        <div data-search>
+                            <span><i class="fas fa-search"></i></span>
+                            <input type="text" placeholder="{$lang.search}" data-search-value>
+                        </div>
+                        <div data-list>
+                            <?php foreach ($data['products'] as $value) : ?>
+                            <div class="hidden">
+                                <figure>
+                                    <?php if (!empty($value['avatar'])) : ?>
+                                    <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
+                                    <?php else : ?>
+                                    <img src="{$path.images}empty.png">
+                                    <?php endif; ?>
+                                </figure>
+                                <p><?php echo $value['token'] . ' | ' .  $value['name'] . ' | {$lang.' . $value['type'] . '}'; ?></p>
+                                <a data-list-value="<?php echo $value['id']; ?>"></a>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
                     <div class="row">
-                        <div class="span8">
-                            <div class="compound st-6">
-                                <div data-preview>
-                                    <input type="text" placeholder="{$lang.product}" data-preview-value>
-                                    <input type="text" name="product" readonly data-preview-selected>
-                                </div>
-                                <div data-search>
-                                    <span><i class="fas fa-search"></i></span>
-                                    <input type="text" placeholder="{$lang.search}" data-search-value>
-                                </div>
-                                <div data-list>
-                                    <?php foreach ($data['products'] as $value) : ?>
-                                    <div class="hidden">
-                                        <figure>
-                                            <?php if (!empty($value['avatar'])) : ?>
-                                            <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
-                                            <?php else : ?>
-                                            <img src="{$path.images}empty.png">
-                                            <?php endif; ?>
-                                        </figure>
-                                        <p><?php echo $value['token'] . ' | ' .  $value['name'] . ' | {$lang.' . $value['type'] . '}'; ?></p>
-                                        <a data-list-value="<?php echo $value['id']; ?>"></a>
-                                    </div>
-                                    <?php endforeach; ?>
-                                </div>
+                        <div class="span6">
+                            <div class="compound st-7-left">
+                                <input type="text" name="input_quantity" placeholder="{$lang.input_quantity}" disabled>
+                                <span>{$lang.not_apply}</span>
                             </div>
                         </div>
-                        <div class="span4">
-                            <div class="text">
-                                <select name="location">
-                                    <option value="" selected hidden>{$lang.location}</option>
-                                    <?php foreach ($data['inventories_locations'] as $value) : ?>
-                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                        <div class="span6">
+                            <div class="compound st-7-right">
+                                <input type="text" name="storage_quantity" placeholder="{$lang.storage_quantity}">
+                                <span>{$lang.unity}</span>
                             </div>
                         </div>
                     </div>
@@ -314,16 +320,20 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                 <fieldset class="fields-group">
                     <div class="row">
                         <div class="span6">
-                            <div class="compound st-7-right">
-                                <input type="text" name="quantity" placeholder="{$lang.quantity}">
-                                <span>{$lang.unity}</span>
-                            </div>
-                        </div>
-                        <div class="span6">
                             <div class="compound st-3-left">
                                 <span class="first"><i class="fas fa-dollar-sign"></i></span>
                                 <input type="text" name="price" placeholder="{$lang.unitary_price}">
                                 <span class="last"><?php echo Session::get_value('vkye_account')['currency']; ?></span>
+                            </div>
+                        </div>
+                        <div class="span6">
+                            <div class="text">
+                                <select name="location">
+                                    <option value="" selected hidden>{$lang.location}</option>
+                                    <?php foreach ($data['inventories_locations'] as $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
                     </div>

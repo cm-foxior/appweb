@@ -11,34 +11,46 @@ class Products_model extends Model
 
 	public function read_products($type, $to_use = false)
 	{
-		$and['account'] = Session::get_value('vkye_account')['id'];
-		$and['type'] = $type;
+		$inners = [];
+		$and['products.account'] = Session::get_value('vkye_account')['id'];
+		$and['products.type'] = $type;
 
 		if ($to_use == true)
 		{
 			$fields = [
-				'id',
-				'name'
+				'products.id',
+				'products.name'
 			];
 
-			$and['blocked'] = false;
+			$and['products.blocked'] = false;
 		}
 		else
 		{
+			$inners = [
+				'[>]products_unities(products_inputs_unities)' => [
+					'input_unity' => 'id'
+				],
+				'[>]products_unities(products_storages_unities)' => [
+					'storage_unity' => 'id'
+				]
+			];
+
 			$fields = [
-				'id',
-				'avatar',
-				'name',
-				'token',
-				'price',
-				'blocked'
+				'products.id',
+				'products.avatar',
+				'products.name',
+				'products.token',
+				'products.price',
+				'products_inputs_unities.name(input_unity)',
+				'products_storages_unities.name(storage_unity)',
+				'products.blocked'
 			];
 		}
 
-		$query = System::decode_json_to_array($this->database->select('products', $fields, [
+		$query = System::decode_json_to_array($this->database->select('products', $inners, $fields, [
 			'AND' => $and,
 			'ORDER' => [
-				'name' => 'ASC'
+				'products.name' => 'ASC'
 			]
 		]));
 
@@ -53,7 +65,8 @@ class Products_model extends Model
 			'type',
 			'token',
 			'price',
-			'unity',
+			'input_unity',
+			'storage_unity',
 			'weight',
 			'recipes',
 			'supplies',
@@ -76,7 +89,8 @@ class Products_model extends Model
 			'type' => $data['type'],
 			'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
 			'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
-			'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
+			'input_unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? (!empty($data['input_unity']) ? $data['input_unity'] : null) : null,
+			'storage_unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['storage_unity'] : null,
 			'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
 				'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : null,
 				'full' => !empty($data['weight_full']) ? $data['weight_full'] : null
@@ -109,7 +123,8 @@ class Products_model extends Model
 				'name' => $data['name'],
 				'token' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['token'] : null,
 				'price' => ($data['type'] == 'sale_menu') ? $data['price'] : null,
-				'unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['unity'] : null,
+				'input_unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? (!empty($data['input_unity']) ? $data['input_unity'] : null) : null,
+				'storage_unity' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') ? $data['storage_unity'] : null,
 				'weight' => ($data['type'] == 'sale_menu' OR $data['type'] == 'supply') ? json_encode([
 					'empty' => !empty($data['weight_empty']) ? $data['weight_empty'] : null,
 					'full' => !empty($data['weight_full']) ? $data['weight_full'] : null

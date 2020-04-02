@@ -23,18 +23,18 @@ class Branches_controller extends Controller
 				if (Validations::email($_POST['email'], true) == false)
 					array_push($errors, ['email','{$lang.invalid_field}']);
 
-				if (Validations::empty([$_POST['phone_country'],$_POST['phone_number']], true) == false)
+				if (Validations::empty([$_POST['phone_country'],$_POST['phone_number']]) == false)
 					array_push($errors, ['phone_number','{$lang.dont_leave_this_field_empty}']);
 				if (Validations::number('int', $_POST['phone_number'], true) == false)
 					array_push($errors, ['phone_number','{$lang.invalid_field}']);
 
-				if (Validations::empty([$_POST['country'],$_POST['address']], true) == false)
+				if (Validations::empty([$_POST['country'],$_POST['address']]) == false)
 					array_push($errors, ['address','{$lang.dont_leave_this_field_empty}']);
 
 				if (Validations::string(['uppercase','int'], $_POST['fiscal_id'], true) == false)
 					array_push($errors, ['fiscal_id','{$lang.invalid_field}']);
 
-				if (Validations::empty([$_POST['fiscal_country'],$_POST['fiscal_address']], true) == false)
+				if (Validations::empty([$_POST['fiscal_country'],$_POST['fiscal_address']]) == false)
 					array_push($errors, ['fiscal_address','{$lang.dont_leave_this_field_empty}']);
 
 				if (empty($errors))

@@ -35,7 +35,7 @@ class Inventories_controller extends Controller
 				}
 			}
 
-			if ($_POST['action'] == 'read_product')
+			if ($_POST['action'] == 'read_product_to_add_to_input_table')
 			{
 				$query = $this->model->read_product($_POST['id']);
 
@@ -61,19 +61,25 @@ class Inventories_controller extends Controller
 
 				if (Validations::empty($_POST['product']) == false)
 					array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);
+				else
+				{
+					$_POST['product'] = $this->model->read_product($_POST['product']);
 
-				if (Validations::empty($_POST['location']) == false)
-					array_push($errors, ['location','{$lang.dont_leave_this_field_empty}']);
+					if (Validations::empty($_POST['product']['input_unity']) == true AND Validations::empty($_POST['input_quantity']) == false)
+						array_push($errors, ['input_quantity','{$lang.dont_leave_this_field_empty}']);
 
-				if (Validations::empty($_POST['quantity']) == false)
-					array_push($errors, ['quantity','{$lang.dont_leave_this_field_empty}']);
+					if (Validations::empty($_POST['storage_quantity']) == false)
+						array_push($errors, ['storage_quantity','{$lang.dont_leave_this_field_empty}']);
 
-				if (Validations::equals($_POST['type'], 1) == true AND Validations::empty($_POST['price']) == false)
-					array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
+					if (Validations::empty($_POST['price']) == false)
+						array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
+
+					if (Validations::empty($_POST['location']) == false)
+						array_push($errors, ['location','{$lang.dont_leave_this_field_empty}']);
+				}
 
 				if (empty($errors))
 				{
-					$_POST['product'] = $this->model->read_product($_POST['product']);
 					$_POST['location'] = $this->model->read_inventory_location($_POST['location']);
 					$_POST['categories'] = !empty($_POST['categories']) ? $this->model->read_inventories_categories($_POST['categories']) : [];
 
@@ -83,9 +89,11 @@ class Inventories_controller extends Controller
 
 					if (array_key_exists($key, $temporal))
 					{
-						$temporal[$key]['quantity'] += $_POST['quantity'];
+						$temporal[$key]['input_quantity'] = !empty($_POST['product']['input_unity']) ? ($temporal[$key]['input_quantity'] + $_POST['input_quantity']) : 0;
+						$temporal[$key]['transform_quantity'] = !empty($_POST['product']['input_unity']) ? $_POST['storage_quantity'] : 0;
+						$temporal[$key]['storage_quantity'] = !empty($_POST['product']['input_unity']) ? ($_POST['storage_quantity'] * $temporal[$key]['input_quantity']) : ($temporal[$key]['storage_quantity'] + $_POST['storage_quantity']);
 						$temporal[$key]['price'] = $_POST['price'];
-						$temporal[$key]['total'] = ($temporal[$key]['quantity'] * $_POST['price']);
+						$temporal[$key]['total'] = !empty($_POST['product']['input_unity']) ? ($_POST['price'] * $temporal[$key]['input_quantity']) : ($_POST['price'] * $temporal[$key]['storage_quantity']);
 						$temporal[$key]['location'] = $_POST['location'];
 						$temporal[$key]['categories'] = $_POST['categories'];
 					}
@@ -93,9 +101,11 @@ class Inventories_controller extends Controller
 					{
 						$temporal[$key] = [
 							'product' => $_POST['product'],
-							'quantity' => $_POST['quantity'],
+							'input_quantity' => !empty($_POST['product']['input_unity']) ? $_POST['input_quantity'] : 0,
+							'transform_quantity' => !empty($_POST['product']['input_unity']) ? $_POST['storage_quantity'] : 0,
+							'storage_quantity' => !empty($_POST['product']['input_unity']) ? ($_POST['storage_quantity'] * $_POST['input_quantity']) : $_POST['storage_quantity'],
 							'price' => $_POST['price'],
-							'total' => ($_POST['quantity'] * $_POST['price']),
+							'total' => !empty($_POST['product']['input_unity']) ? ($_POST['price'] * $_POST['input_quantity']) : ($_POST['price'] * $_POST['storage_quantity']),
 							'location' => $_POST['location'],
 							'categories' => $_POST['categories']
 						];
@@ -115,15 +125,19 @@ class Inventories_controller extends Controller
 								</figure>
 							</td>
 							<td>
-								' . $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}
+								{$lang.product} ({$lang.' . $value['product']['type'] . '}): ' . $value['product']['name'] . ' (' . $value['product']['token'] . ')
 								<br>
-								' . $value['quantity'] . ' ' . $value['product']['unity'] . '
+								{$lang.storage}: ' . (!empty($value['product']['input_unity'])
+									? $value['input_quantity'] . ' ' . $value['product']['input_unity'] . ' {$lang.of} ' . $value['transform_quantity'] . ' ' . $value['product']['storage_unity'] . ' {$lang.abb_each_one} (' . $value['storage_quantity'] . ' ' . $value['product']['storage_unity'] . ')'
+										: $value['storage_quantity'] . ' ' . $value['product']['storage_unity']) . '
 								<br>
-								' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')
+								{$lang.unitary_price} (' . (!empty($value['product']['input_unity']) ? $value['product']['input_unity'] : $value['product']['storage_unity']) . '): ' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . '
 								<br>
-								' . $value['location']['name'] . '
+								{$lang.total}: ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . '
 								<br>
-								' . (!empty($value['categories']) ? Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
+								{$lang.location}: ' . $value['location']['name'] . '
+								<br>
+								' . (!empty($value['categories']) ? '{$lang.categories}: ' . Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
 							</td>
 							<td class="button">
 								<a data-action="remove_product_to_input_table" data-id="' . $value['product']['id'] . '" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
@@ -176,15 +190,19 @@ class Inventories_controller extends Controller
 								</figure>
 							</td>
 							<td>
-								' . $value['product']['token'] . ' | ' . $value['product']['name'] . ' | {$lang.' . $value['product']['type'] . '}
+								{$lang.product} ({$lang.' . $value['product']['type'] . '}): ' . $value['product']['name'] . ' (' . $value['product']['token'] . ')
 								<br>
-								' . $value['quantity'] . ' ' . $value['product']['unity'] . '
+								{$lang.storage}: ' . (!empty($value['product']['input_unity'])
+									? $value['input_quantity'] . ' ' . $value['product']['input_unity'] . ' {$lang.of} ' . $value['transform_quantity'] . ' ' . $value['product']['storage_unity'] . ' {$lang.abb_each_one} (' . $value['storage_quantity'] . ' ' . $value['product']['storage_unity'] . ')'
+										: $value['storage_quantity'] . ' ' . $value['product']['storage_unity']) . '
 								<br>
-								' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . ' (' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . ')
+								{$lang.unitary_price} (' . (!empty($value['product']['input_unity']) ? $value['product']['input_unity'] : $value['product']['storage_unity']) . '): ' . Currency::format($value['price'], Session::get_value('vkye_account')['currency']) . '
 								<br>
-								' . $value['location']['name'] . '
+								{$lang.total}: ' . Currency::format($value['total'], Session::get_value('vkye_account')['currency']) . '
 								<br>
-								' . (!empty($value['categories']) ? Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
+								{$lang.location}: ' . $value['location']['name'] . '
+								<br>
+								' . (!empty($value['categories']) ? '{$lang.categories}: ' . Functions::summation('string', $value['categories'], 'name') : '{$lang.not_categories}') . '
 							</td>
 							<td class="button">
 								<a data-action="remove_product_to_input_table" data-id="' . $value['product']['id'] . '" class="alert"><i class="fas fa-trash"></i><span>{$lang.remove_to_table}</span></a>
@@ -242,9 +260,6 @@ class Inventories_controller extends Controller
 
 				if (Validations::empty($_POST['type']) == false)
 					array_push($errors, ['type','{$lang.dont_leave_this_field_empty}']);
-
-				if (Validations::equals($_POST['saved'], 'bill') == true AND Validations::empty($_POST['provider']) == false)
-					array_push($errors, ['provider','{$lang.dont_leave_this_field_empty}']);
 
 				if (Validations::empty(Functions::temporal('get', 'inventories', 'inputs')) == false)
 					array_push($errors, ['product','{$lang.dont_leave_this_field_empty}']);

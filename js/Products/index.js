@@ -88,7 +88,10 @@ $(document).ready(function()
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="price"]').val(data.price);
 
             if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
-                $('[data-modal="' + create_action + '"]').find('form').find('[name="unity"]').val(data.unity);
+            {
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="input_unity"]').val(data.input_unity);
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="storage_unity"]').val(data.storage_unity);
+            }
 
             if (data.type == 'sale_menu' || data.type == 'supply')
             {
