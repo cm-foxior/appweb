@@ -192,13 +192,17 @@ class Dates
     */
     static public function format_hour($hour, $format = 'H:i:s')
     {
-        if ($format == '12')
+        if ($format == '12-short' OR $format == '12-long')
         {
             $hour = explode(':', $hour);
             $hour[3] = ($hour[0] < 12) ? 'am' : 'pm';
             $hour[0] = ($hour[0] > 12) ? $hour[0] - 12 : $hour[0];
             $hour[0] = ($hour[0] <= 9 AND $hour[3] == 'pm') ? '0' . $hour[0] : $hour[0];
-            $hour = $hour[0] . (array_key_exists(1, $hour) ? ':' . $hour[1] : '') . (array_key_exists(2, $hour) ? ':' . $hour[2] : '') . ' ' . $hour[3];
+
+            if ($format == '12-short')
+                $hour = $hour[0] . ':' . (array_key_exists(1, $hour) ? $hour[1] : '00') . ' ' . $hour[3];
+            else if ($format == '12-long')
+                $hour = $hour[0] . ':' . (array_key_exists(1, $hour) ? $hour[1] : '00') . ':' . (array_key_exists(2, $hour) ? $hour[2] : '00') . ' ' . $hour[3];
 
             return $hour;
         }

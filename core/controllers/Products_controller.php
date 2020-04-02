@@ -41,8 +41,8 @@ class Products_controller extends Controller
 
 				if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material')
 				{
-					if (Validations::empty($_POST['unity']) == false)
-						array_push($errors, ['unity','{$lang.dont_leave_this_field_empty}']);
+					if (Validations::empty($_POST['storage_unity']) == false)
+						array_push($errors, ['storage_unity','{$lang.dont_leave_this_field_empty}']);
 				}
 
 				if ($data['type'] == 'sale_menu')
@@ -149,9 +149,9 @@ class Products_controller extends Controller
 
 			$data['products'] = $this->model->read_products($data['type']);
 			$data['products_unities'] = $this->model->read_products_unities(true);
+			$data['products_categories'] = $this->model->read_products_categories(true);
 			$data['products_supplies'] = $this->model->read_products('supply', true);
 			$data['products_recipes'] = $this->model->read_products('recipe', true);
-			$data['products_categories'] = $this->model->read_products_categories(true);
 
 			$template = $this->view->render($this, 'index');
 

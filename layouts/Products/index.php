@@ -56,6 +56,15 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php if ($data['type'] == 'sale_menu') : ?>
                 <td class="bigtag"><span><?php echo Currency::format($value['price'], Session::get_value('vkye_account')['currency']); ?></span></td>
                 <?php endif; ?>
+                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
+                <td class="bigtag">
+                    <?php if (!empty($value['input_unity'])) : ?>
+                    <span><?php echo $value['input_unity'] . '<i class="fas fa-chevron-right"></i>' . $value['storage_unity']; ?></span>
+                    <?php else: ?>
+                    <span><?php echo $value['storage_unity']; ?></span>
+                    <?php endif; ?>
+                </td>
+                <?php endif; ?>
                 <td class="smalltag">
                     <?php if ($value['blocked'] == true) : ?>
                     <span class="busy">{$lang.blocked}</span>
@@ -108,62 +117,56 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 </fieldset>
                 <?php endif; ?>
                 <fieldset class="fields-group">
+                    <div class="text">
+                        <input type="text" name="name" placeholder="{$lang.name}">
+                    </div>
+                    <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
+                    <div class="checkbox st-3">
+                        <label>
+                            <input type="checkbox" name="inventory" checked>
+                            <span>{$lang.product_subject_to_inventory}</span>
+                        </label>
+                    </div>
+                    <?php endif; ?>
+                </fieldset>
+                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
+                <fieldset class="fields-group">
                     <div class="row">
-                        <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
-                        <div class="span8">
-                        <?php else: ?>
-                        <div class="span12">
-                        <?php endif; ?>
-                            <fieldset class="fields-group">
-                                <div class="text">
-                                    <input type="text" name="name" placeholder="{$lang.name}">
-                                </div>
-                                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
-                                <div class="checkbox st-3">
-                                    <label>
-                                        <input type="checkbox" name="inventory" checked>
-                                        <span>{$lang.subject_to_inventory}</span>
-                                    </label>
-                                </div>
-                                <?php endif; ?>
-                            </fieldset>
-                        </div>
-                        <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
                         <div class="span4">
                             <div class="compound st-2-left">
                                 <a data-action="generate_random_token"><i class="fas fa-redo"></i></a>
                                 <input type="text" name="token" placeholder="{$lang.folio}">
                             </div>
                         </div>
-                        <?php endif; ?>
-                    </div>
-                </fieldset>
-                <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
-                <fieldset class="fields-group">
-                    <div class="row">
-                        <?php if ($data['type'] == 'sale_menu') : ?>
                         <div class="span4">
-                        <?php else: ?>
-                        <div class="span12">
-                        <?php endif; ?>
                             <div class="text">
-                                <select name="unity">
-                                    <option value="" selected hidden>{$lang.unity}</option>
+                                <select name="input_unity">
+                                    <option value="" selected>{$lang.not_apply_input_unity}</option>
                                     <?php foreach ($data['products_unities'] as $value) : ?>
                                     <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
-                        <?php if ($data['type'] == 'sale_menu') : ?>
-                        <div class="span8">
-                            <div class="compound st-3-left">
-                                <span class="first"><i class="fas fa-dollar-sign"></i></span>
-                                <input type="text" name="price" placeholder="{$lang.unitary_price}">
-                                <span class="last"><?php echo Session::get_value('vkye_account')['currency']; ?></span>
+                        <div class="span4">
+                            <div class="text">
+                                <select name="storage_unity">
+                                    <option value="" selected hidden>{$lang.storage_unity}</option>
+                                    <?php foreach ($data['products_unities'] as $value) : ?>
+                                    <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
-                        <?php endif; ?>
+                    </div>
+                </fieldset>
+                <?php endif; ?>
+                <?php if ($data['type'] == 'sale_menu') : ?>
+                <fieldset class="fields-group">
+                    <div class="compound st-3-left">
+                        <span class="first"><i class="fas fa-dollar-sign"></i></span>
+                        <input type="text" name="price" placeholder="{$lang.unitary_price}">
+                        <span class="last"><?php echo Session::get_value('vkye_account')['currency']; ?></span>
                     </div>
                 </fieldset>
                 <?php endif; ?>

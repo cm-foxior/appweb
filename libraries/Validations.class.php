@@ -21,13 +21,12 @@ class Validations
     * @summary: Valida que un valor este establecido y no vacío.
     *
     * @param string $data: Variable a validar.
-    * @param boolean $group: Identificador para saber si validará un grupo de variables al mismo tiempo.
     *
     * @return boolean
     */
-    public static function empty($data, $group = false)
+    public static function empty($data)
     {
-        if ($group == true)
+        if (is_array($data))
         {
             $check = true;
             $count = 0;

@@ -145,6 +145,7 @@ input[type="checkbox"]::before {
     top: 0px;
     left: 0px;
     display: block;
+    border-radius: 50%;
     border: 1px solid #eee;
     cursor: pointer;
     z-index: 1;
@@ -165,6 +166,7 @@ input[type="checkbox"]:checked::before {
     top: 0px;
     left: 4px;
     border: 2px solid #fff;
+    border-radius: 0px;
     border-top-style: none;
     border-right-style: none;
     background: none;
@@ -183,6 +185,7 @@ input[type="checkbox"]::after {
     top: 0px;
     left: 0px;
     display: block;
+    border-radius: 50%;
     background-color: #eee;
     z-index: 0;
 }
@@ -319,22 +322,18 @@ table.tbl-st-1 > tbody > tr > td.bigtag > span {
 
 table.tbl-st-1 > tbody > tr > td.smalltag > span > i,
 table.tbl-st-1 > tbody > tr > td.bigtag > span > i {
+    margin: 0px 5px;
     font-size: 10px;
 }
 
 table.tbl-st-1 > tbody > tr > td.smalltag.left > span > i,
 table.tbl-st-1 > tbody > tr > td.bigtag.left > span > i {
-    margin-right: 5px;
+    margin: 0px 5px 0px 0px;
 }
 
 table.tbl-st-1 > tbody > tr > td.smalltag.right > span > i,
 table.tbl-st-1 > tbody > tr > td.bigtag.right > span > i {
-    margin-left: 5px;
-}
-
-table.tbl-st-1 > tbody > tr > td.smalltag > span,
-table.tbl-st-1 > tbody > tr > td.bigtag > span {
-
+    margin: 0px 0px 0px 5px;
 }
 
 /*  */
@@ -794,19 +793,16 @@ fieldset.fields-group div.checkbox.st-2 > label {
 
 fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]::before,
 fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]::before {
-    border-radius: 50%;
     border-color: #e0e0e0;
 }
 
 fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]:checked::before,
 fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]:checked::before {
-    border-radius: 0px;
     border-color: #fff;
 }
 
 fieldset.fields-group div.checkbox.st-1 > label > input[type="checkbox"]::after,
 fieldset.fields-group div.checkbox.st-2 > label > input[type="checkbox"]::after {
-    border-radius: 50%;
     background-color: #e0e0e0;
 }
 
@@ -1271,8 +1267,7 @@ fieldset.fields-group div.compound.st-7-right > select {
 
 fieldset.fields-group div.compound.st-7-left > span,
 fieldset.fields-group div.compound.st-7-right > span {
-    width: auto;
-    min-width: 100px;
+    width: 100px;
     position: absolute;
     top: 0px;
     bottom: 0px;

@@ -57,25 +57,25 @@ class Inventories_model extends Model
 				'product' => 'id'
 			],
 			'[>]products_unities' => [
-				'products.unity' => 'id'
-			],
-			'[>]bills' => [
-				'bill' => 'id'
+				'products.storage_unity' => 'id'
 			],
 			'[>]inventories_locations' => [
 				'location' => 'id'
+			],
+			'[>]bills' => [
+				'bill' => 'id'
 			]
 		], [
 			'inventories.movement',
 			'inventories_types.name(type_name)',
 			'inventories_types.system(type_system)',
 			'products.name(product_name)',
-			'products_unities.name(product_unity)',
-			'inventories.quantity',
+			'products_unities.name(product_storage_unity)',
+			'inventories.storage_quantity',
 			'inventories.date',
 			'inventories.hour',
-			'bills.token(bill)',
-			'inventories_locations.name(location)'
+			'inventories_locations.name(location)',
+			'bills.token(bill)'
 		], [
 			'AND' => [
 				'inventories.account' => Session::get_value('vkye_account')['id'],
@@ -134,15 +134,19 @@ class Inventories_model extends Model
 	public function read_product($id)
 	{
 		$query = $this->database->select('products', [
-			'[>]products_unities' => [
-				'unity' => 'id'
+			'[>]products_unities(products_inputs_unities)' => [
+				'input_unity' => 'id'
+			],
+			'[>]products_unities(products_storages_unities)' => [
+				'storage_unity' => 'id'
 			]
 		], [
 			'products.id',
 			'products.name',
 			'products.type',
 			'products.token',
-			'products_unities.name(unity)'
+			'products_inputs_unities.name(input_unity)',
+			'products_storages_unities.name(storage_unity)'
 		], [
 			'products.id' => $id
 		]);
@@ -164,7 +168,7 @@ class Inventories_model extends Model
 
 			if (!empty($bill))
 			{
-				$bill = $bill['id'];
+				$bill = $bill[0]['id'];
 				$go = true;
 			}
 			else
@@ -173,7 +177,7 @@ class Inventories_model extends Model
 					'token' => $data['bill_token'],
 					'payment' => json_encode([
 						'way' => $data['bill_payment_way'],
-						'method' => ''
+						'method' => null
 					])
 				]);
 
@@ -198,14 +202,16 @@ class Inventories_model extends Model
 					'movement' => 'input',
 					'type' => $data['type'],
 					'product' => $value['product']['id'],
-					'quantity' => $value['quantity'],
+					'input_quantity' => !empty($value['product']['input_unity']) ? $value['input_quantity'] : null,
+					'transform_quantity' => !empty($value['product']['input_unity']) ? $value['transform_quantity'] : null,
+					'storage_quantity' => $value['storage_quantity'],
 					'date' => $data['date'],
 					'hour' => $data['hour'],
-					'price' => !empty($value['price']) ? $value['price'] : null,
-					'bill' => ($data['saved'] == 'bill') ? $bill : null,
-					'provider' => !empty($data['provider']) ? $data['provider'] : null,
+					'price' => $value['price'],
 					'location' => $value['location']['id'],
-					'categories' => json_encode((!empty($value['categories']) ? array_map('current', $value['categories']) : []))
+					'categories' => json_encode((!empty($value['categories']) ? array_map('current', $value['categories']) : [])),
+					'provider' => !empty($data['provider']) ? $data['provider'] : null,
+					'bill' => ($data['saved'] == 'bill') ? $bill : null
 				]);
 			}
 		}

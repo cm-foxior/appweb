@@ -42,21 +42,30 @@ $(document).ready(function()
     {
         $.ajax({
             type: 'POST',
-            data: 'action=read_product&id=' + $(this).data('list-value'),
+            data: 'action=read_product_to_add_to_input_table&id=' + $(this).data('list-value'),
             processData: false,
             cache: false,
             dataType: 'json',
             success: function(response)
             {
                 if (response.status == 'success')
-                    $('[name="quantity"]').parent().find('span').html(response.data.unity);
+                {
+                    $('[name="input_quantity"]').parent().find('span').html(((validate_string('empty', response.data.input_unity) == false) ? response.data.input_unity : 'No aplica'));
+                    $('[name="input_quantity"]').attr('disabled', ((validate_string('empty', response.data.input_unity) == false) ? false : true));
+                    $('[name="storage_quantity"]').parent().find('span').html(response.data.storage_unity);
+                }
                 else if (response.status == 'error')
                     open_notification_modal('alert', response.message);
             }
         });
     });
 
-    $('[name="quantity"]').on('keyup', function()
+    $('[name="input_quantity"]').on('keyup', function()
+    {
+        validate_string('float', $(this).val(), $(this));
+    });
+
+    $('[name="storage_quantity"]').on('keyup', function()
     {
         validate_string('float', $(this).val(), $(this));
     });
@@ -91,10 +100,12 @@ $(document).ready(function()
                 {
                     $('[name="product"]').parents('.st-6').find('[data-preview-value]').val('');
                     $('[name="product"]').val('');
-                    $('[name="location"]').val('');
-                    $('[name="quantity"]').val('');
-                    $('[name="quantity"]').parent().find('span').html('Unidad');
+                    $('[name="input_quantity"]').val('');
+                    $('[name="input_quantity"]').parent().find('span').html('No aplica');
+                    $('[name="storage_quantity"]').val('');
+                    $('[name="storage_quantity"]').parent().find('span').html('Unidad');
                     $('[name="price"]').val('');
+                    $('[name="location"]').val('');
                     $('[name="categories[]"]').prop('checked', false);
                     $('[data-table="inputs"]').find(' > tbody').html(response.data.table);
                 });
