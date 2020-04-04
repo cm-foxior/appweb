@@ -163,10 +163,24 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php endif; ?>
                 <?php if ($data['type'] == 'sale_menu') : ?>
                 <fieldset class="fields-group">
-                    <div class="compound st-3-left">
-                        <span class="first"><i class="fas fa-dollar-sign"></i></span>
-                        <input type="text" name="price" placeholder="{$lang.unitary_price}">
-                        <span class="last"><?php echo Session::get_value('vkye_account')['currency']; ?></span>
+                    <div class="row">
+                        <div class="span6">
+                            <div class="compound st-3-left">
+                                <span class="first"><i class="fas fa-dollar-sign"></i></span>
+                                <input type="text" name="price" placeholder="{$lang.unitary_price}">
+                                <span class="last"><?php echo Session::get_value('vkye_account')['currency']; ?></span>
+                            </div>
+                        </div>
+                        <div class="span6">
+                            <div class="compound st-1-right">
+                                <input type="text" name="gain_margin_amount" placeholder="{$lang.gain_margin}">
+                                <select name="gain_margin_type">
+                                    <option value="" selected>{$lang.not_type}</option>
+                                    <option value="%">% {$lang.percentage}</option>
+                                    <option value="$">$ {$lang.fixed_amount}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <?php endif; ?>

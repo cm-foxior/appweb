@@ -22,6 +22,11 @@ $(document).ready(function()
         validate_string('float', $(this).val(), $(this));
     });
 
+    $('[name="gain_margin_amount"]').on('keyup', function()
+    {
+        validate_string('float', $(this).val(), $(this));
+    });
+
     $('[name="weight_full"]').on('keyup', function()
     {
         validate_string('float', $(this).val(), $(this));
@@ -84,13 +89,17 @@ $(document).ready(function()
             if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="token"]').val(data.token);
 
-            if (data.type == 'sale_menu')
-                $('[data-modal="' + create_action + '"]').find('form').find('[name="price"]').val(data.price);
-
             if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
             {
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="input_unity"]').val(data.input_unity);
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="storage_unity"]').val(data.storage_unity);
+            }
+
+            if (data.type == 'sale_menu')
+            {
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="price"]').val(data.price);
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="gain_margin_amount"]').val(data.gain_margin.amount);
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="gain_margin_type"]').val(data.gain_margin.type);
             }
 
             if (data.type == 'sale_menu' || data.type == 'supply')

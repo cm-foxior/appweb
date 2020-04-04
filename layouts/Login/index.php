@@ -25,9 +25,9 @@ $this->dependencies->add(['js', '{$path.js}Login/index.min.js']);
             <button type="submit">{$lang.login}</button>
         </div>
         <div class="shurtcut">
-            <a>{$lang.have_you_forgotten_your_password}<i class="fas fa-user-lock"></i></a>
-            <a>{$lang.signup_your_user}<i class="fas fa-user-plus"></i></a>
-            <a>{$lang.create_your_account}<i class="fas fa-folder-plus"></i></a>
+            <a>{$lang.have_you_forgotten_your_password}<i class="fas fa-lock"></i></a>
+            <a>{$lang.signup_your_user}<i class="fas fa-user"></i></a>
+            <a>{$lang.create_your_account}<i class="fas fa-user-circle"></i></a>
         </div>
     </form>
     <a>{$lang.development_by}<img src="{$path.images}code_monkey_logotype_black.svg"></a>

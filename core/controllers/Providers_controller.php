@@ -25,7 +25,7 @@ class Providers_controller extends Controller
 
 				if (Validations::empty([$_POST['phone_country'],$_POST['phone_number']]) == false)
 					array_push($errors, ['phone_number','{$lang.dont_leave_this_field_empty}']);
-				if (Validations::number('int', $_POST['phone_number'], true) == false)
+				else if (Validations::number('int', $_POST['phone_number'], true) == false)
 					array_push($errors, ['phone_number','{$lang.invalid_field}']);
 
 				if (Validations::empty([$_POST['country'],$_POST['address']]) == false)

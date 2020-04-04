@@ -51,6 +51,11 @@ class Products_controller extends Controller
 						array_push($errors, ['price','{$lang.dont_leave_this_field_empty}']);
 					else if (Validations::number('float', $_POST['price']) == false)
 						array_push($errors, ['price','{$lang.invalid_field}']);
+
+					if (Validations::empty([$_POST['gain_margin_amount'],$_POST['gain_margin_type']]) == false)
+						array_push($errors, ['gain_margin_amount','{$lang.dont_leave_this_field_empty}']);
+					else if (Validations::number('float', $_POST['gain_margin_amount'], true) == false)
+						array_push($errors, ['gain_margin_amount','{$lang.invalid_field}']);
 				}
 
 				if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply')
@@ -150,8 +155,8 @@ class Products_controller extends Controller
 			$data['products'] = $this->model->read_products($data['type']);
 			$data['products_unities'] = $this->model->read_products_unities(true);
 			$data['products_categories'] = $this->model->read_products_categories(true);
-			$data['products_supplies'] = $this->model->read_products('supply', true);
-			$data['products_recipes'] = $this->model->read_products('recipe', true);
+			// $data['products_supplies'] = $this->model->read_products('supply', true);
+			// $data['products_recipes'] = $this->model->read_products('recipe', true);
 
 			$template = $this->view->render($this, 'index');
 

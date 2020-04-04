@@ -74,7 +74,7 @@ main.login > form > div.button {
 main.login > form > div.button > button {
     width: auto;
     height: 60px;
-    padding: 0px 20px;
+    padding: 0px 40px;
     border-radius: 60px;
     background-color: #e0e0e0;
     font-size: 14px;
