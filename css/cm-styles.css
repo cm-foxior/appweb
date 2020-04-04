@@ -921,8 +921,8 @@ fieldset.fields-group div.compound.st-1-right > select {
     position: absolute;
     top: 0px;
     bottom: 0px;
+    padding: 0px 10px;
     border: none;
-    border-radius: 50px 0px 0px 50px;
     box-sizing: border-box;
     background-color: #e0e0e0;
     font-size: 12px;
@@ -932,12 +932,12 @@ fieldset.fields-group div.compound.st-1-right > select {
 
 fieldset.fields-group div.compound.st-1-left > select {
     left: 2.5px;
-    padding-left: 20px;
+    border-radius: 50px 0px 0px 50px;
 }
 
 fieldset.fields-group div.compound.st-1-right > select {
     right: 2.5px;
-    padding-right: 20px;
+    border-radius: 0px 50px 50px 0px;
 }
 
 /*  */
