@@ -40,6 +40,10 @@ $(document).ready(function()
 
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
             $('[data-modal="' + create_action + '"]').find('form').find('[name="level"]').val(data.level);
+            $('[data-modal="' + create_action + '"]').find('form').find('[name="sale_menu"]').prop('checked', ((data.sale_menu == true) ? true : false));
+            $('[data-modal="' + create_action + '"]').find('form').find('[name="supply"]').prop('checked', ((data.supply == true) ? true : false));
+            $('[data-modal="' + create_action + '"]').find('form').find('[name="recipe"]').prop('checked', ((data.recipe == true) ? true : false));
+            $('[data-modal="' + create_action + '"]').find('form').find('[name="work_material"]').prop('checked', ((data.work_material == true) ? true : false));
         });
     });
 

@@ -23,7 +23,7 @@ class Inventories_controller extends Controller
 
 					echo json_encode([
 						'status' => 'success',
-						'path' => '/inventories/' . System::clean_string_to_url($query['name'])
+						'path' => '/inventories/' . System::clean_string('url', $query['name'])
 					]);
 				}
 				else
@@ -307,7 +307,7 @@ class Inventories_controller extends Controller
 				Functions::temporal('set_if_not_exist', 'inventories', 'branch', $data['branches'][0]);
 
 				if (!isset($params[0]) OR empty($params[0]))
-					header('Location: /inventories/' . System::clean_string_to_url(Functions::temporal('get', 'inventories', 'branch')['name']));
+					header('Location: /inventories/' . System::clean_string('url', Functions::temporal('get', 'inventories', 'branch')['name']));
 				else
 				{
 					$data['inventories'] = $this->model->read_inventories();

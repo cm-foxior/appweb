@@ -39,7 +39,7 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
             <?php foreach ($data['products_categories'] as $value) : ?>
             <tr>
                 <td class="smalltag"><span>{$lang.level} <?php echo $value['level']; ?></span></td>
-                <td><?php echo $value['name']; ?></td>
+                <td><?php echo $value['name'] . ' (' . System::clean_string('commas', (($value['sale_menu'] == true) ? '{$lang.sale_menu}, ' : '') . (($value['supply'] == true) ? '{$lang.supplies}, ' : '') . (($value['recipe'] == true) ? '{$lang.recipes}, ' : '') . (($value['work_material'] == true) ? '{$lang.work_material}, ' : '')) . ')'; ?></td>
                 <td class="smalltag">
                     <?php if ($value['blocked'] == true) : ?>
                     <span class="busy">{$lang.blocked}</span>
@@ -92,6 +92,29 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
                                 <input type="text" name="level" placeholder="{$lang.level}">
                             </div>
                         </div>
+                    </div>
+                </fieldset>
+                <fieldset class="fields-group">
+                    <div class="title">
+                        <h6>{$lang.to_use_in}</h6>
+                    </div>
+                    <div class="checkbox st-3">
+                        <label>
+                            <input type="checkbox" name="sale_menu" checked>
+                            <span>{$lang.sale_menu}</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="supply" checked>
+                            <span>{$lang.supplies}</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="recipe" checked>
+                            <span>{$lang.recipes}</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="work_material" checked>
+                            <span>{$lang.work_material}</span>
+                        </label>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
