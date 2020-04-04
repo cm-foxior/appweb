@@ -84,7 +84,7 @@ $(document).ready(function()
             $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
 
             if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
-                $('[data-modal="' + create_action + '"]').find('[name="inventory"]').prop('checked', ((data.inventory == true) ? true : false));
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="inventory"]').prop('checked', ((data.inventory == true) ? true : false));
 
             if (data.type == 'sale_menu' || data.type == 'supply' || data.type == 'work_material')
                 $('[data-modal="' + create_action + '"]').find('form').find('[name="token"]').val(data.token);
@@ -110,14 +110,14 @@ $(document).ready(function()
 
             $.each(data.categories, function (key, value)
             {
-                $('[data-modal="' + create_action + '"]').find('[name="categories[]"][value="' + value + '"]').prop('checked', true);
+                $('[data-modal="' + create_action + '"]').find('form').find('[name="categories[]"][value="' + value + '"]').prop('checked', true);
             });
 
             if (data.type == 'sale_menu' || data.type == 'recipe')
             {
                 $.each(data.supplies, function (key, value)
                 {
-                    $('[data-modal="' + create_action + '"]').find('[name="supplies[]"][value="' + value + '"]').prop('checked', true);
+                    $('[data-modal="' + create_action + '"]').find('form').find('[name="supplies[]"][value="' + value + '"]').prop('checked', true);
                 });
             }
 
@@ -125,7 +125,7 @@ $(document).ready(function()
             {
                 $.each(data.recipes, function (key, value)
                 {
-                    $('[data-modal="' + create_action + '"]').find('[name="recipes[]"][value="' + value + '"]').prop('checked', true);
+                    $('[data-modal="' + create_action + '"]').find('form').find('[name="recipes[]"][value="' + value + '"]').prop('checked', true);
                 });
             }
         });

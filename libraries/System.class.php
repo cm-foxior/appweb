@@ -68,13 +68,17 @@ class System
     /**
     * @summary: Entrega una cadena de texto limpia para una URL.
     *
+    * @param string $option: Tipo de .
     * @param string $string: Cadena de texto a limpiar.
     *
     * @return string
     */
-    public static function clean_string_to_url($string)
+    public static function clean_string($option, $string)
 	{
-		return strtolower(str_replace(' ', '-', $string));
+        if ($option == 'url')
+            return strtolower(str_replace(' ', '-', $string));
+        else if ($option == 'commas')
+            return substr($string, -strlen($string), -2);
     }
 
     /**

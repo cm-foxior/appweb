@@ -199,7 +199,7 @@ class Products_model extends Model
         return $query;
     }
 
-	public function read_products_categories($to_use = false)
+	public function read_products_categories($to_use = false, $type = null)
 	{
 		if ($to_use == true)
 		{
@@ -211,6 +211,7 @@ class Products_model extends Model
 
 			$where['AND'] = [
 				'account' => Session::get_value('vkye_account')['id'],
+				$type => true,
 				'blocked' => false
 			];
 		}
@@ -220,6 +221,10 @@ class Products_model extends Model
 				'id',
 				'name',
 				'level',
+				'sale_menu',
+				'supply',
+				'recipe',
+				'work_material',
 				'blocked'
 			];
 
@@ -255,7 +260,11 @@ class Products_model extends Model
 	{
 		$query = $this->database->select('products_categories', [
 			'name',
-			'level'
+			'level',
+			'sale_menu',
+			'supply',
+			'recipe',
+			'work_material'
 		], [
 			'id' => $id
 		]);
@@ -269,6 +278,10 @@ class Products_model extends Model
 			'account' => Session::get_value('vkye_account')['id'],
 			'name' => $data['name'],
 			'level' => $data['level'],
+			'sale_menu' => !empty($data['sale_menu']) ? true : false,
+			'supply' => !empty($data['supply']) ? true : false,
+			'recipe' => !empty($data['recipe']) ? true : false,
+			'work_material' => !empty($data['work_material']) ? true : false,
 			'blocked' => false
 		]);
 
@@ -279,7 +292,11 @@ class Products_model extends Model
 	{
 		$query = $this->database->update('products_categories', [
 			'name' => $data['name'],
-			'level' => $data['level']
+			'level' => $data['level'],
+			'sale_menu' => !empty($data['sale_menu']) ? true : false,
+			'supply' => !empty($data['supply']) ? true : false,
+			'recipe' => !empty($data['recipe']) ? true : false,
+			'work_material' => !empty($data['work_material']) ? true : false
 		], [
 			'id' => $data['id']
 		]);
