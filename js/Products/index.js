@@ -39,7 +39,7 @@ $(document).ready(function()
 
     $('[data-search="categories"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="categories"]').find(' > label'));
+        search_in_table($(this).val(), $('[data-table="categories"]').find(' > label'), 'hidden');
     });
 
     $('[data-search="supplies"]').on('keyup', function()

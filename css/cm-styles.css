@@ -749,12 +749,25 @@ fieldset.fields-group div.text > select:disabled {
 
 /* Checkboxes and radios */
 fieldset.fields-group div.checkbox.st-1,
-fieldset.fields-group div.checkbox.st-2 {
+fieldset.fields-group div.checkbox.st-2,
+fieldset.fields-group div.checkbox.st-3-left,
+fieldset.fields-group div.checkbox.st-3-right {
     width: 100%;
 }
 
-fieldset.fields-group div.checkbox.st-3 {
-    width: auto;
+fieldset.fields-group div.checkbox.st-3-left,
+fieldset.fields-group div.checkbox.st-3-right {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+fieldset.fields-group div.checkbox.st-3-left {
+    justify-content: flex-start;
+}
+
+fieldset.fields-group div.checkbox.st-3-right {
+    justify-content: flex-end;
 }
 
 /*  */
@@ -820,16 +833,24 @@ fieldset.fields-group div.checkbox.st-2 > label > span {
 }
 
 /*  */
-fieldset.fields-group div.checkbox.st-3 > label {
+fieldset.fields-group div.checkbox.st-3-left > label,
+fieldset.fields-group div.checkbox.st-3-right > label {
     width: auto;
-    display: inline-block;
-    padding: 5px;
     box-sizing: border-box;
     background-color: #fff;
     cursor: pointer;
 }
 
-fieldset.fields-group div.checkbox.st-3 > label > span {
+fieldset.fields-group div.checkbox.st-3-left > label {
+    padding-right: 5px;
+}
+
+fieldset.fields-group div.checkbox.st-3-right > label {
+    padding-left: 5px;
+}
+
+fieldset.fields-group div.checkbox.st-3-left > label > span,
+fieldset.fields-group div.checkbox.st-3-right > label > span {
     width: auto;
     font-size: 12px;
     font-weight: 400;
@@ -921,7 +942,7 @@ fieldset.fields-group div.compound.st-1-right > select {
     position: absolute;
     top: 0px;
     bottom: 0px;
-    padding: 0px 10px;
+    padding: 0px 10px 0px 20px;
     border: none;
     box-sizing: border-box;
     background-color: #e0e0e0;
@@ -1149,42 +1170,61 @@ fieldset.fields-group div.compound.st-5-triple > div > label > input[type="radio
     cursor: no-drop;
 }
 
-/*  */
-fieldset.fields-group div.compound.st-6 > div[data-preview] {
+/* --- */
+fieldset.fields-group div.compound.st-6 > div[data-preview],
+fieldset.fields-group div.compound.st-6 > div[data-search],
+fieldset.fields-group div.compound.st-6 > div[data-list] {
     width: 100%;
 }
 
-fieldset.fields-group div.compound.st-6 > div[data-preview] > input[data-preview-value] {
-    width: 100%;
-    height: 50px;
-    padding: 0px 20px;
+fieldset.fields-group div.compound.st-6 > div[data-preview] {
+    display: none;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 5px;
+    box-sizing: border-box;
     border: 1px solid #eee;
     border-radius: 50px;
     box-sizing: border-box;
-    background-color: #eee;
-    font-size: 12px;
-    font-weight: 400;
-    color: #212121;
-    cursor: pointer;
 }
 
-fieldset.fields-group div.compound.st-6 > div[data-preview] > input[data-preview-selected] {
-    display: none;
+fieldset.fields-group div.compound.st-6 > div[data-preview].open {
+    display: flex;
 }
 
 fieldset.fields-group div.compound.st-6 > div[data-search],
 fieldset.fields-group div.compound.st-6 > div[data-list] {
-    width: 100%;
     position: relative;
+}
+
+fieldset.fields-group div.compound.st-6 > div[data-search].close {
     display: none;
+}
+
+fieldset.fields-group div.compound.st-6 > div[data-list] {
     margin-top: 5px;
 }
 
-fieldset.fields-group div.compound.st-6 > div[data-search].open,
-fieldset.fields-group div.compound.st-6 > div[data-list].open {
-    display: block;
+/*  */
+fieldset.fields-group div.compound.st-6 > div[data-preview] > a {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0px;
+    border-radius: 50%;
+    background-color: #eee;
+    font-size: 16px;
+    font-weight: 600;
+    color: #757575;
 }
 
+fieldset.fields-group div.compound.st-6 > div[data-preview] > input {
+    display: none;
+}
+
+/*  */
 fieldset.fields-group div.compound.st-6 > div[data-search] > span {
     width: 50px;
     position: absolute;
@@ -1199,7 +1239,7 @@ fieldset.fields-group div.compound.st-6 > div[data-search] > span {
     color: #757575;
 }
 
-fieldset.fields-group div.compound.st-6 > div[data-search] > input[data-search-value] {
+fieldset.fields-group div.compound.st-6 > div[data-search] > input {
     width: 100%;
     height: 50px;
     padding: 0px 20px 0px 50px;
@@ -1212,39 +1252,57 @@ fieldset.fields-group div.compound.st-6 > div[data-search] > input[data-search-v
     color: #212121;
 }
 
+/*  */
+fieldset.fields-group div.compound.st-6 > div[data-preview] > div,
 fieldset.fields-group div.compound.st-6 > div[data-list] > div {
-    width: 100%;
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 5px;
+}
+
+fieldset.fields-group div.compound.st-6 > div[data-preview] > div {
+    width: calc(100% - 50px);
+}
+
+fieldset.fields-group div.compound.st-6 > div[data-list] > div {
+    width: 100%;
+}
+
+fieldset.fields-group div.compound.st-6 > div[data-preview] > div > figure,
+fieldset.fields-group div.compound.st-6 > div[data-list] > div > figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+fieldset.fields-group div.compound.st-6 > div[data-preview] > div > figure {
+    width: 50px;
+    height: 50px;
 }
 
 fieldset.fields-group div.compound.st-6 > div[data-list] > div > figure {
     width: 40px;
     height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    border-radius: 50%;
-    overflow: hidden;
 }
 
+fieldset.fields-group div.compound.st-6 > div[data-preview] > div > figure > img,
 fieldset.fields-group div.compound.st-6 > div[data-list] > div > figure > img {
     width: 100%;
 }
 
+fieldset.fields-group div.compound.st-6 > div[data-preview] > div > p,
 fieldset.fields-group div.compound.st-6 > div[data-list] > div > p {
     width: auto;
-    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
     font-size: 12px;
     font-weight: 400;
     color: #757575;
 }
 
-fieldset.fields-group div.compound.st-6 > div[data-list] > div > a[data-list-value] {
+fieldset.fields-group div.compound.st-6 > div[data-list] > a[data-value] {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -1468,7 +1526,7 @@ fieldset.fields-group div.uploader[data-multiple-uploader] > input[data-select] 
 /* Title */
 fieldset.fields-group div.title {
     width: 100%;
-    padding-bottom: 5px;
+    padding-top: 10px;
     box-sizing: border-box;
 }
 
@@ -1476,7 +1534,7 @@ fieldset.fields-group div.title > h6 {
     width: 100%;
     padding: 0px 5px;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     color: #757575;
 }

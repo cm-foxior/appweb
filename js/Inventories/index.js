@@ -38,11 +38,11 @@ $(document).ready(function()
         validate_string(['uppercase','lowercase','int'], $(this).val(), $(this));
     });
 
-    $('[name="product"]').parents('.st-6').find('[data-list-value]').on('click', function()
+    $('[name="product"]').parents('.st-6').find('[data-list] > a').on('click', function()
     {
         $.ajax({
             type: 'POST',
-            data: 'action=read_product_to_add_to_input_table&id=' + $(this).data('list-value'),
+            data: 'action=read_product_to_add_to_input_table&id=' + $(this).data('value'),
             processData: false,
             cache: false,
             dataType: 'json',
@@ -53,6 +53,11 @@ $(document).ready(function()
                     $('[name="input_quantity"]').parent().find('span').html(((validate_string('empty', response.data.input_unity) == false) ? response.data.input_unity : 'No aplica'));
                     $('[name="input_quantity"]').attr('disabled', ((validate_string('empty', response.data.input_unity) == false) ? false : true));
                     $('[name="storage_quantity"]').parent().find('span').html(response.data.storage_unity);
+
+                    if (validate_string('empty', response.data.input_unity) == false)
+                        $('[name="input_quantity"]').focus();
+                    else
+                        $('[name="storage_quantity"]').focus();
                 }
                 else if (response.status == 'error')
                     open_notification_modal('alert', response.message);
@@ -77,7 +82,7 @@ $(document).ready(function()
 
     $('[data-search="categories"]').on('keyup', function()
     {
-        search_in_table($(this).val(), $('[data-table="categories"]').find(' > label'));
+        search_in_table($(this).val(), $('[data-table="categories"]').find(' > label'), 'hidden');
     });
 
     $('[data-action="add_product_to_input_table"]').on('click', function()
@@ -98,8 +103,11 @@ $(document).ready(function()
             {
                 check_form_errors(form, response, function()
                 {
-                    $('[name="product"]').parents('.st-6').find('[data-preview-value]').val('');
+                    $('[name="product"]').parents('.compound.st-6').find('[data-preview]').removeClass('open');
                     $('[name="product"]').val('');
+                    $('[name="product"]').parents('.compound.st-6').find('[data-preview] > div').html('');
+                    $('[name="product"]').parents('.compound.st-6').find('[data-search]').removeClass('close');
+                    $('[name="product"]').parents('.compound.st-6').find('[data-search] > input').focus();
                     $('[name="input_quantity"]').val('');
                     $('[name="input_quantity"]').parent().find('span').html('No aplica');
                     $('[name="storage_quantity"]').val('');

@@ -121,10 +121,10 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         <input type="text" name="name" placeholder="{$lang.name}">
                     </div>
                     <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'supply' OR $data['type'] == 'work_material') : ?>
-                    <div class="checkbox st-3">
+                    <div class="checkbox st-3-right">
                         <label>
+                            <span>{$lang.subject_to_inventory}</span>
                             <input type="checkbox" name="inventory" checked>
-                            <span>{$lang.product_subject_to_inventory}</span>
                         </label>
                     </div>
                     <?php endif; ?>
@@ -141,7 +141,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                         <div class="span4">
                             <div class="text">
                                 <select name="input_unity">
-                                    <option value="" selected>{$lang.not_apply_input_unity}</option>
+                                    <option value="" selected hidden>{$lang.input_unity}</option>
                                     <?php foreach ($data['products_unities'] as $value) : ?>
                                     <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                     <?php endforeach; ?>
@@ -175,7 +175,7 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                             <div class="compound st-1-right">
                                 <input type="text" name="gain_margin_amount" placeholder="{$lang.gain_margin}">
                                 <select name="gain_margin_type">
-                                    <option value="" selected>{$lang.not_type}</option>
+                                    <option value="" selected hidden>{$lang.type}</option>
                                     <option value="%">% {$lang.percentage}</option>
                                     <option value="$">$ {$lang.fixed_amount}</option>
                                 </select>
@@ -202,24 +202,16 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php endif; ?>
                 <?php if (!empty($data['products_categories'])) : ?>
                 <fieldset class="fields-group">
-                    <div class="title">
-                        <h6>{$lang.categories}</h6>
-                    </div>
-                    <?php if (Functions::summation('count', $data['products_categories'], true) > 20) : ?>
                     <div class="compound st-4-left">
                         <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="categories" placeholder="{$lang.search}">
+                        <input type="text" data-search="categories" placeholder="{$lang.categories}">
                     </div>
-                    <?php endif; ?>
                     <div class="checkbox st-1" data-table="categories">
                         <?php foreach ($data['products_categories'] as $value) : ?>
-                            <?php foreach ($value as $subvalue) : ?>
-                            <label>
-                                <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
-                                <span><?php echo $subvalue['name']; ?></span>
-                            </label>
-                            <?php endforeach; ?>
-                            <i class="fas fa-circle"></i>
+                        <label class="hidden">
+                            <input type="checkbox" name="categories[]" value="<?php echo $value['id']; ?>">
+                            <span><?php echo $value['name']; ?></span>
+                        </label>
                         <?php endforeach; ?>
                     </div>
                 </fieldset>
@@ -227,12 +219,9 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php if ($data['type'] == 'sale_menu' OR $data['type'] == 'recipe') : ?>
                     <?php if (!empty($data['products_supplies'])) : ?>
                     <fieldset class="fields-group">
-                        <div class="title">
-                            <h6>{$lang.supplies}</h6>
-                        </div>
                         <div class="compound st-4-left">
                             <span><i class="fas fa-search"></i></span>
-                            <input type="text" data-search="supplies" placeholder="{$lang.search}">
+                            <input type="text" data-search="supplies" placeholder="{$lang.supplies}">
                         </div>
                         <div class="checkbox st-1" data-table="supplies">
                             <?php foreach ($data['products_supplies'] as $value) : ?>
@@ -248,12 +237,9 @@ $this->dependencies->add(['js', '{$path.js}Products/index.min.js']);
                 <?php if ($data['type'] == 'sale_menu') : ?>
                     <?php if (!empty($data['products_recipes'])) : ?>
                     <fieldset class="fields-group">
-                        <div class="title">
-                            <h6>{$lang.recipes}</h6>
-                        </div>
                         <div class="compound st-4-left">
                             <span><i class="fas fa-search"></i></span>
-                            <input type="text" data-search="recipes" placeholder="{$lang.search}">
+                            <input type="text" data-search="recipes" placeholder="{$lang.recipes}">
                         </div>
                         <div class="checkbox st-2" data-table="recipes">
                             <?php foreach ($data['products_recipes'] as $value) : ?>
