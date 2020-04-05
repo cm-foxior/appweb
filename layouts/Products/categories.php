@@ -96,23 +96,23 @@ $this->dependencies->add(['js', '{$path.js}Products/categories.min.js']);
                 </fieldset>
                 <fieldset class="fields-group">
                     <div class="title">
-                        <h6>{$lang.to_use_in}</h6>
+                        <h6>{$lang.available_for}:</h6>
                     </div>
-                    <div class="checkbox st-3">
+                    <div class="checkbox st-1">
                         <label>
-                            <input type="checkbox" name="sale_menu" checked>
+                            <input type="checkbox" name="sale_menu">
                             <span>{$lang.sale_menu}</span>
                         </label>
                         <label>
-                            <input type="checkbox" name="supply" checked>
+                            <input type="checkbox" name="supply">
                             <span>{$lang.supplies}</span>
                         </label>
                         <label>
-                            <input type="checkbox" name="recipe" checked>
+                            <input type="checkbox" name="recipe">
                             <span>{$lang.recipes}</span>
                         </label>
                         <label>
-                            <input type="checkbox" name="work_material" checked>
+                            <input type="checkbox" name="work_material">
                             <span>{$lang.work_material}</span>
                         </label>
                     </div>

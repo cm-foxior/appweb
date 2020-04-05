@@ -11,31 +11,32 @@ class Products_model extends Model
 
 	public function read_products($type, $to_use = false)
 	{
-		$inners = [];
-		$and['products.account'] = Session::get_value('vkye_account')['id'];
-		$and['products.type'] = $type;
-
 		if ($to_use == true)
 		{
-			$fields = [
-				'products.id',
-				'products.name'
-			];
-
-			$and['products.blocked'] = false;
+			$query = System::decode_json_to_array($this->database->select('products', [
+				'id',
+				'name'
+			], [
+				'AND' => [
+					'account' => Session::get_value('vkye_account')['id'],
+					'type' => $type,
+					'blocked' => false
+				],
+				'ORDER' => [
+					'name' => 'ASC'
+				]
+			]));
 		}
 		else
 		{
-			$inners = [
+			$query = System::decode_json_to_array($this->database->select('products', [
 				'[>]products_unities(products_inputs_unities)' => [
 					'input_unity' => 'id'
 				],
 				'[>]products_unities(products_storages_unities)' => [
 					'storage_unity' => 'id'
 				]
-			];
-
-			$fields = [
+			], [
 				'products.id',
 				'products.avatar',
 				'products.name',
@@ -44,15 +45,16 @@ class Products_model extends Model
 				'products_storages_unities.name(storage_unity)',
 				'products.price',
 				'products.blocked'
-			];
+			], [
+				'AND' => [
+					'products.account' => Session::get_value('vkye_account')['id'],
+					'products.type' => $type
+				],
+				'ORDER' => [
+					'products.name' => 'ASC'
+				]
+			]));
 		}
-
-		$query = System::decode_json_to_array($this->database->select('products', $inners, $fields, [
-			'AND' => $and,
-			'ORDER' => [
-				'products.name' => 'ASC'
-			]
-		]));
 
 		return $query;
 	}
@@ -205,8 +207,7 @@ class Products_model extends Model
 		{
 			$fields = [
 				'id',
-				'name',
-				'level'
+				'name'
 			];
 
 			$where['AND'] = [
@@ -238,22 +239,7 @@ class Products_model extends Model
 
 		$query = $this->database->select('products_categories', $fields, $where);
 
-		if ($to_use == true)
-		{
-			$return = [];
-
-			foreach ($query as $key => $value)
-			{
-				if (array_key_exists($value['level'], $return))
-					array_push($return[$value['level']], $value);
-				else
-					$return[$value['level']] = [$value];
-			}
-
-			return $return;
-		}
-		else
-			return $query;
+		return $query;
 	}
 
 	public function read_product_category($id)

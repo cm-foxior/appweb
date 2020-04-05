@@ -277,16 +277,17 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                 <fieldset class="fields-group">
                     <div class="compound st-6">
                         <div data-preview>
-                            <input type="text" placeholder="{$lang.product}" data-preview-value>
-                            <input type="text" name="product" readonly data-preview-selected>
+                            <input type="text" name="product">
+                            <div></div>
+                            <a><i class="fas fa-search"></i></a>
                         </div>
                         <div data-search>
                             <span><i class="fas fa-search"></i></span>
-                            <input type="text" placeholder="{$lang.search}" data-search-value>
+                            <input type="text" placeholder="{$lang.product}">
                         </div>
-                        <div data-list>
-                            <?php foreach ($data['products'] as $value) : ?>
-                            <div class="hidden">
+                        <?php foreach ($data['products'] as $value) : ?>
+                        <div data-list class="hidden">
+                            <div>
                                 <figure>
                                     <?php if (!empty($value['avatar'])) : ?>
                                     <img src="{$path.uploads}<?php echo $value['avatar']; ?>">
@@ -294,11 +295,11 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                                     <img src="{$path.images}empty.png">
                                     <?php endif; ?>
                                 </figure>
-                                <p><?php echo $value['token'] . ' | ' .  $value['name'] . ' | {$lang.' . $value['type'] . '}'; ?></p>
-                                <a data-list-value="<?php echo $value['id']; ?>"></a>
+                                <p><?php echo $value['name'] . ' (' . $value['token'] . ' - {$lang.' . $value['type'] . '})'; ?></p>
                             </div>
-                            <?php endforeach; ?>
+                            <a data-value="<?php echo $value['id']; ?>"></a>
                         </div>
+                        <?php endforeach; ?>
                     </div>
                 </fieldset>
                 <fieldset class="fields-group">
@@ -340,24 +341,16 @@ $this->dependencies->add(['js', '{$path.js}Inventories/index.min.js']);
                 </fieldset>
                 <?php if (!empty($data['inventories_categories'])) : ?>
                 <fieldset class="fields-group">
-                    <div class="title">
-                        <h6>{$lang.categories}</h6>
-                    </div>
-                    <?php if (Functions::summation('count', $data['inventories_categories'], true) > 20) : ?>
                     <div class="compound st-4-left">
                         <span><i class="fas fa-search"></i></span>
-                        <input type="text" data-search="categories" placeholder="{$lang.search}">
+                        <input type="text" data-search="categories" placeholder="{$lang.categories}">
                     </div>
-                    <?php endif; ?>
                     <div class="checkbox st-1" data-table="categories">
                         <?php foreach ($data['inventories_categories'] as $value) : ?>
-                            <?php foreach ($value as $subvalue) : ?>
-                            <label>
-                                <input type="checkbox" name="categories[]" value="<?php echo $subvalue['id']; ?>">
-                                <span><?php echo $subvalue['name']; ?></span>
-                            </label>
-                            <?php endforeach; ?>
-                            <i class="fas fa-circle"></i>
+                        <label class="hidden">
+                            <input type="checkbox" name="categories[]" value="<?php echo $value['id']; ?>">
+                            <span><?php echo $value['name']; ?></span>
+                        </label>
                         <?php endforeach; ?>
                     </div>
                 </fieldset>

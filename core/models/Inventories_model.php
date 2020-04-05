@@ -431,8 +431,7 @@ class Inventories_model extends Model
 		{
 			$fields = [
 				'id',
-				'name',
-				'level'
+				'name'
 			];
 
 			if (is_array($to_use))
@@ -464,27 +463,7 @@ class Inventories_model extends Model
 
 		$query = $this->database->select('inventories_categories', $fields, $where);
 
-		if (is_array($to_use) OR $to_use == true)
-		{
-			if (is_array($to_use))
-				return $query;
-			else if ($to_use == true)
-			{
-				$return = [];
-
-				foreach ($query as $key => $value)
-				{
-					if (array_key_exists($value['level'], $return))
-						array_push($return[$value['level']], $value);
-					else
-						$return[$value['level']] = [$value];
-				}
-
-				return $return;
-			}
-		}
-		else
-			return $query;
+		return $query;
 	}
 
 	public function read_inventory_category($id)

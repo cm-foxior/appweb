@@ -73,30 +73,30 @@ $(document).ready(function()
     /**
     * @summary Compound st-6
     */
-    $('.compound.st-6').find('[data-preview-value]').on('click', function()
+    $('.compound.st-6').find('[data-search] > input').on('keyup', function()
     {
-        $(this).parents('.compound.st-6').find('[data-search]').addClass('open');
-        $(this).parents('.compound.st-6').find('[data-search] > [data-search-value]').focus();
+        search_in_table($(this).val(), $(this).parents('.compound.st-6').find('[data-list]'), 'hidden');
     });
 
-    $('.compound.st-6').find('[data-search-value]').on('keyup', function()
+    $('.compound.st-6').find('[data-list] > [data-value]').on('click', function()
     {
-        if ($(this).val().length > 0)
-            $(this).parents('.compound.st-6').find('[data-list]').addClass('open');
-        else if ($(this).val().length <= 0)
-            $(this).parents('.compound.st-6').find('[data-list]').removeClass('open');
-
-        search_in_table($(this).val(), $(this).parents('.compound.st-6').find('[data-list] > div'), 'hidden');
+        $(this).parents('.compound.st-6').find('[data-preview]').addClass('open');
+        $(this).parents('.compound.st-6').find('[data-preview] > input').val($(this).data('value'));
+        $(this).parents('.compound.st-6').find('[data-preview] > div').html($(this).parent().find('div').html());
+        $(this).parents('.compound.st-6').find('[data-search]').addClass('close');
+        $(this).parents('.compound.st-6').find('[data-search] > input').val('');
+        $(this).parents('.compound.st-6').find('[data-list]').addClass('hidden');
     });
 
-    $('.compound.st-6').find('[data-list-value]').on('click', function()
+    $('.compound.st-6').find('[data-preview] > a').on('click', function()
     {
-        $(this).parents('.compound.st-6').find('[data-preview-value]').val($(this).parent().find('p').html());
-        $(this).parents('.compound.st-6').find('[data-preview-selected]').val($(this).data('list-value'));
-        $(this).parents('.compound.st-6').find('[data-search-value]').val('');
-        $(this).parents('.compound.st-6').find('[data-search]').removeClass('open');
-        $(this).parents('.compound.st-6').find('[data-list]').removeClass('open');
-        $(this).parents('.compound.st-6').find('[data-list] > div').addClass('hidden');
+        $(this).parents('.compound.st-6').find('[data-preview]').removeClass('open');
+        $(this).parents('.compound.st-6').find('[data-preview] > input').val('');
+        $(this).parents('.compound.st-6').find('[data-preview] > div').html('');
+        $(this).parents('.compound.st-6').find('[data-search]').removeClass('close');
+        $(this).parents('.compound.st-6').find('[data-search] > input').val('');
+        $(this).parents('.compound.st-6').find('[data-search] > input').focus();
+        $(this).parents('.compound.st-6').find('[data-list]').addClass('hidden');
     });
 });
 
