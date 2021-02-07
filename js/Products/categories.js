@@ -2,14 +2,11 @@
 
 $(document).ready(function()
 {
+    $('[data-search="products_categories"]').focus();
+
     $('[data-search="products_categories"]').on('keyup', function()
     {
         search_in_table($(this).val(), $('[data-table="products_categories"]').find(' > tbody > tr'));
-    });
-
-    $('[name="level"]').on('keyup', function()
-    {
-        validate_string('int', $(this).val(), $(this));
     });
 
     var create_action = 'create_product_category';
@@ -28,6 +25,16 @@ $(document).ready(function()
         open_form_modal('create', $('[data-modal="' + create_action + '"]'));
     });
 
+    $('[name="level"]').on('keyup', function()
+    {
+        validate_string('int', $(this).val(), $(this));
+    });
+
+    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
+    {
+        send_form_modal('create', $(this), event);
+    });
+
     $(document).on('click', '[data-action="' + update_action + '"]', function()
     {
         action = read_action;
@@ -38,18 +45,13 @@ $(document).ready(function()
         {
             action = update_action;
 
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="level"]').val(data.level);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="sale_menu"]').prop('checked', ((data.sale_menu == true) ? true : false));
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="supply"]').prop('checked', ((data.supply == true) ? true : false));
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="recipe"]').prop('checked', ((data.recipe == true) ? true : false));
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="work_material"]').prop('checked', ((data.work_material == true) ? true : false));
+            $('[name="name"]').val(data.name);
+            $('[name="level"]').val(data.level);
+            $('[name="sale_menu"]').prop('checked', ((data.sale_menu == true) ? true : false));
+            $('[name="supply"]').prop('checked', ((data.supply == true) ? true : false));
+            $('[name="recipe"]').prop('checked', ((data.recipe == true) ? true : false));
+            $('[name="work_material"]').prop('checked', ((data.work_material == true) ? true : false));
         });
-    });
-
-    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
-    {
-        send_form_modal('create', $(this), event);
     });
 
     $(document).on('click', '[data-action="' + block_action + '"]', function()

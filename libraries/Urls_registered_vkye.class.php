@@ -13,6 +13,10 @@ class Urls_registered_vkye
                 'controller' => 'Index',
                 'method' => 'index'
             ],
+            '/system' => [
+                'controller' => 'System',
+                'method' => 'index'
+            ],
             '/login' => [
                 'controller' => 'Login',
                 'method' => 'index'
@@ -21,13 +25,33 @@ class Urls_registered_vkye
                 'controller' => 'Dashboard',
                 'method' => 'index'
             ],
-            '/inventories' => [
+            '/inventories/movements' => [
                 'controller' => 'Inventories',
-                'method' => 'index'
+                'method' => 'movements'
             ],
-            '/inventories/%param%' => [
+            '/inventories/audits' => [
                 'controller' => 'Inventories',
-                'method' => 'index'
+                'method' => 'audits'
+            ],
+            '/inventories/audits/%param%' => [
+                'controller' => 'Inventories',
+                'method' => 'audits'
+            ],
+            '/inventories/audits/%param%/%param%' => [
+                'controller' => 'Inventories',
+                'method' => 'audits'
+            ],
+            '/inventories/periods' => [
+                'controller' => 'Inventories',
+                'method' => 'periods'
+            ],
+            '/inventories/periods/%param%' => [
+                'controller' => 'Inventories',
+                'method' => 'periods'
+            ],
+            '/inventories/periods/%param%/%param%' => [
+                'controller' => 'Inventories',
+                'method' => 'periods'
             ],
             '/inventories/types' => [
                 'controller' => 'Inventories',
@@ -53,9 +77,9 @@ class Urls_registered_vkye
                 'controller' => 'Products',
                 'method' => 'unities'
             ],
-            '/products/barcodes' => [
+            '/products/contents' => [
                 'controller' => 'Products',
-                'method' => 'barcodes'
+                'method' => 'contents'
             ],
             '/providers' => [
                 'controller' => 'Providers',

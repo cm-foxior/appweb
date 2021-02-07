@@ -33,7 +33,7 @@ class Login_model extends Model
 					'avatar',
 					'name',
 					'type',
-					'token',
+					'path',
 					'email',
 					'description',
 					'website',
@@ -47,7 +47,7 @@ class Login_model extends Model
 					'work_team',
 					'permissions',
 					'settings',
-					'status'
+					'blocked'
 				], [
 					'id' => $value['id']
 				]));

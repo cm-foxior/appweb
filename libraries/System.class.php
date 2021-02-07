@@ -19,6 +19,104 @@ defined('_EXEC') or die;
 class System
 {
     /**
+    * @summary: Resguarda una variable de forma temporal.
+    *
+    * @param string $option:
+    * @param string $module:
+    * @param string $key:
+    * @param int $value:
+    *
+    * @return string
+    * @return array
+    * @return boolean
+    */
+    public static function temporal($option, $module, $key, $value = null)
+    {
+        $temporal = Session::get_value('vkye_temporal');
+
+        if ($option == 'set_forced' OR $option == 'set_if_not_exist')
+        {
+            if ($option == 'set_forced')
+                $temporal[$module][$key] = $value;
+            else if ($option == 'set_if_not_exist')
+            {
+                if (!array_key_exists($key, $temporal[$module]) OR empty($temporal[$module][$key]))
+                    $temporal[$module][$key] = $value;
+            }
+
+            Session::set_value('vkye_temporal', $temporal);
+        }
+        else if ($option == 'get')
+            return (array_key_exists($module, $temporal) AND array_key_exists($key, $temporal[$module])) ? $temporal[$module][$key] : [];
+        else if ($option == 'get_if_exists')
+            return (array_key_exists($module, $temporal) AND array_key_exists($key, $temporal[$module])) ? true : false;
+    }
+
+    /**
+    * @summary: Realiza la sumatoria de un array de números o texto.
+    *
+    * @param string $option:
+    * @param string $data:
+    * @param string $key:
+    * @param int $subkey:
+    *
+    * @return int
+    * @return float
+    * @return string
+    */
+    public static function summation($option, $data, $key, $subkey = null, $marker = ', ')
+    {
+        if ($option == 'math' OR $option == 'count')
+            $sum = 0;
+        else if ($option == 'string')
+            $sum = '';
+
+        foreach ($data as $value)
+        {
+            if (!empty($subkey))
+            {
+                foreach ($value[$subkey] as $subvalue)
+                {
+                    if (isset($key) AND !empty($key))
+                    {
+                        if ($option == 'math')
+                            $sum += $subvalue[$key];
+                    }
+                }
+            }
+            else
+            {
+                if (isset($key) AND !empty($key))
+                {
+                    if ($option == 'math')
+                        $sum += $value[$key];
+                    else if ($option == 'count')
+                    {
+                        foreach ($value as $subvalue)
+                            $sum += 1;
+                    }
+                    else if ($option == 'string')
+                        $sum .= $value[$key] . $marker;
+                }
+                else
+                {
+                    if ($option == 'math')
+                        $sum += $value;
+                    else if ($option == 'count')
+                        $sum += 1;
+                    else if ($option == 'string')
+                        $sum .= $value . $marker;
+                }
+            }
+        }
+
+        if ($option == 'math' OR $option == 'count')
+            return $sum;
+        else if ($option == 'string')
+            return substr($sum, 0, -strlen($marker));
+    }
+
+    /**
     * @summary: Entrega una cadena de texto aleatoria.
     *
     * @param string $option: (allcase, uppercase, lowercase) Formato en el que retornará la cadena de texto.

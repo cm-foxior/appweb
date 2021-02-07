@@ -28,7 +28,7 @@ class Fileloader
     *
     * @return string
     */
-    public static function up($file, $upload_directory = PATH_UPLOADS, $valid_extensions = ['png','jpg','jpeg'], $maximum_file_size = 'unlimited', $multiple = false)
+    public static function up($file, $upload_directory = PATH_UPLOADS, $valid_extensions = ['png','jpg','jpeg','doc','docx','xls','xlsx','pdf'], $maximum_file_size = 'unlimited', $multiple = false)
 	{
         if (!empty($file))
         {
@@ -42,7 +42,7 @@ class Fileloader
             {
                 foreach ($file as $key => $value)
                 {
-                    $uploader->set_file_name($value['name']);
+                    $uploader->set_file_name();
                     $uploader->set_file_temporal_name($value['tmp_name']);
                     $uploader->set_file_type($value['type']);
                     $uploader->set_file_size($value['size']);
@@ -62,7 +62,7 @@ class Fileloader
             }
             else if ($multiple == false)
             {
-                $uploader->set_file_name($file['name']);
+                $uploader->set_file_name();
                 $uploader->set_file_temporal_name($file['tmp_name']);
                 $uploader->set_file_type($file['type']);
                 $uploader->set_file_size($file['size']);
@@ -83,6 +83,28 @@ class Fileloader
         else
             return null;
 	}
+
+    /**
+    * @summary: Sube archivos al servidor convirtiendolos desde base 64.
+    *
+    * @param file $file: Archivo a subir.
+    * @param string $upload_directory: Directorio donde se va subir $file.
+    *
+    * @return string
+    */
+    public static function base64($file, $upload_directory = PATH_UPLOADS, $extension = '.png')
+    {
+        $security = new Security();
+
+        $file = explode(',', $file);
+        $file = base64_decode($file[1]);
+        $name = $security->random_string(16) . $extension;
+        $path = $upload_directory . $name;
+
+        file_put_contents($path, $file);
+
+        return $name;
+    }
 
     /**
     * @summary: Elimina archivos del servidor.

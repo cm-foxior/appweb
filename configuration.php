@@ -30,6 +30,15 @@ class Configuration
 	public static $web_page = 'Foxior';
 
 	/**
+     * Versión del sitio web.
+	 *
+	 * @static
+	 *
+     * @var string $web_version
+     */
+	public static $web_version = '2.0';
+
+	/**
      * Idioma por default
 	 * @example es, en, fr, ru..
 	 *
@@ -47,7 +56,7 @@ class Configuration
 	 *
      * @var string $error_reporting
      */
-	public static $error_reporting = 'none';
+	public static $error_reporting = 'development';
 
 	/**
      * Modo para debuggear errores.
@@ -147,7 +156,7 @@ class Configuration
 	 *
      * @var string $db_name
      */
-	public static $db_name = 'fx-website';
+	public static $db_name = 'foxior';
 
 	/**
      * Usuario de la base de datos
@@ -165,7 +174,7 @@ class Configuration
 	 *
      * @var string $db_pass
      */
-	public static $db_pass = 'npSr&231';
+	public static $db_pass = 'r7p9&qO1';
 
 	/**
      * Tipo de caracteres para la base de datos. Opcional.
@@ -221,7 +230,7 @@ class Configuration
 	 *
      * @var boolean $smtp_auth
      */
-	public static $smtp_auth = true;
+	public static $smtp_auth = false;
 
 	/**
      * Dominio o IP del servidor SMTP.
@@ -230,7 +239,7 @@ class Configuration
 	 *
      * @var string $smtp_host
      */
-	public static $smtp_host = 'mail.codemonkey.com.mx';
+	public static $smtp_host = '';
 
 	/**
      * Usuario de la cuenta smtp.
@@ -240,7 +249,7 @@ class Configuration
 	 *
      * @var string $smtp_user
      */
-	public static $smtp_user = 'noreply@codemonkey.com.mx';
+	public static $smtp_user = '';
 
 	/**
      * Contraseña de la cuenta smtp.
@@ -249,7 +258,7 @@ class Configuration
 	 *
      * @var string $smtp_pass
      */
-	public static $smtp_pass = 'Xxk71#g7';
+	public static $smtp_pass = '';
 
 	/**
      * Seguridad de la encriptacion para el envio de SMTP.
@@ -269,4 +278,13 @@ class Configuration
      * @var integer $smtp_port
      */
 	public static $smtp_port = 465;
+
+	/**
+     * Variables extras del sitio web.
+	 *
+	 * @static
+	 *
+     * @var integer $vars
+     */
+	public static $vars = [];
 }

@@ -24,9 +24,9 @@ class Validations
     *
     * @return boolean
     */
-    public static function empty($data)
+    public static function empty($data, $array = false)
     {
-        if (is_array($data))
+        if ($array == true)
         {
             $check = true;
             $count = 0;

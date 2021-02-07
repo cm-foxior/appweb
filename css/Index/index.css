@@ -1,0 +1,29 @@
+
+body {
+    position: relative;
+}
+
+.floating_contacts {
+    width: 50px;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 99;
+}
+
+.floating_contacts > a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    cursor: pointer;
+}

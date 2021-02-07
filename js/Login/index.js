@@ -2,9 +2,9 @@
 
 $(document).ready(function()
 {
-    $('form[name="login"]').on('submit', function(e)
+    $('form[name="login"]').on('submit', function(event)
     {
-        e.preventDefault();
+        event.preventDefault();
 
         var form = $(this);
         var data = new FormData(form[0]);

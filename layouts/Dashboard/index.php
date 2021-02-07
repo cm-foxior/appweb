@@ -2,11 +2,11 @@
 
 defined('_EXEC') or die;
 
-$this->dependencies->add(['js', '{$path.js}Dashboard/index.min.js']);
+$this->dependencies->add(['js', '{$path.js}Dashboard/index.js']);
 
 ?>
 
 %{header}%
-<main>
+<main class="workspace unmodbar">
 
 </main>

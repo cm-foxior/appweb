@@ -30,33 +30,30 @@ class Permissions
         $access = false;
         $paths = [];
 
-        array_push($paths, '/Dashboard/index');
-
         if ($option == 'account')
         {
             if (!empty(Session::get_value('vkye_account')))
             {
                 if (Session::get_value('vkye_account')['status'] == true)
                 {
+                    array_push($paths, '/Dashboard/index');
+                    array_push($paths, '/System/index');
+
                     foreach (Session::get_value('vkye_account')['permissions'] as $key => $value)
                     {
                         switch ($value)
                         {
-                            case 'accounting' :
-                                break;
-
-                            case 'ebilling' :
-                                break;
-
                             case 'inventories' :
-                                array_push($paths, '/Inventories/index');
+                                array_push($paths, '/Inventories/movements');
+                                array_push($paths, '/Inventories/audits');
+                                array_push($paths, '/Inventories/periods');
                                 array_push($paths, '/Inventories/types');
                                 array_push($paths, '/Inventories/locations');
                                 array_push($paths, '/Inventories/categories');
                                 array_push($paths, '/Products/index');
                                 array_push($paths, '/Products/categories');
                                 array_push($paths, '/Products/unities');
-                                array_push($paths, '/Products/barcodes');
+                                array_push($paths, '/Products/contents');
                                 array_push($paths, '/Providers/index');
                                 array_push($paths, '/Branches/index');
                                 break;
@@ -84,20 +81,62 @@ class Permissions
             {
                 if (Session::get_value('vkye_user')['permissions'] != 'all')
                 {
+                    array_push($paths, '/Dashboard/index');
+                    array_push($paths, '/System/index');
+
                     foreach (Session::get_value('vkye_user')['permissions'] as $key => $value)
                     {
                         switch ($value)
                         {
-                            case 'input_inventories' :
-                                array_push($paths, '/Inventories/index');
+                            case 'create_inventories_inputs' :
+                                array_push($paths, '/Inventories/movements');
                                 break;
 
-                            case 'output_inventories' :
-                                array_push($paths, '/Inventories/index');
+                            case 'update_inventories_inputs' :
+                                array_push($paths, '/Inventories/movements');
                                 break;
 
-                            case 'transfer_inventories' :
-                                array_push($paths, '/Inventories/index');
+                            case 'delete_inventories_inputs' :
+                                array_push($paths, '/Inventories/movements');
+                                break;
+
+                            case 'create_inventories_outputs' :
+                                array_push($paths, '/Inventories/movements');
+                                break;
+
+                            case 'update_inventories_outputs' :
+                                array_push($paths, '/Inventories/movements');
+                                break;
+
+                            case 'delete_inventories_outputs' :
+                                array_push($paths, '/Inventories/movements');
+                                break;
+
+                            case 'create_inventories_transfers' :
+                                array_push($paths, '/Inventories/movements');
+                                break;
+
+                            case 'create_inventories_audits' :
+                                array_push($paths, '/Inventories/audits');
+                                break;
+
+                            case 'update_inventories_audits' :
+                                array_push($paths, '/Inventories/audits');
+                                break;
+
+                            case 'delete_inventories_audits' :
+                                array_push($paths, '/Inventories/audits');
+                                break;
+
+                            case 'create_inventories_periods' :
+                                array_push($paths, '/Inventories/periods');
+
+                            case 'update_inventories_periods' :
+                                array_push($paths, '/Inventories/periods');
+                                break;
+
+                            case 'delete_inventories_periods' :
+                                array_push($paths, '/Inventories/periods');
                                 break;
 
                             case 'create_inventories_types' :
@@ -220,8 +259,24 @@ class Permissions
                                 array_push($paths, '/Products/unities');
                                 break;
 
-                            case 'print_products_barcodes' :
-                                array_push($paths, '/Products/barcodes');
+                            case 'create_products_contents' :
+                                array_push($paths, '/Products/contents');
+                                break;
+
+                            case 'update_products_contents' :
+                                array_push($paths, '/Products/contents');
+                                break;
+
+                            case 'block_products_contents' :
+                                array_push($paths, '/Products/contents');
+                                break;
+
+                            case 'unblock_products_contents' :
+                                array_push($paths, '/Products/contents');
+                                break;
+
+                            case 'delete_products_contents' :
+                                array_push($paths, '/Products/contents');
                                 break;
 
                             case 'create_providers' :
@@ -365,7 +420,12 @@ class Permissions
         {
             if (Session::get_value('vkye_user')['permissions'] != 'all')
             {
-                if (in_array($id, Session::get_value('vkye_user')['branches']))
+                if (Session::get_value('vkye_user')['branches'] != 'all')
+                {
+                    if (in_array($id, Session::get_value('vkye_user')['branches']))
+                        $access = true;
+                }
+                else
                     $access = true;
             }
             else
@@ -382,13 +442,53 @@ class Permissions
     *
     * @return string
     */
-    static public function redirection()
+    static public function redirection($param = false, $data = [])
     {
-        if (empty(Session::get_value('vkye_user')['accounts']))
-            return '/accounts';
-        else if (Session::get_value('vkye_account')['status'] == false)
-            return '/account/payment';
-        else
-            return '/dashboard';
+        if (Session::exists_var('session') == true)
+        {
+            $path = '/dashboard';
+
+            if (Session::exists_var('uri') == true)
+            {
+                $path = Session::get_value('uri');
+
+                Session::unset_value('uri');
+            }
+            else if (Permissions::account(['inventories']) == true)
+            {
+                if (Permissions::user(['inventories_inputs','inventories_outputs','inventories_transfers'], true) == true)
+                    $path = '/inventories/movements';
+                else if (Permissions::user(['inventories_periods'], true) == true)
+                    $path = '/inventories/existences';
+            }
+
+            if (!empty($param))
+            {
+                if (is_string($param))
+                {
+                    if ($param == 'branch')
+                    {
+                        if (Session::get_value('vkye_user')['branches'] != 'all')
+                        {
+                            foreach ($data as $key => $value)
+                            {
+                                if (!in_array($value['id'], Session::get_value('vkye_user')['branches']))
+                                    unset($data[$key]);
+                            }
+
+                            $data = array_values($data);
+                        }
+
+                        return $data[0];
+                    }
+                    else
+                        header('Location: /' . $param);
+                }
+                else if ($param == true)
+                    return $path;
+            }
+            else
+                header('Location: ' . $path);
+        }
     }
 }

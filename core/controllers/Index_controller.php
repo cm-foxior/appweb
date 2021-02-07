@@ -13,17 +13,17 @@ class Index_controller extends Controller
 	{
 		header('Location: /login');
 
-		// if (Format::exist_ajax_request() == true)
-		// {
-		//
-		// }
-		// else
-		// {
-		// 	define('_title', Configuration::$web_page . ' | ' . System::seo('title') . ' | ' . System::seo('keywords'));
-		//
-		// 	$template = $this->view->render($this, 'index');
-		//
-		// 	echo $template;
-		// }
+		if (Format::exist_ajax_request() == true)
+		{
+
+		}
+		else
+		{
+			define('_title', Configuration::$web_page . ' | ' . System::settings('seo', 'title', $GLOBALS['_vkye_module'], true) . ' | ' . System::settings('seo', 'keywords', $GLOBALS['_vkye_module'], true));
+
+			$template = $this->view->render($this, 'index');
+
+			echo $template;
+		}
 	}
 }

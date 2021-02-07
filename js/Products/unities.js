@@ -2,6 +2,8 @@
 
 $(document).ready(function()
 {
+    $('[data-search="products_unities"]').focus();
+
     $('[data-search="products_unities"]').on('keyup', function()
     {
         search_in_table($(this).val(), $('[data-table="products_unities"]').find(' > tbody > tr'));
@@ -23,6 +25,11 @@ $(document).ready(function()
         open_form_modal('create', $('[data-modal="' + create_action + '"]'));
     });
 
+    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
+    {
+        send_form_modal('create', $(this), event);
+    });
+
     $(document).on('click', '[data-action="' + update_action + '"]', function()
     {
         action = read_action;
@@ -33,13 +40,8 @@ $(document).ready(function()
         {
             action = update_action;
 
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
+            $('[name="name"]').val(data.name);
         });
-    });
-
-    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
-    {
-        send_form_modal('create', $(this), event);
     });
 
     $(document).on('click', '[data-action="' + block_action + '"]', function()

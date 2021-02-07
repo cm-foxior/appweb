@@ -2,19 +2,11 @@
 
 $(document).ready(function()
 {
+    $('[data-search="providers"]').focus();
+
     $('[data-search="providers"]').on('keyup', function()
     {
         search_in_table($(this).val(), $('[data-table="providers"]').find(' > div'));
-    });
-
-    $('[name="phone_number"]').on('keyup', function()
-    {
-        validate_string('int', $(this).val(), $(this));
-    });
-
-    $('[name="fiscal_id"]').on('keyup', function()
-    {
-        validate_string(['uppercase','int'], $(this).val().toUpperCase(), $(this));
     });
 
     var create_action = 'create_provider';
@@ -29,8 +21,36 @@ $(document).ready(function()
         action = create_action;
         id = null;
 
+        switch_states('');
+
         transform_form_modal('create', $('[data-modal="' + create_action + '"]'));
         open_form_modal('create', $('[data-modal="' + create_action + '"]'));
+    });
+
+    $('[name="phone_country"]').on('change', function()
+    {
+        if ($(this).val().length <= 0)
+            $('[name="phone_number"]').val('');
+    });
+
+    $('[name="phone_number"]').on('keyup', function()
+    {
+        validate_string('int', $(this).val(), $(this));
+    });
+
+    $('[name="fiscal_country"]').on('change', function()
+    {
+        switch_states($(this).val());
+    });
+
+    $('[name="fiscal_id"]').on('keyup', function()
+    {
+        validate_string(['uppercase','int'], $(this).val().toUpperCase(), $(this));
+    });
+
+    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
+    {
+        send_form_modal('create', $(this), event);
     });
 
     $(document).on('click', '[data-action="' + update_action + '"]', function()
@@ -43,23 +63,19 @@ $(document).ready(function()
         {
             action = update_action;
 
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="avatar"]').parents('.uploader').find('img').attr('src', ((validate_string('empty', data.avatar) == false) ? '../uploads/' + data.avatar : '../images/provider.png'));
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="email"]').val(data.email);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="phone_country"]').val(data.phone.country);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="phone_number"]').val(data.phone.number);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="country"]').val(data.country);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="address"]').val(data.address);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="fiscal_id"]').val(data.fiscal.id);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="fiscal_name"]').val(data.fiscal.name);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="fiscal_country"]').val(data.fiscal.country);
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="fiscal_address"]').val(data.fiscal.address);
-        });
-    });
+            $('[name="avatar"]').parents('.uploader').find('img').attr('src', ((validate_string('empty', data.avatar) == false) ? '../uploads/' + data.avatar : '../images/provider.png'));
+            $('[name="name"]').val(data.name);
+            $('[name="email"]').val(data.email);
+            $('[name="phone_country"]').val(data.phone.country);
+            $('[name="phone_number"]').val(data.phone.number);
+            $('[name="fiscal_country"]').val(data.fiscal.country);
 
-    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
-    {
-        send_form_modal('create', $(this), event);
+            switch_states(data.fiscal.country, data.fiscal.state);
+
+            $('[name="fiscal_address"]').val(data.fiscal.address);
+            $('[name="fiscal_name"]').val(data.fiscal.name);
+            $('[name="fiscal_id"]').val(data.fiscal.id);
+        });
     });
 
     $(document).on('click', '[data-action="' + block_action + '"]', function()
@@ -91,3 +107,31 @@ $(document).ready(function()
         send_form_modal('delete');
     });
 });
+
+function switch_states(country, state)
+{
+    $.ajax({
+        type: 'POST',
+        data: 'action=switch_states&country=' + country,
+        processData: false,
+        cache: false,
+        dataType: 'json',
+        success: function(response)
+        {
+            if (response.status == 'success')
+            {
+                state = (state == undefined || state == null || state == '') ? '' : state;
+
+                $('[name="fiscal_state"]').html(response.html);
+                $('[name="fiscal_state"]').val(state);
+
+                if (country == 'MEX')
+                    $('[name="fiscal_state"]').attr('disabled', false);
+                else
+                    $('[name="fiscal_state"]').attr('disabled', true);
+            }
+            else if (response.status == 'error')
+                open_notification_modal('alert', response.message);
+        }
+    });
+}

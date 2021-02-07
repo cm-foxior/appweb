@@ -2,6 +2,8 @@
 
 $(document).ready(function()
 {
+    $('[data-search="inventories_locations"]').focus();
+
     $('[data-search="inventories_locations"]').on('keyup', function()
     {
         search_in_table($(this).val(), $('[data-table="inventories_locations"]').find(' > tbody > tr'));
@@ -23,6 +25,11 @@ $(document).ready(function()
         open_form_modal('create', $('[data-modal="' + create_action + '"]'));
     });
 
+    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
+    {
+        send_form_modal('create', $(this), event);
+    });
+
     $(document).on('click', '[data-action="' + update_action + '"]', function()
     {
         action = read_action;
@@ -33,13 +40,8 @@ $(document).ready(function()
         {
             action = update_action;
 
-            $('[data-modal="' + create_action + '"]').find('form').find('[name="name"]').val(data.name);
+            $('[name="name"]').val(data.name);
         });
-    });
-
-    $('[data-modal="' + create_action + '"]').find('form').on('submit', function(event)
-    {
-        send_form_modal('create', $(this), event);
     });
 
     $(document).on('click', '[data-action="' + block_action + '"]', function()

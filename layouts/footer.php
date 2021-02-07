@@ -19,12 +19,11 @@
                 </main>
             </div>
         </section>
-        <script src="{$path.js}jquery-2.1.4.min.js"></script>
-        <script src="{$path.js}valkyrie.min.js"></script>
-        <script src="{$path.js}cm-scripts.min.js"></script>
-        <script src="{$path.js}cm-scripts-dashboard.min.js"></script>
-        <script src="{$path.js}scripts.min.js"></script>
-        <script defer src="https://kit.fontawesome.com/743152b0c5.js"></script> <!-- Font awenson icons -->
+        <script src="https://cdn.codemonkey.com.mx/monkeyboard/assets/js/jquery-2.1.4.min.js"></script>
+        <script src="https://cdn.codemonkey.com.mx/monkeyboard/assets/js/valkyrie.min.js"></script>
+        <script src="https://cdn.codemonkey.com.mx/monkeyboard/assets/js/scripts.js"></script>
+        <script src="{$path.js}scripts.js"></script>
+        <script defer src="https://kit.fontawesome.com/743152b0c5.js"></script>
         {$dependencies.js}
         {$dependencies.other}
     </body>

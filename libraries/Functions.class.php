@@ -4,62 +4,226 @@ defined('_EXEC') or die;
 
 class Functions
 {
-    public static function temporal($option, $module, $key, $value = null)
+    static public function conversion($type, $quantity, $unity_1, $unity_2)
     {
-        $temporal = Session::get_value('vkye_temporal');
+        $conversion = 0;
 
-        if ($option == 'set_forced' OR $option == 'set_if_not_exist')
+        if ($unity_1 == 'HY763H8O') // Piezas
         {
-            if ($option == 'set_forced')
-                $temporal[$module][$key] = $value;
-            else if ($option == 'set_if_not_exist')
-            {
-                if (!array_key_exists($key, $temporal[$module]) OR empty($temporal[$module][$key]))
-                    $temporal[$module][$key] = $value;
-            }
 
-            Session::set_value('vkye_temporal', $temporal);
         }
-        else if ($option == 'get')
-            return array_key_exists($key, $temporal[$module]) ? $temporal[$module][$key] : [];
-    }
-
-    public static function summation($option, $data, $key)
-    {
-        if ($option == 'math' OR $option == 'count')
-            $sum = 0;
-        else if ($option == 'string')
-            $sum = '';
-
-        foreach ($data as $value)
+        else if ($unity_1 == 'MKJHTYIA') // Kilogramos
         {
-            if (isset($key) AND !empty($key))
+            if ($unity_2 == 'HY763H8O') // Piezas
             {
-                if ($option == 'math')
-                    $sum += $value[$key];
-                else if ($option == 'count')
-                {
-                    foreach ($value as $subvalue)
-                        $sum += 1;
-                }
-                else if ($option == 'string')
-                    $sum .= $value[$key] . ', ';
+
             }
-            else
+            else if ($unity_2 == 'MKJHTYIA') // Kilogramos
+                $conversion = $quantity * 1;
+            else if ($unity_2 == 'SHBJ9876') // Gramos
+                $conversion = $quantity * 1000;
+            else if ($unity_2 == '098YH65W') // Miligramos
+                $conversion = $quantity * 1000000;
+            else if ($unity_2 == '456789HY') // Kilolitros
             {
-                if ($option == 'math')
-                    $sum += $value;
-                else if ($option == 'count')
-                    $sum += 1;
-                else if ($option == 'string')
-                    $sum .= $value . ', ';
+
+            }
+            else if ($unity_2 == 'JU76GF59') // Litros
+            {
+
+            }
+            else if ($unity_2 == 'AXDE5TB2') // Mililitros
+            {
+
+            }
+            else if ($unity_2 == 'WDTG34CF') // Onza fluida
+            {
+
+            }
+            else if ($unity_2 == '4FT5BQ7K') // Onza de peso
+            {
+
             }
         }
+        else if ($unity_1 == 'SHBJ9876') // Gramos
+        {
+            if ($unity_2 == 'HY763H8O') // Piezas
+            {
 
-        if ($option == 'math' OR $option == 'count')
-            return $sum;
-        else if ($option == 'string')
-            return substr($sum, 0, -2);
+            }
+            else if ($unity_2 == 'MKJHTYIA') // Kilogramos
+                $conversion = $quantity / 1000;
+            else if ($unity_2 == 'SHBJ9876') // Gramos
+                $conversion = $quantity / 1;
+            else if ($unity_2 == '098YH65W') // Miligramos
+                $conversion = $quantity * 1000;
+            else if ($unity_2 == '456789HY') // Kilolitros
+                $conversion = $quantity / 1000000;
+            else if ($unity_2 == 'JU76GF59') // Litros
+                $conversion = $quantity / 1000;
+            else if ($unity_2 == 'AXDE5TB2') // Mililitros
+                $conversion = $quantity / 1;
+            else if ($unity_2 == 'WDTG34CF') // Onza fluida
+            {
+
+            }
+            else if ($unity_2 == '4FT5BQ7K') // Onza de peso
+            {
+
+            }
+        }
+        else if ($unity_1 == '098YH65W') // Miligramos
+        {
+            if ($unity_2 == 'HY763H8O') // Piezas
+            {
+
+            }
+            else if ($unity_2 == 'MKJHTYIA') // Kilogramos
+                $conversion = $quantity / 1000000;
+            else if ($unity_2 == 'SHBJ9876') // Gramos
+                $conversion = $quantity / 1000;
+            else if ($unity_2 == '098YH65W') // Miligramos
+                $conversion = $quantity / 1;
+            else if ($unity_2 == '456789HY') // Kilolitros
+            {
+
+            }
+            else if ($unity_2 == 'JU76GF59') // Litros
+            {
+
+            }
+            else if ($unity_2 == 'AXDE5TB2') // Mililitros
+            {
+
+            }
+            else if ($unity_2 == 'WDTG34CF') // Onza fluida
+            {
+
+            }
+            else if ($unity_2 == '4FT5BQ7K') // Onza de peso
+            {
+
+            }
+        }
+        else if ($unity_1 == '456789HY') // Kilolitros
+        {
+            if ($unity_2 == 'HY763H8O') // Piezas
+            {
+
+            }
+            else if ($unity_2 == 'MKJHTYIA') // Kilogramos
+            {
+
+            }
+            else if ($unity_2 == 'SHBJ9876') // Gramos
+            {
+
+            }
+            else if ($unity_2 == '098YH65W') // Miligramos
+            {
+
+            }
+            else if ($unity_2 == '456789HY') // Kilolitros
+                $conversion = $quantity / 1;
+            else if ($unity_2 == 'JU76GF59') // Litros
+                $conversion = $quantity * 1000;
+            else if ($unity_2 == 'AXDE5TB2') // Mililitros
+                $conversion = $quantity * 1000000;
+            else if ($unity_2 == 'WDTG34CF') // Onza fluida
+            {
+
+            }
+            else if ($unity_2 == '4FT5BQ7K') // Onza de peso
+            {
+
+            }
+        }
+        else if ($unity_1 == 'JU76GF59') // Litros
+        {
+            if ($unity_2 == 'HY763H8O') // Piezas
+            {
+
+            }
+            else if ($unity_2 == 'MKJHTYIA') // Kilogramos
+            {
+
+            }
+            else if ($unity_2 == 'SHBJ9876') // Gramos
+            {
+
+            }
+            else if ($unity_2 == '098YH65W') // Miligramos
+            {
+
+            }
+            else if ($unity_2 == '456789HY' AND $type == 'unity') // Kilolitros
+                $conversion = $quantity / 1000;
+            else if ($unity_2 == '456789HY' AND $type == 'cost') // Kilolitros
+                $conversion = $quantity * 1000;
+            else if ($unity_2 == 'JU76GF59' AND $type == 'unity') // Litros
+                $conversion = $quantity / 1;
+            else if ($unity_2 == 'JU76GF59' AND $type == 'cost') // Litros
+                $conversion = $quantity * 1;
+            else if ($unity_2 == 'AXDE5TB2') // Mililitros
+                $conversion = $quantity * 1000;
+            else if ($unity_2 == 'WDTG34CF') // Onza fluida
+            {
+
+            }
+            else if ($unity_2 == '4FT5BQ7K') // Onza de peso
+            {
+
+            }
+        }
+        else if ($unity_1 == 'AXDE5TB2') // Mililitros
+        {
+            if ($unity_2 == 'HY763H8O') // Piezas
+            {
+
+            }
+            else if ($unity_2 == 'MKJHTYIA') // Kilogramos
+            {
+
+            }
+            else if ($unity_2 == 'SHBJ9876') // Gramos
+            {
+
+            }
+            else if ($unity_2 == '098YH65W') // Miligramos
+            {
+
+            }
+            else if ($unity_2 == '456789HY' AND $type == 'unity') // Kilolitros
+                $conversion = $quantity / 1000000;
+            else if ($unity_2 == '456789HY' AND $type == 'cost') // Kilolitros
+                $conversion = $quantity * 1000000;
+            else if ($unity_2 == 'JU76GF59' AND $type == 'unity') // Litros
+                $conversion = $quantity / 1000;
+            else if ($unity_2 == 'JU76GF59' AND $type == 'cost') // Litros
+                $conversion = $quantity * 1000;
+            else if ($unity_2 == 'AXDE5TB2' AND $type == 'unity') // Mililitros
+                $conversion = $quantity / 1;
+            else if ($unity_2 == 'AXDE5TB2' AND $type == 'cost') // Mililitros
+                $conversion = $quantity * 1;
+            else if ($unity_2 == 'WDTG34CF') // Onza fluida
+            {
+
+            }
+            else if ($unity_2 == '4FT5BQ7K') // Onza de peso
+            {
+
+            }
+        }
+        else if ($unity_1 == 'WDTG34CF') // Onza fluida
+        {
+
+        }
+        else if ($unity_1 == '4FT5BQ7K') // Onza de peso
+        {
+
+        }
+
+        return $conversion;
     }
 
     static public function payments_ways()
@@ -70,8 +234,9 @@ class Functions
             'name',
             'code'
         ], [
+            'blocked' => false,
             'ORDER' => [
-                'name' => 'ASC'
+                'order' => 'ASC'
             ]
         ]));
     }
@@ -87,6 +252,36 @@ class Functions
         ], [
             'ORDER' => [
                 'name' => 'ASC'
+            ]
+        ]));
+    }
+
+    static public function states($country)
+    {
+        $database = new Medoo();
+
+        return System::decode_json_to_array($database->select('system_states', [
+            'id',
+            'name'
+        ], [
+            'country' => $country,
+            'ORDER' => [
+                'name' => 'ASC'
+            ]
+        ]));
+    }
+
+    static public function formulas()
+    {
+        $database = new Medoo();
+
+        return System::decode_json_to_array($database->select('system_formulas', [
+            'code',
+            'name'
+        ], [
+            'blocked' => false,
+            'ORDER' => [
+                'order' => 'ASC'
             ]
         ]));
     }

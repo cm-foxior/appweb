@@ -9,6 +9,30 @@ class Branches_model extends Model
 		parent::__construct();
 	}
 
+	public function create_branch($data)
+	{
+		$query = $this->database->insert('branches', [
+			'account' => Session::get_value('vkye_account')['id'],
+			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
+			'name' => $data['name'],
+			'email' => !empty($data['email']) ? $data['email'] : null,
+			'phone' => json_encode([
+                'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
+                'number' => !empty($data['phone_number']) ? $data['phone_number'] : ''
+            ]),
+			'fiscal' => json_encode([
+                'id' => !empty($data['fiscal_id']) ? $data['fiscal_id'] : '',
+                'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : '',
+                'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : '',
+                'state' => !empty($data['fiscal_state']) ? $data['fiscal_state'] : '',
+                'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : ''
+            ]),
+			'blocked' => false
+		]);
+
+		return $query;
+	}
+
 	public function read_branches()
 	{
 		$query = System::decode_json_to_array($this->database->select('branches', [
@@ -34,39 +58,12 @@ class Branches_model extends Model
 			'name',
 			'email',
 			'phone',
-            'country',
-            'address',
 			'fiscal'
 		], [
 			'id' => $id
 		]));
 
 		return !empty($query) ? $query[0] : null;
-	}
-
-	public function create_branch($data)
-	{
-		$query = $this->database->insert('branches', [
-			'account' => Session::get_value('vkye_account')['id'],
-			'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
-			'name' => $data['name'],
-			'email' => !empty($data['email']) ? $data['email'] : null,
-			'phone' => json_encode([
-                'country' => !empty($data['phone_country']) ? $data['phone_country'] : null,
-                'number' => !empty($data['phone_number']) ? $data['phone_number'] : null
-            ]),
-			'country' => !empty($data['country']) ? $data['country'] : null,
-			'address' => !empty($data['address']) ? $data['address'] : null,
-			'fiscal' => json_encode([
-                'id' => !empty($data['fiscal_id']) ? $data['fiscal_id'] : null,
-                'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : null,
-                'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : null,
-                'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : null
-            ]),
-			'blocked' => false
-		]);
-
-		return $query;
 	}
 
 	public function update_branch($data)
@@ -82,20 +79,19 @@ class Branches_model extends Model
         if (!empty($edited))
         {
             $query = $this->database->update('branches', [
-				'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : null,
+				'avatar' => !empty($data['avatar']['name']) ? Fileloader::up($data['avatar']) : $edited[0]['avatar'],
 				'name' => $data['name'],
 				'email' => !empty($data['email']) ? $data['email'] : null,
 				'phone' => json_encode([
-	                'country' => !empty($data['phone_country']) ? $data['phone_country'] : null,
-	                'number' => !empty($data['phone_number']) ? $data['phone_number'] : null
+	                'country' => !empty($data['phone_country']) ? $data['phone_country'] : '',
+	                'number' => !empty($data['phone_number']) ? $data['phone_number'] : ''
 	            ]),
-				'country' => !empty($data['country']) ? $data['country'] : null,
-				'address' => !empty($data['address']) ? $data['address'] : null,
 				'fiscal' => json_encode([
-	                'id' => !empty($data['fiscal_id']) ? $data['fiscal_id'] : null,
-	                'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : null,
-	                'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : null,
-	                'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : null
+	                'id' => !empty($data['fiscal_id']) ? $data['fiscal_id'] : '',
+	                'name' => !empty($data['fiscal_name']) ? $data['fiscal_name'] : '',
+	                'country' => !empty($data['fiscal_country']) ? $data['fiscal_country'] : '',
+	                'state' => !empty($data['fiscal_state']) ? $data['fiscal_state'] : '',
+	                'address' => !empty($data['fiscal_address']) ? $data['fiscal_address'] : ''
 	            ])
             ], [
                 'id' => $data['id']

@@ -20,7 +20,7 @@ class Uploader
         $this->show_404 = $show_404;
     }
 
-    public function set_file_name($argv)
+    public function set_file_name()
     {
         $this->file_name = $this->security->random_string(16);
     }
@@ -32,7 +32,14 @@ class Uploader
 
     public function set_file_type($argv)
     {
-        $this->file_type = explode( '/', $argv );
+        $this->file_type = explode('/', $argv);
+
+        if ($this->file_type[1] == 'vnd.openxmlformats-officedocument.wordprocessingml.document')
+            $this->file_type[1] = 'docx';
+        else if ($this->file_type[1] == 'vnd.ms-excel')
+            $this->file_type[1] = 'xls';
+        else if ($this->file_type[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            $this->file_type[1] = 'xlsx';
     }
 
     public function set_file_size($argv)
