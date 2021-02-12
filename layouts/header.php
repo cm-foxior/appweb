@@ -31,6 +31,7 @@
             <li><a><i class="fas fa-star"></i></a></li>
             <li><a><i class="fas fa-heart"></i></a></li>
             <li><a><i class="fas fa-meteor"></i></a></li>
+            <li><a><i class="fas fa-th"></i></a></li>
         </ul>
     </nav>
 </header>
