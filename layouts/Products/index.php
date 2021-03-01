@@ -2,21 +2,12 @@
 
 defined('_EXEC') or die;
 
-$this->dependencies->add(['js', '{$path.js}Products/index.js']);
+$this->dependencies->add(['js', '{$path.js}Products/index.js?v=1.0']);
 
 ?>
 
 %{header}%
 <header class="modbar">
-    <div class="shortcuts">
-        <?php if (Permissions::user(['products'], true) == true) : ?>
-            <a href="/products/salemenu"><i class="fas fa-dollar-sign"></i><span>{$lang.sale_menu}</span></a>
-            <a href="/products/recipes"><i class="fas fa-receipt"></i><span>{$lang.recipes}</span></a>
-            <a href="/products/supplies"><i class="fas fa-layer-group"></i><span>{$lang.supplies}</span></a>
-            <a href="/products/workmaterial"><i class="fas fa-mail-bulk"></i><span>{$lang.work_material}</span></a>
-            <a href="/products/products"><i class="fas fa-city"></i><span>{$lang.work_material}</span></a>
-        <?php endif; ?>
-    </div>
     <div class="buttons">
         <fieldset class="fields-group big">
             <div class="compound st-4-left">

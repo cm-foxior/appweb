@@ -9,7 +9,7 @@ class System_model extends Model
 		parent::__construct();
 	}
 
-	public function get_session($account)
+	public function read_session($account)
 	{
 		$session['user'] = System::decode_json_to_array($this->database->select('users', [
 			'id',

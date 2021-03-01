@@ -3,10 +3,6 @@
 /* Menubar's rewrite
 /* ------------------------------------------------------------- */
 
-header.leftbar > nav > ul {
-    border-bottom: 0px;
-}
-
 header.leftbar > nav > ul > li > a.logotype {
     background-color: #ff5722;
 }

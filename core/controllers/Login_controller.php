@@ -23,7 +23,7 @@ class Login_controller extends Controller
 
 			if (empty($errors))
 			{
-				$query = $this->model->get_session($_POST['email']);
+				$query = $this->model->read_session($_POST['email']);
 
 				if (!empty($query))
 				{
@@ -35,9 +35,9 @@ class Login_controller extends Controller
 						Session::init();
 						Session::set_value('session', true);
 						Session::set_value('vkye_account', $query['account']);
-						Session::set_value('vkye_time_zone', $query['account']['time_zone']);
 						Session::set_value('vkye_user', $query['user']);
 						Session::set_value('vkye_lang', $query['user']['language']);
+						Session::set_value('vkye_time_zone', $query['account']['time_zone']);
 						Session::set_value('vkye_temporal', []);
 
 						echo json_encode([

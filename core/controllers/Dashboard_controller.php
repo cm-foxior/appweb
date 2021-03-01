@@ -13,7 +13,7 @@ class Dashboard_controller extends Controller
 	{
 		if (Format::exist_ajax_request() == true)
 		{
-			
+
 		}
 		else
 		{

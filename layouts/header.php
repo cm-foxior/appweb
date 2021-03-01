@@ -7,7 +7,7 @@
                 <img src="<?php echo (!empty(Session::get_value('vkye_account')['avatar']) ? '{$path.uploads}' . Session::get_value('vkye_account')['avatar'] : 'https://cdn.codemonkey.com.mx/monkeyboard/assets/images/account.png'); ?>">
             </figure>
             <div>
-                <h4 class="<?php echo ((Session::get_value('vkye_account')['status'] == true) ? 'online' : 'offline'); ?>"><i class="fas fa-circle"></i><?php echo Session::get_value('vkye_account')['name']; ?></h4>
+                <h4 class="<?php echo ((Session::get_value('vkye_account')['blocked'] == false) ? 'online' : 'offline'); ?>"><i class="fas fa-circle"></i><?php echo Session::get_value('vkye_account')['name']; ?></h4>
                 <span>{$lang.<?php echo Session::get_value('vkye_account')['type']; ?>}</span>
             </div>
         </div>
@@ -72,7 +72,7 @@
                         </figure>
                         <div>
                             <h4><?php echo $value['name']; ?></h4>
-                            <?php if ($value['status'] == true) : ?>
+                            <?php if ($value['blocked'] == false) : ?>
                                 <?php if (Session::get_value('vkye_account')['id'] == $value['id']) : ?>
                                     <span class="online"><i class="fas fa-circle"></i>{$lang.online}</span>
                                 <?php else : ?>

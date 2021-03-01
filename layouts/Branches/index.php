@@ -2,7 +2,7 @@
 
 defined('_EXEC') or die;
 
-$this->dependencies->add(['js', '{$path.js}Branches/index.js']);
+$this->dependencies->add(['js', '{$path.js}Branches/index.js?v=1.0']);
 
 ?>
 

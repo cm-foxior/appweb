@@ -36,7 +36,7 @@ class Configuration
 	 *
      * @var string $web_version
      */
-	public static $web_version = '2.0';
+	public static $web_version = '1.0';
 
 	/**
      * Idioma por default
@@ -147,7 +147,7 @@ class Configuration
 	 *
      * @var string $db_host
      */
-	public static $db_host = 'codemonkey.com.mx';
+	public static $db_host = '149.56.81.137';
 
 	/**
      * Nombre de la base de datos

@@ -9,11 +9,11 @@ $this->dependencies->add(['js', '{$path.plugins}wow/wow.min.js']);
 $this->dependencies->add(['css', '{$path.css}Index/maicons.css']);
 $this->dependencies->add(['css', '{$path.css}Index/bootstrap.css']);
 $this->dependencies->add(['css', '{$path.css}Index/mobster.css']);
-$this->dependencies->add(['css', '{$path.css}Index/index.css']);
+$this->dependencies->add(['css', '{$path.css}Index/index.css?v=1.0']);
 $this->dependencies->add(['js', '{$path.js}Index/jquery-3.5.1.min.js']);
 $this->dependencies->add(['js', '{$path.js}Index/bootstrap.bundle.min.js']);
 $this->dependencies->add(['js', '{$path.js}Index/mobster.js']);
-$this->dependencies->add(['js', '{$path.js}Index/index.js']);
+$this->dependencies->add(['js', '{$path.js}Index/index.js?v=1.0']);
 
 ?>
 

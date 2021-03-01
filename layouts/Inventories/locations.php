@@ -2,7 +2,7 @@
 
 defined('_EXEC') or die;
 
-$this->dependencies->add(['js', '{$path.js}Inventories/locations.js']);
+$this->dependencies->add(['js', '{$path.js}Inventories/locations.js?v=1.0']);
 
 ?>
 
