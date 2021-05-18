@@ -230,7 +230,7 @@ class Configuration
 	 *
      * @var boolean $smtp_auth
      */
-	public static $smtp_auth = false;
+	public static $smtp_auth = true;
 
 	/**
      * Dominio o IP del servidor SMTP.
@@ -239,7 +239,7 @@ class Configuration
 	 *
      * @var string $smtp_host
      */
-	public static $smtp_host = '';
+	public static $smtp_host = 'mail.foxior.com';
 
 	/**
      * Usuario de la cuenta smtp.
@@ -249,7 +249,7 @@ class Configuration
 	 *
      * @var string $smtp_user
      */
-	public static $smtp_user = '';
+	public static $smtp_user = 'noreply@foxior.com';
 
 	/**
      * Contraseña de la cuenta smtp.
@@ -258,7 +258,7 @@ class Configuration
 	 *
      * @var string $smtp_pass
      */
-	public static $smtp_pass = '';
+	public static $smtp_pass = 'mE!2o92f';
 
 	/**
      * Seguridad de la encriptacion para el envio de SMTP.
@@ -268,7 +268,7 @@ class Configuration
 	 *
      * @var string $smtp_secure
      */
-	public static $smtp_secure = 'ssl';
+	public static $smtp_secure = 'tls';
 
 	/**
      * Puerto de conexion al servidor SMTP.
@@ -277,7 +277,7 @@ class Configuration
 	 *
      * @var integer $smtp_port
      */
-	public static $smtp_port = 465;
+	public static $smtp_port = 587;
 
 	/**
      * Variables extras del sitio web.
